@@ -8,8 +8,7 @@ from sklearn.preprocessing import normalize
 from PIL import Image
 pd.set_option('display.float_format', lambda x: '%.0f' % x)
 
-
-
+# this is a plotly figure formatting function that can be used on a range of Plotly figure objects
 def plotly_streamlit_layout(fig, barmode=None, barnorm=None, height=None,width=None):
     fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
                       plot_bgcolor='rgba(0,0,0,0)',
@@ -25,12 +24,14 @@ def plotly_streamlit_layout(fig, barmode=None, barnorm=None, height=None,width=N
 
     return fig
 
+# this is a plotly figure formatting function (text) that can be used on a range of Plotly figure objects
 def plotly_streamlit_texts(fig, x_title, y_title):
     fig.update_layout(yaxis=dict(title=y_title, titlefont_size=10, tickfont_size=10),
                       xaxis=dict(title=x_title, titlefont_size=10, tickfont_size=10))
 
     return fig
 
+# this generates a heatmap from a Pandas.corr() DataFrame
 def get_heatmap(df):
     mask = np.triu(np.ones_like(df, dtype=bool))
     data = df.mask(mask)
@@ -56,12 +57,13 @@ def get_heatmap(df):
     fig = go.Figure(data=[heat], layout=layout)
     return fig
 
+# this function returns index ranges where there are nulls
 def get_indexes(x):
     index_fill_1 = [i for i in range(x.index[0], x.dropna().index[0])]
     index_interpolate = [i for i in range(x.dropna().index[0], x.index[-1])]
     return index_fill_1, index_interpolate
 
-
+# this function updates a series of data using either fill na or interpolation
 def update_series(x):
     if len(x.dropna()) == 0:
         x = x.fillna(1)
@@ -74,6 +76,7 @@ def update_series(x):
         x_interpolate = x_interpolate.interpolate()
         return pd.concat([x_fill_1, x_interpolate])
 
+# these are the OWID columns we want to transform using either fillna or interpolation
 transform_cols = ['people_vaccinated_per_hundred',
                   'total_vaccinations',
                   'total_deaths',
@@ -86,11 +89,11 @@ transform_cols = ['people_vaccinated_per_hundred',
 @st.cache
 def get_data(df, transform_cols):
     """ This is the main function that transforms the raw OWID data into something we can use in the app
-        Args:
-            Original DataFrame from csv
-        Returns:
-            Processed / cleaned DataFrame
-        """
+    Args:
+        Original DataFrame from csv
+    Returns:
+        Processed / cleaned DataFrame
+    """
 
     # loop through and subset each country to a list
     country_dfs = []
@@ -130,30 +133,30 @@ def get_data(df, transform_cols):
     return df_final
 
 
+# read in the raw OWID data
+df = pd.read_csv('../owid-covid-data.csv')
 
-
-
-df = pd.read_csv('owid-covid-data.csv')
-
+# select the columns we want
 cols_for_app = ['continent','location','date','total_deaths','total_deaths_per_million',\
-         'total_cases_per_million','icu_patients_per_million','hosp_patients_per_million',
-         'people_vaccinated_per_hundred','total_vaccinations',
-         'gdp_per_capita','population','stringency_index','population',
-         'population_density', 'median_age', 'aged_65_older',
-         'aged_70_older', 'gdp_per_capita', 'extreme_poverty',
-         'cardiovasc_death_rate', 'diabetes_prevalence',
-         'female_smokers','male_smokers', 'handwashing_facilities',
-         'hospital_beds_per_thousand','life_expectancy']
+                'total_cases_per_million','icu_patients_per_million','hosp_patients_per_million',
+                'people_vaccinated_per_hundred','total_vaccinations',
+                'gdp_per_capita','population','stringency_index','population',
+                'population_density', 'median_age', 'aged_65_older',
+                'aged_70_older', 'gdp_per_capita', 'extreme_poverty',
+                'cardiovasc_death_rate', 'diabetes_prevalence',
+                'female_smokers','male_smokers', 'handwashing_facilities',
+                'hospital_beds_per_thousand','life_expectancy']
 
 df = df[cols_for_app]
 
-df_final = get_data(df,transform_cols)
+# get the data
+df_final = get_data(df, transform_cols)
 
 # drop any nulls
-df.dropna(subset=['population'],inplace=True)
+df.dropna(subset=['population'], inplace=True)
 
 
-
+# this initialises the app and sets up the template with tabs
 def streamlit_init():
 
     st.markdown(
@@ -162,7 +165,7 @@ def streamlit_init():
     query_params = st.experimental_get_query_params()
     tabs = ["About", "Covid-19 Cross Section Analysis", 'Covid-19 Time Series Analysis']
 
-    im = Image.open('./kitsamho_covid_app_assets/logo.jpeg')
+    im = Image.open('./covid_streamlit_app_assets/logo.jpeg')
     st.image(im.resize((int(im.size[0] / 1), int(im.size[1] / 1)), 0))
 
     if "tab" in query_params:
@@ -171,7 +174,7 @@ def streamlit_init():
         active_tab = "About"
 
     if active_tab not in tabs:
-        st.experimental_set_query_params(tab="Home")
+        st.experimental_set_query_params(tab="About")
         active_tab = "Home"
 
     li_items = "".join(
@@ -207,14 +210,9 @@ if active_tab == "About":
     st.markdown('To keep the app *light*, I did not include every single feature available in the data set but did \
     include the following:')
 
-    df_code = pd.read_csv('owid-covid-codebook.csv')
-
-
+    # this is the data dictionary we show on the about page
+    df_code = pd.read_csv('../owid-covid-codebook.csv')
     df_code = df_code[df_code.column.isin(cols_for_app)]
-
-
-
-
     st.dataframe(df_code)
 
 
@@ -226,7 +224,6 @@ if active_tab == "About":
 
 
     st.header('Github Links')
-
     st.write('OWID Repository : https://github.com/owid/covid-19-data')
     st.write('Forked Repository : https://github.com/kitsamho/covid-19-data')
     st.write('Streamlit .py file : https://github.com/kitsamho/covid-19-data')
@@ -234,9 +231,7 @@ if active_tab == "About":
 
 
     st.header('About Me | Contact Details')
-
-    st.write('My name is Sam Ho. I am a Data scientist in the R&D team at martech startup Datasine. Datasine is an \
-              AI powered, SaaS platform that helps clients choose the most effective ad creative.')
+    st.write('My name is Sam Ho. I am a Data scientist at Shutterstock AI')
 
     st.write('I would love to know what you thought of this app. If you have any comments or suggestions for improvement\
              (pretty sure there will be some bugs) please hit me up on LinkedIn: https://www.linkedin.com/in/kitsamho/')
@@ -284,7 +279,7 @@ elif active_tab == "Covid-19 Cross Section Analysis":
                 'Total Deaths per Million': 'total_deaths_per_million',
                 'Total Cases per Million': 'total_cases_per_million',
                 'People Vaccinated per Hundred': 'people_vaccinated_per_hundred',
-                'No sizing': None}
+                'No sizing': 'no_sizing'}
 
     # set up some columns for the interactive widgets - use a mid point to create some buffer between widgets
     c1, mid, c2, = st.beta_columns((3,0.5,3))
@@ -304,17 +299,25 @@ elif active_tab == "Covid-19 Cross Section Analysis":
     size_by = c2.selectbox('Size markers by', list(size_dic.keys()), 0)
     size_by = size_dic[size_by]
 
+    # if we want to get relative sizes of markers set up plot frame including variable to size
+    if size_by != 'no_sizing':
+        df_plot = df_analysis[[x, y, size_by, 'location', 'continent']]
+        rel_sizing = True
+    else:
+        df_plot = df_analysis[[x, y, 'location', 'continent']]
+        rel_sizing = False
+
     # select continent
     df_continent = c2.selectbox('Show which continent', continents, 0)
 
     # marker size adjustment
-    marker_size = st.slider('Use this to adjust relative marker size', 1, 1000, step=1,value=150)
+    if size_by != 'no_sizing':
+        marker_size = st.slider('Use this to adjust relative marker size', 1, 1000, step=1,value=150)
+    else:
+        marker_size = st.slider('Use this to adjust marker size', 1, 30, step=1, value=10)
 
     # select which measure of central tendency to show
     average_kind = c1.selectbox('Which central tendency', ('Mean', 'Median'), 0)
-
-    # get a DataFrame for the metrics needed to create plot
-    df_plot = df_analysis[[x, y, size_by, 'location', 'continent']]
 
     # if people have selected a specific continent to show then mask DataFrame
     if df_continent != 'Show All Countries':
@@ -325,11 +328,19 @@ elif active_tab == "Covid-19 Cross Section Analysis":
         return pd.Series((normalize([df[col]]) * marker_size)[0])
     
     # main function that generates plot
-    def plot_scatter(df, x, y, size, marker_size, average_kind ='Mean'):
+    def plot_scatter(df, x, y, size, marker_size, rel_sizing =True, average_kind ='Mean'):
 
         fig_scatter = go.Figure() # get a graph objects figure
         df_to_plot = df.reset_index(drop=True)
         col = px.colors.qualitative.Plotly * 25 # get 25 colours
+
+        # if we want relative sizing
+        if rel_sizing:
+            plot_size = reshape_for_plot(df_to_plot, size, marker_size)
+            hover_texts = df_to_plot[size]
+        else:
+            plot_size = [marker_size] * df_to_plot.shape[0]
+            hover_texts = [''] * df_to_plot.shape[0]
 
         # loop through each row and add marker and various bits of meta data
         for i in range(df_to_plot.shape[0]):
@@ -338,12 +349,12 @@ elif active_tab == "Covid-19 Cross Section Analysis":
                 y=np.array(df_to_plot[y][i]),
                 name=df_to_plot['location'][i],
                 hovertext='<b>' + df_to_plot['location'][i] + '</b>' + '<br>' + size.capitalize().replace('_', ' ') + ' : ' + \
-                          str(int(df_to_plot[size][i])),
+                          str(hover_texts[i]),
                 hoverinfo="text",
                 mode='markers',
 
                 # marker size is adjusted using a reshape function
-                marker=dict(size=reshape_for_plot(df_to_plot, size, marker_size)[i], opacity=0.5,
+                marker=dict(size=plot_size[i], opacity=0.5,
                             color=col[i])))
 
         # add vertical and horizontal lines to represent mean or median
@@ -373,7 +384,7 @@ elif active_tab == "Covid-19 Cross Section Analysis":
 
 
     # get plot
-    fig_cross_plot = plot_scatter(df_plot, x=x, y=y, size=size_by, marker_size=marker_size)
+    fig_cross_plot = plot_scatter(df_plot, x=x, y=y, size=size_by, rel_sizing=rel_sizing,marker_size=marker_size)
 
     # add plot to streamlit
     st.plotly_chart(plotly_streamlit_layout(fig_cross_plot, height=800, width=1600))
@@ -416,15 +427,21 @@ elif active_tab == "Covid-19 Time Series Analysis":
                   'Hospital patients per million': 'hosp_patients_per_million',
                   'Population':'population'}
 
-    # user input options for marker size
-    size_by = st.selectbox('Size markers by',('Total Deaths','Total Deaths per Million','Population', \
-                                              'People Vaccinated per Hundred'),2)
+
 
     # user input options for the x axis
-    x_metric = c1.selectbox('X axis', ('Total Deaths','Population'),0)
+    x_metric = c1.selectbox('X axis', ('Total Deaths','Population','Hospital patients per million'),1)
 
     # user input options for the y axis
-    y_metric = c2.selectbox('Y axis', ('People Vaccinated per Hundred','Total Cases per Million'),1)
+    y_metric = c2.selectbox('Y axis', ('People Vaccinated per Hundred','Total Cases per Million',\
+                                       'Hospital patients per million'),0)
+
+    # user input options for marker size
+    size_by = c1.selectbox('Size markers by', ('Total Deaths', 'Total Deaths per Million', 'Population', \
+                                               'People Vaccinated per Hundred'), 1)
+
+    # select which measure of central tendency to show
+    average_kind = c2.selectbox('Which central tendency', ('Mean', 'Median'), 0)
 
     # some custom ranges for different metrics - these are used to make the plot readable
     if x_metric == 'Population':
@@ -464,7 +481,7 @@ elif active_tab == "Covid-19 Time Series Analysis":
         return fig
 
     fig_animate = plot_scatter_animate(df_final, x=metric_dic[x_metric], y=metric_dic[y_metric], marker_size=\
-                                       metric_dic[size_by])
+                                       metric_dic[size_by], average_kind=average_kind)
 
     fig_animate = plotly_streamlit_layout(fig_animate, height=700, width=1600)
 
