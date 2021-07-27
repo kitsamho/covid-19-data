@@ -1,5 +1,6 @@
 import streamlit as st
 from helperfunctions.helper import *
+import plotly.graph_objects as go
 
 def write(df_code_book):
     st.header('Overview')
@@ -14,11 +15,6 @@ def write(df_code_book):
     st.markdown('To keep the app *light*, I did not include every single feature available in the data set but did \
     include the following:')
 
-
-
-    # st.dataframe(df_code_book, width=3000, height=768)
-
-    import plotly.graph_objects as go
     col_1 = df_code_book[df_code_book.columns[0]].values
     col_2 = df_code_book[df_code_book.columns[1]].values
     col_3 = df_code_book[df_code_book.columns[2]].values
@@ -26,7 +22,8 @@ def write(df_code_book):
     fig_table = go.Figure(data=[go.Table(header=dict(values=[df_code_book.columns[0], df_code_book.columns[1], \
                                                              df_code_book.columns[2]]),
                                          cells=dict(values=[col_1, col_2,col_3], align='left'))])
-    st.plotly_chart(plotly_streamlit_layout(fig_table,height=800,width=1800))
+
+    st.plotly_chart(plotly_streamlit_layout(fig_table, height=800, width=1800))
 
     st.write("**Note** I can't be held accountable for the quality of the data in this dataset.")
 

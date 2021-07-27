@@ -41,6 +41,7 @@ def get_owid_codebook(csv_path, cols):
     df_code = df_code.rename(columns={'column':'variable'})
     return df_code
 
+
 # get original OWID DataFrame
 df = get_owid_data(owid_csv_path, cols_for_app)
 
@@ -97,6 +98,7 @@ def format_owid_data(df, transform_cols):
 
 # format DataFrame
 df_final = format_owid_data(df, transform_cols)
+
 
 # this initialises the app and sets up the template with tabs
 def streamlit_init():

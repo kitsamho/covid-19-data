@@ -63,6 +63,7 @@ def write(df_final):
         fig = px.scatter(df, x=metric_dic[x_metric], y=metric_dic[y_metric], animation_frame=df.date, \
                          animation_group="location", size=marker_size, hover_name="location", log_y=log_y, log_x=True,
                          color=df.continent, range_x=range_x, range_y=range_y, size_max=50)
+
         # add vertical and horizontal lines to represent mean or median
         if average_kind == 'Mean':
             fig.add_vline(x=df[x].mean(), line_width=1, line_dash="dash", line_color="grey")

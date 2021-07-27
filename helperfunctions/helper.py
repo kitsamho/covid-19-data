@@ -3,6 +3,7 @@ import pandas as pd
 
 import plotly.graph_objects as go
 
+
 # this is a plotly figure formatting function that can be used on a range of Plotly figure objects
 def plotly_streamlit_layout(fig, barmode=None, barnorm=None, height=None,width=None):
     fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
@@ -19,12 +20,14 @@ def plotly_streamlit_layout(fig, barmode=None, barnorm=None, height=None,width=N
 
     return fig
 
+
 # this is a plotly figure formatting function (text) that can be used on a range of Plotly figure objects
 def plotly_streamlit_texts(fig, x_title, y_title):
     fig.update_layout(yaxis=dict(title=y_title, titlefont_size=10, tickfont_size=10),
                       xaxis=dict(title=x_title, titlefont_size=10, tickfont_size=10))
 
     return fig
+
 
 # this generates a heatmap from a Pandas.corr() DataFrame
 def get_heatmap(df):
