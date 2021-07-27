@@ -134,7 +134,7 @@ def get_data(df, transform_cols):
 
 
 # read in the raw OWID data
-df = pd.read_csv('../owid-covid-data.csv')
+df = pd.read_csv('./public/data/owid-covid-data.csv')
 
 # select the columns we want
 cols_for_app = ['continent','location','date','total_deaths','total_deaths_per_million',\
@@ -211,7 +211,7 @@ if active_tab == "About":
     include the following:')
 
     # this is the data dictionary we show on the about page
-    df_code = pd.read_csv('../owid-covid-codebook.csv')
+    df_code = pd.read_csv('./public/data/owid-covid-codebook.csv')
     df_code = df_code[df_code.column.isin(cols_for_app)]
     st.dataframe(df_code)
 
