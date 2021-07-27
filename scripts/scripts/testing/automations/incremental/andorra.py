@@ -33,18 +33,20 @@ def get_date(soup):
         "setembre": 9,
         "octubre": 10,
         "novembre": 11,
-        "desembre": 12
+        "desembre": 12,
     }
-    date_str = soup.find(class_="text-primary tracking-normal text-lg font-bold mb-0").text.lower()
+    date_str = soup.find(
+        class_="text-primary tracking-normal text-lg font-bold mb-0"
+    ).text.lower()
     match = re.search(r"actualització (\d+) d(e |')([a-z]+)", date_str)
     # Get day and month from website
     day = int(match.group(1))
     month = int(month_map[match.group(3)])
-    # Estimate year and build date
+    # Estimate year and build date
     year = datetime.datetime.now().year
     date = datetime.date(year, month, day)
     if date > datetime.datetime.now().date():
-        date = datetime.date(year-1, month, day)
+        date = datetime.date(year - 1, month, day)
     date = date.strftime("%Y-%m-%d")
     return date
 
@@ -59,10 +61,13 @@ def get_count(soup):
         int: Count of tests (PCR + TMA)
     """
     tag_id = "capacidtat"  # CHECK ON THIS! It is a typo on their side, correct spelling should be "capacitat"
-    values = [elem.find("span") for elem in soup.find(id=tag_id).find_all("div", class_="text-primary")]
+    values = [
+        elem.find("span")
+        for elem in soup.find(id=tag_id).find_all("div", class_="text-primary")
+    ]
     values = [int(x.text.replace(".", "")) for x in values]
     titles = [x.text.strip() for x in soup.find(id=tag_id).findAll("h3")]
-    
+
     count = 0
     for value, title in zip(values, titles):
         if "PCR" in title:
@@ -70,7 +75,7 @@ def get_count(soup):
         elif "TMA" in title:
             count_tma = value
     count = count_pcr + count_tma
-    
+
     return count
 
 
@@ -80,13 +85,15 @@ def is_404(soup):
 
 def main():
     """Main function.
-    
+
     Update file in `PATH`.
     """
     data = pd.read_csv(PATH)
 
     # Retrieve HTML page (using fake header, otherwise 404 error)
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36"
+    }
     req = requests.get(URL, headers=headers)
     soup = BeautifulSoup(req.content, "html.parser")
 
@@ -103,11 +110,11 @@ def main():
                     "Units": "people tested",
                     "Testing type": "PCR, TMA",
                     "Source URL": URL,
-                    "Source label": SOURCE_LABEL
+                    "Source label": SOURCE_LABEL,
                 }
                 data = data.append(new_row, ignore_index=True)
                 data.to_csv(PATH, index=False)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

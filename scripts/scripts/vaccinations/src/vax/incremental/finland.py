@@ -12,18 +12,23 @@ def read(source: str) -> pd.Series:
 def parse_data(df: pd.DataFrame) -> pd.Series:
 
     people_vaccinated = df.loc[
-        (df.Measure == "Administered doses") & (df["Vaccination dose"] == "First dose"), "val"
+        (df.Measure == "Administered doses") & (df["Vaccination dose"] == "First dose"),
+        "val",
     ].item()
 
     people_fully_vaccinated = df.loc[
-        (df.Measure == "Administered doses") & (df["Vaccination dose"] == "Second dose"), "val"
+        (df.Measure == "Administered doses")
+        & (df["Vaccination dose"] == "Second dose"),
+        "val",
     ].item()
 
-    return pd.Series({
-        "people_vaccinated": int(people_vaccinated),
-        "people_fully_vaccinated": int(people_fully_vaccinated),
-        "total_vaccinations": int(people_vaccinated + people_fully_vaccinated),
-    })
+    return pd.Series(
+        {
+            "people_vaccinated": int(people_vaccinated),
+            "people_fully_vaccinated": int(people_fully_vaccinated),
+            "total_vaccinations": int(people_vaccinated + people_fully_vaccinated),
+        }
+    )
 
 
 def get_date() -> str:
@@ -45,17 +50,12 @@ def enrich_source(ds: pd.Series) -> pd.Series:
         (
             "https://sampo.thl.fi/pivot/prod/en/vaccreg/cov19cov/fact_cov19cov?column=measure-533185.533172.433796."
             "533175&row=cov_vac_dose-533174L"
-        )
+        ),
     )
 
 
 def pipeline(ds: pd.Series) -> pd.Series:
-    return (
-        ds
-        .pipe(enrich_location)
-        .pipe(enrich_vaccine)
-        .pipe(enrich_source)
-    )
+    return ds.pipe(enrich_location).pipe(enrich_vaccine).pipe(enrich_source)
 
 
 def main(paths):
@@ -72,7 +72,7 @@ def main(paths):
         people_fully_vaccinated=int(data["people_fully_vaccinated"]),
         date=data["date"],
         source_url=data["source_url"],
-        vaccine=data["vaccine"]
+        vaccine=data["vaccine"],
     )
 
 

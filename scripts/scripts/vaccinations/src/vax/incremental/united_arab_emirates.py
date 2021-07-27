@@ -9,10 +9,11 @@ from vax.utils.dates import localdate
 
 
 class UnitedArabEmirates:
-
     def __init__(self) -> None:
         self.location = "United Arab Emirates"
-        self.source_url = "https://fcsc.gov.ae/en-us/Pages/Covid19/UAE-Covid-19-Updates.aspx"
+        self.source_url = (
+            "https://fcsc.gov.ae/en-us/Pages/Covid19/UAE-Covid-19-Updates.aspx"
+        )
 
     def read(self) -> pd.Series:
         return self._parse_data()
@@ -23,12 +24,18 @@ class UnitedArabEmirates:
             elem = driver.find_element_by_class_name("total_vaccination")
             total_vaccinations = self._parse_total_vaccinations(elem)
             population = self._estimate_population(elem, total_vaccinations)
-            return pd.Series({
-                "total_vaccinations": total_vaccinations,
-                "people_vaccinated": self._parse_people_vaccinated(elem, population),
-                "people_fully_vaccinated": self._parse_people_fully_vaccinated(elem, population),
-                "date": self._parse_date(driver),
-            })
+            return pd.Series(
+                {
+                    "total_vaccinations": total_vaccinations,
+                    # "people_vaccinated": self._parse_people_vaccinated(
+                    #     elem, population
+                    # ),
+                    # "people_fully_vaccinated": self._parse_people_fully_vaccinated(
+                    #     elem, population
+                    # ),
+                    "date": self._parse_date(driver),
+                }
+            )
 
     def _parse_total_vaccinations(self, elem) -> pd.Series:
         text_total = elem.find_element_by_class_name("numbers").text
@@ -48,12 +55,14 @@ class UnitedArabEmirates:
 
     def _parse_people_fully_vaccinated(self, elem, population) -> pd.Series:
         regex = r"Percentage of population fully vaccinated \(against COVID-19\)\s{1,2}([\d\.]+)%"
-        share_fully_vaccinated = self._parse_relative_metric(elem, "fullyVaccintedpct", regex)
+        share_fully_vaccinated = self._parse_relative_metric(
+            elem, "fullyVaccintedpct", regex
+        )
         return round(share_fully_vaccinated * population)
 
     def _parse_relative_metric(self, elem, class_name: str, regex: str):
         text = elem.find_element_by_class_name(class_name).text
-        metric = float(re.search(regex, text).group(1))/100
+        metric = float(re.search(regex, text).group(1)) / 100
         return metric
 
     def _parse_date(self, driver) -> pd.Series:
@@ -62,37 +71,34 @@ class UnitedArabEmirates:
         return extract_clean_date(text_date, regex_date, "%d %B %Y", lang="en")
 
     def pipe_location(self, ds: pd.Series) -> pd.Series:
-        return enrich_data(ds, 'location', self.location)
+        return enrich_data(ds, "location", self.location)
 
     def pipe_vaccine(self, ds: pd.Series) -> pd.Series:
         return enrich_data(
             ds,
-            'vaccine',
-            "Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sinopharm/Wuhan, Sputnik V"
+            "vaccine",
+            "Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sinopharm/Wuhan, Sputnik V",
         )
 
     def pipe_source(self, ds: pd.Series) -> pd.Series:
-        return enrich_data(ds, 'source_url', self.source_url)
+        return enrich_data(ds, "source_url", self.source_url)
 
     def pipeline(self, ds: pd.Series) -> pd.Series:
         return (
-            ds
-            .pipe(self.pipe_location)
-            .pipe(self.pipe_vaccine)
-            .pipe(self.pipe_source)
+            ds.pipe(self.pipe_location).pipe(self.pipe_vaccine).pipe(self.pipe_source)
         )
 
     def export(self, paths):
         data = self.read().pipe(self.pipeline)
         increment(
             paths=paths,
-            location=data['location'],
-            total_vaccinations=int(data['total_vaccinations']),
-            people_vaccinated=int(data['people_vaccinated']),
-            people_fully_vaccinated=int(data['people_fully_vaccinated']),
-            date=data['date'],
-            source_url=data['source_url'],
-            vaccine=data['vaccine']
+            location=data["location"],
+            total_vaccinations=int(data["total_vaccinations"]),
+            # people_vaccinated=int(data["people_vaccinated"]),
+            # people_fully_vaccinated=int(data["people_fully_vaccinated"]),
+            date=data["date"],
+            source_url=data["source_url"],
+            vaccine=data["vaccine"],
         )
 
 

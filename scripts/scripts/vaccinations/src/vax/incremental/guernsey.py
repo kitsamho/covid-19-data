@@ -8,7 +8,6 @@ from vax.utils.dates import extract_clean_date
 
 
 class Guernsey:
-
     def __init__(self, source_url: str, location: str):
         self.source_url = source_url
         self.location = location
@@ -33,20 +32,19 @@ class Guernsey:
         return ds.loc[["date", "total_vaccinations"]]
 
     def pipe_location(self, ds: pd.Series) -> pd.Series:
-        return enrich_data(ds, 'location', self.location)
+        return enrich_data(ds, "location", self.location)
 
     def pipe_vaccine(self, ds: pd.Series) -> pd.Series:
-        return enrich_data(ds, 'vaccine', "Moderna, Oxford/AstraZeneca, Pfizer/BioNTech")
+        return enrich_data(
+            ds, "vaccine", "Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
+        )
 
     def pipe_source(self, ds: pd.Series) -> pd.Series:
-        return enrich_data(ds, 'source_url', self.source_url)
+        return enrich_data(ds, "source_url", self.source_url)
 
     def pipeline(self, ds: pd.Series) -> pd.Series:
         return (
-            ds
-            .pipe(self.pipe_location)
-            .pipe(self.pipe_vaccine)
-            .pipe(self.pipe_source)
+            ds.pipe(self.pipe_location).pipe(self.pipe_vaccine).pipe(self.pipe_source)
         )
 
     def to_csv(self, paths):
@@ -54,11 +52,11 @@ class Guernsey:
         data = self.read().pipe(self.pipeline)
         increment(
             paths=paths,
-            location=data['location'],
-            total_vaccinations=data['total_vaccinations'],
-            date=data['date'],
-            source_url=data['source_url'],
-            vaccine=data['vaccine']
+            location=data["location"],
+            total_vaccinations=data["total_vaccinations"],
+            date=data["date"],
+            source_url=data["source_url"],
+            vaccine=data["vaccine"],
         )
 
 
@@ -66,7 +64,7 @@ def main(paths):
     Guernsey(
         source_url="https://covid19.gov.gg/guidance/vaccine/stats",
         location="Guernsey",
-    ).to_csv(paths) 
+    ).to_csv(paths)
 
 
 if __name__ == "__main__":

@@ -9,7 +9,6 @@ from vax.utils.dates import clean_date
 
 
 class Monaco:
-
     def __init__(self, source_url: str, location: str):
         self.source_url = source_url
         self.location = location
@@ -23,7 +22,7 @@ class Monaco:
 
     def read(self, last_update: str) -> pd.DataFrame:
         data = []
-        for cnt in range(0, 5*self._num_max_pages, 5):
+        for cnt in range(0, 5 * self._num_max_pages, 5):
             # print(f"page: {cnt}")
             url = f"{self.source_url}/(offset)/{cnt}/"
             soup = get_soup(url)
@@ -46,7 +45,7 @@ class Monaco:
                     **self.parse_data_news_page(soup),
                 }
                 records.append(record)
-            else: 
+            else:
                 # print(elem["date"], "END")
                 return records, False
         return records, True
@@ -54,18 +53,23 @@ class Monaco:
     def get_elements(self, soup: BeautifulSoup) -> list:
         elems = soup.find_all("h3", text=re.compile(self.regex["title"]))
         elems = [
-            {"link": self.parse_link(elem), "date": self.parse_date(elem)} 
-        for elem in elems]
+            {"link": self.parse_link(elem), "date": self.parse_date(elem)}
+            for elem in elems
+        ]
         return elems
 
     def parse_data_news_page(self, soup: BeautifulSoup):
         people_vaccinated = re.search(self.regex["people_vaccinated"], soup.text)
-        people_fully_vaccinated = re.search(self.regex["people_fully_vaccinated"], soup.text)
+        people_fully_vaccinated = re.search(
+            self.regex["people_fully_vaccinated"], soup.text
+        )
         metrics = {}
         if people_vaccinated:
             metrics["people_vaccinated"] = clean_count(people_vaccinated.group(1))
         if people_fully_vaccinated:
-            metrics["people_fully_vaccinated"] = clean_count(people_fully_vaccinated.group(1))
+            metrics["people_fully_vaccinated"] = clean_count(
+                people_fully_vaccinated.group(1)
+            )
         return metrics
 
     def parse_date(self, elem):
@@ -80,15 +84,18 @@ class Monaco:
         return df.dropna(subset=["people_vaccinated", "people_fully_vaccinated"])
 
     def pipe_total_vaccinations(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.assign(total_vaccinations=df.people_vaccinated+df.people_fully_vaccinated)
+        return df.assign(
+            total_vaccinations=df.people_vaccinated + df.people_fully_vaccinated
+        )
 
     def pipe_drop_duplicates(self, df: pd.DataFrame) -> pd.DataFrame:
-        return (
-            df.sort_values("date")
-            .drop_duplicates(
-                subset=["total_vaccinations", "people_vaccinated", "people_fully_vaccinated"],
-                keep="first"
-            )
+        return df.sort_values("date").drop_duplicates(
+            subset=[
+                "total_vaccinations",
+                "people_vaccinated",
+                "people_fully_vaccinated",
+            ],
+            keep="first",
         )
 
     def pipe_location(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -98,20 +105,21 @@ class Monaco:
         return df.assign(vaccine="Pfizer/BioNTech")
 
     def pipe_select_output_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df[[
-            "location",
-            "date",
-            "vaccine",
-            "source_url",
-            "total_vaccinations",
-            "people_vaccinated",
-            "people_fully_vaccinated"
-        ]]
+        return df[
+            [
+                "location",
+                "date",
+                "vaccine",
+                "source_url",
+                "total_vaccinations",
+                "people_vaccinated",
+                "people_fully_vaccinated",
+            ]
+        ]
 
     def pipeline(self, df: pd.Series) -> pd.Series:
         return (
-            df
-            .pipe(self.pipe_filter_nans)
+            df.pipe(self.pipe_filter_nans)
             .pipe(self.pipe_total_vaccinations)
             .pipe(self.pipe_drop_duplicates)
             .pipe(self.pipe_location)
@@ -136,7 +144,7 @@ def main(paths):
     Monaco(
         source_url="https://www.gouv.mc/Action-Gouvernementale/Coronavirus-Covid-19/Actualites/",
         location="Monaco",
-    ).to_csv(paths) 
+    ).to_csv(paths)
 
 
 if __name__ == "__main__":

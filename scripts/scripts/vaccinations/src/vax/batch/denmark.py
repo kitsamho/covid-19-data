@@ -11,15 +11,16 @@ from vax.utils.utils import get_soup
 from vax.utils.dates import clean_date_series
 
 
-SEPARATOR = ","
+SEPARATOR = ";"
 
 
 class Denmark:
-
     def __init__(self):
         self.location = "Denmark"
         # self.source_url_ref = "https://covid19.ssi.dk/overvagningsdata/vaccinationstilslutning"
-        self.source_url_ref = "https://covid19.ssi.dk/overvagningsdata/download-fil-med-vaccinationsdata"
+        self.source_url_ref = (
+            "https://covid19.ssi.dk/overvagningsdata/download-fil-med-vaccinationsdata"
+        )
         self.date_limit_one_dose = "2021-05-27"
         self.vaccines_mapping = {
             "AstraZeneca Covid-19 vaccine": "Oxford/AstraZeneca",
@@ -43,7 +44,9 @@ class Denmark:
             self._download_data(url, tf)
             df = self._parse_data(tf)
             total_vaccinations_latest = self._parse_total_vaccinations(tf)
-            df.loc[df["Vaccinedato"]==df["Vaccinedato"].max(), "total_vaccinations"] = total_vaccinations_latest
+            df.loc[
+                df["Vaccinedato"] == df["Vaccinedato"].max(), "total_vaccinations"
+            ] = total_vaccinations_latest
         return df
 
     def _parse_link_zip(self):
@@ -57,8 +60,12 @@ class Denmark:
         z.extractall(output_path)
 
     def _parse_data(self, path):
-        df_dose1 = self._load_df_metric(path, "PaabegVacc_daek_DK_prdag.csv", "Kumuleret antal påbegyndt vacc.")
-        df_fully = self._load_df_metric(path, "FaerdigVacc_daekning_DK_prdag.csv", "Kumuleret antal færdigvacc.")
+        df_dose1 = self._load_df_metric(
+            path, "PaabegVacc_daek_DK_prdag.csv", "Kumuleret antal påbegyndt vacc."
+        )
+        df_fully = self._load_df_metric(
+            path, "FaerdigVacc_daekning_DK_prdag.csv", "Kumuleret antal færdigvacc."
+        )
         df = df_fully.merge(df_dose1, on="Vaccinedato", how="outer")
         return df.sort_values("Vaccinedato")
 
@@ -67,15 +74,15 @@ class Denmark:
             os.path.join(path, "Vaccine_DB", filename),
             encoding="iso-8859-1",
             usecols=["Vaccinedato", "geo", metric_name],
-            sep=SEPARATOR
+            sep=SEPARATOR,
         )
-        return df[df.geo=="Nationalt"].drop(columns=["geo"])
+        return df[df.geo == "Nationalt"].drop(columns=["geo"])
 
     def _parse_total_vaccinations(self, path):
         df = pd.read_csv(
             os.path.join(path, "Vaccine_DB", "Vaccinationstyper_regioner.csv"),
             encoding="iso-8859-1",
-            sep=SEPARATOR
+            sep=SEPARATOR,
         )
         # Check 1/2
         self._check_df_vax_1(df)
@@ -104,14 +111,18 @@ class Denmark:
 
     def _check_df_vax_2(self, df, mask):
         if (df.loc[mask, "dose_1"] - df.loc[mask, "dose_2"]).sum() != 0:
-            raise ValueError(f"First and second dose counts for single-shot vaccines should be equal.")
+            raise ValueError(
+                f"First and second dose counts for single-shot vaccines should be equal."
+            )
 
     def pipe_rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.rename(columns={
-            "Vaccinedato": "date",
-            "Kumuleret antal færdigvacc.": "people_fully_vaccinated",
-            "Kumuleret antal påbegyndt vacc.": "people_vaccinated",
-        })
+        return df.rename(
+            columns={
+                "Vaccinedato": "date",
+                "Kumuleret antal færdigvacc.": "people_fully_vaccinated",
+                "Kumuleret antal påbegyndt vacc.": "people_vaccinated",
+            }
+        )
 
     def pipe_format_date(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.assign(date=clean_date_series(df.date, "%Y-%m-%d"))
@@ -122,9 +133,9 @@ class Denmark:
             people_fully_vaccinated=df.people_fully_vaccinated.ffill(),
         )
         mask = df.date < self.date_limit_one_dose
-        df.loc[mask, "total_vaccinations"] = (
-            df.loc[mask, "people_vaccinated"] + df.loc[mask, "people_fully_vaccinated"].fillna(0)
-        )
+        df.loc[mask, "total_vaccinations"] = df.loc[mask, "people_vaccinated"] + df.loc[
+            mask, "people_fully_vaccinated"
+        ].fillna(0)
         # Uncomment to backfill total_vaccinations
         # df = df.pipe(self.pipe_total_vax_bfill, n_days=38)
         return df
@@ -140,13 +151,11 @@ class Denmark:
             if date >= "2021-01-13":
                 return "Moderna, Pfizer/BioNTech"
             return "Pfizer/BioNTech"
+
         return df.assign(vaccine=df.date.astype(str).apply(_enrich_vaccine))
 
     def pipe_metadata(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.assign(
-            location=self.location,
-            source_url=self.source_url_ref
-        )
+        return df.assign(location=self.location, source_url=self.source_url_ref)
 
     def pipe_filter_rows(self, df: pd.DataFrame) -> pd.DataFrame:
         df = df[df.date >= "2020-12-01"]
@@ -154,8 +163,7 @@ class Denmark:
 
     def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
-            df
-            .pipe(self.pipe_rename_columns)
+            df.pipe(self.pipe_rename_columns)
             .pipe(self.pipe_format_date)
             .pipe(self.pipe_metrics)
             .pipe(self.pipe_vaccine)
@@ -177,7 +185,7 @@ class Denmark:
     def _get_zip_links(self, soup):
         links = [x.a.get("href") for x in soup.find_all("h5")]
         return links
-        
+
     def _get_total_vax(self, url):
         with tempfile.TemporaryDirectory() as tf:
             self._download_data(url, tf)
@@ -188,8 +196,9 @@ class Denmark:
     def _backfill_total_vaccinations(self, df: pd.DataFrame, links: list):
         for link in links:
             total_vaccinations_latest, date = self._get_total_vax(link)
-            df.loc[df["date"]==date, "total_vaccinations"] = total_vaccinations_latest
+            df.loc[df["date"] == date, "total_vaccinations"] = total_vaccinations_latest
         return df
+
 
 def main(paths):
     Denmark().export(paths)

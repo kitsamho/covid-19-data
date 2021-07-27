@@ -15,10 +15,12 @@ def read(source: str) -> pd.Series:
 
     people_vaccinated = dose1_only + people_fully_vaccinated
 
-    return pd.Series({
-        "people_vaccinated": people_vaccinated,
-        "people_fully_vaccinated": people_fully_vaccinated
-    })
+    return pd.Series(
+        {
+            "people_vaccinated": people_vaccinated,
+            "people_fully_vaccinated": people_fully_vaccinated,
+        }
+    )
 
 
 def add_totals(ds: pd.Series) -> pd.Series:
@@ -41,11 +43,7 @@ def enrich_location(ds: pd.Series) -> pd.Series:
 
 def pipeline(ds: pd.Series) -> pd.Series:
     return (
-        ds
-        .pipe(add_totals)
-        .pipe(enrich_location)
-        .pipe(enrich_vaccine)
-        .pipe(enrich_date)
+        ds.pipe(add_totals).pipe(enrich_location).pipe(enrich_vaccine).pipe(enrich_date)
     )
 
 
@@ -60,7 +58,7 @@ def main(paths):
         people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url="https://www.government.aw",
-        vaccine=data["vaccine"]
+        vaccine=data["vaccine"],
     )
 
 

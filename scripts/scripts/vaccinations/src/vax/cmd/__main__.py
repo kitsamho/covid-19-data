@@ -13,7 +13,7 @@ def main():
 
     if config.display:
         print(config)
-    
+
     print(config.mode)
 
     if "get" in config.mode:
@@ -44,10 +44,7 @@ def main():
                 paths=paths,
             )
     if "export" in config.mode:
-        main_export(
-            paths=paths,
-            url=creds.owid_cloud_table_post
-        )
+        main_export(paths=paths, url=creds.owid_cloud_table_post)
     if "propose" in config.mode:
         cfg = config.ProposeDataConfig()
         main_propose_data_twitter(

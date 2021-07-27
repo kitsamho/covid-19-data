@@ -12,7 +12,6 @@ from vax.utils.incremental import clean_count, enrich_data, increment
 
 
 class Nepal:
-
     def __init__(self):
         self.location = "Nepal"
         self.source_url = "https://covid19.mohp.gov.np/"
@@ -21,12 +20,14 @@ class Nepal:
         url_pdf = self._parse_pdf_link(self.source_url)
         pdf_text = self._get_text_from_pdf(url_pdf)
         people_vaccinated, people_fully_vaccinated = self._parse_metrics(pdf_text)
-        return pd.Series({
-            "people_vaccinated": people_vaccinated,
-            "people_fully_vaccinated": people_fully_vaccinated,
-            "date": self._parse_date(pdf_text),
-            "source_url": url_pdf,
-        })
+        return pd.Series(
+            {
+                "people_vaccinated": people_vaccinated,
+                "people_fully_vaccinated": people_fully_vaccinated,
+                "date": self._parse_date(pdf_text),
+                "source_url": url_pdf,
+            }
+        )
 
     def _parse_pdf_link(self, url: str) -> str:
         op = Options()
@@ -59,7 +60,7 @@ class Nepal:
         return datetime(year, month, day).strftime("%Y-%m-%d")
 
     def _parse_metrics(self, pdf_text: str):
-        regex = r"1st Dose\s+\|\s+2nd Dose (\d+) (\d+)"
+        regex = r"1st Dose\s+\|\s+Fully Vaccinated (\d+) (\d+)"
         data = re.search(regex, pdf_text)
         people_vaccinated = clean_count(data.group(1))
         people_fully_vaccinated = clean_count(data.group(2))
@@ -78,7 +79,7 @@ class Nepal:
             "September": 9,
             "October": 10,
             "November": 11,
-            "December": 12
+            "December": 12,
         }
         for month_name, month_id in months_dix.items():
             if month_name in month_raw:
@@ -91,14 +92,13 @@ class Nepal:
         return enrich_data(ds, "vaccine", "Oxford/AstraZeneca, Sinopharm/Beijing")
 
     def pipe_metrics(self, ds: pd.Series) -> pd.Series:
-        return enrich_data(ds, "total_vaccinations", ds.people_vaccinated + ds.people_fully_vaccinated)
+        return enrich_data(
+            ds, "total_vaccinations", ds.people_vaccinated + ds.people_fully_vaccinated
+        )
 
     def pipeline(self, ds: pd.Series) -> pd.Series:
         return (
-            ds
-            .pipe(self.pipe_location)
-            .pipe(self.pipe_vaccine)
-            .pipe(self.pipe_metrics)
+            ds.pipe(self.pipe_location).pipe(self.pipe_vaccine).pipe(self.pipe_metrics)
         )
 
     def to_csv(self, paths):
@@ -111,7 +111,7 @@ class Nepal:
             people_fully_vaccinated=data["people_fully_vaccinated"],
             date=data["date"],
             source_url=data["source_url"],
-            vaccine=data["vaccine"]
+            vaccine=data["vaccine"],
         )
 
 

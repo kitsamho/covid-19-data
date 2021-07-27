@@ -6,7 +6,6 @@ import requests
 
 
 class Cyprus:
-
     def __init__(self):
         self.source_url = "https://www.data.gov.cy/node/4617?language=en"
         self.location = "Cyprus"
@@ -19,21 +18,27 @@ class Cyprus:
 
     def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:
         # Rename
-        df = df.rename(columns={
-            "date": "Date",
-            "total tests": "Cumulative total",
-        })
+        df = df.rename(
+            columns={
+                "date": "Date",
+                "total tests": "Cumulative total",
+            }
+        )
         # Remove NaNs
         df = df[~df["Cumulative total"].isna()]
         # Date
-        df = df.assign(**{
-            "Date": df.Date.apply(lambda x: datetime.strptime(x, "%d/%m/%Y").strftime("%Y-%m-%d")),
-            "Country": self.location,
-            "Source label": "Ministry of Health", 
-            "Source URL": self.source_url,
-            "Units": "tests performed",
-            "Notes": pd.NA,
-        })
+        df = df.assign(
+            **{
+                "Date": df.Date.apply(
+                    lambda x: datetime.strptime(x, "%d/%m/%Y").strftime("%Y-%m-%d")
+                ),
+                "Country": self.location,
+                "Source label": "Ministry of Health",
+                "Source URL": self.source_url,
+                "Units": "tests performed",
+                "Notes": pd.NA,
+            }
+        )
         return df
 
     def merge_with_current_data(self, df: pd.DataFrame, filepath: str) -> pd.DataFrame:
@@ -44,11 +49,12 @@ class Cyprus:
 
     def to_csv(self):
         output_path = f"automated_sheets/{self.location}.csv"
-        df = self.read().pipe(self.pipeline).pipe(self.merge_with_current_data, output_path)
-        df.to_csv(
-            output_path,
-            index=False
+        df = (
+            self.read()
+            .pipe(self.pipeline)
+            .pipe(self.merge_with_current_data, output_path)
         )
+        df.to_csv(output_path, index=False)
 
 
 def main():

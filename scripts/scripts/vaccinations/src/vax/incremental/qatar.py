@@ -23,15 +23,17 @@ def connect_parse_data(source: str, source_old: str) -> pd.Series:
         total_vaccinations = driver.find_element_by_id("counter1").text
         people_vaccinated = driver.find_element_by_id("counter2").text
         people_fully_vaccinated = driver.find_element_by_id("counter3").text
-        
+
         driver.get(source_old)
         time.sleep(5)
 
         # Sanity check
         total_vaccinations_old = driver.find_element_by_id("counter1").text
         if total_vaccinations != total_vaccinations_old:
-            raise ValueError("Both dashboards may not be synced and hence may refer to different timestamps. Consider"
-                             "Introducing the timestamp manually.")
+            raise ValueError(
+                "Both dashboards may not be synced and hence may refer to different timestamps. Consider"
+                "Introducing the timestamp manually."
+            )
         date = driver.find_element_by_id("pupdateddate").text.replace("Updated ", "")
         date = str(pd.to_datetime(date, dayfirst=True).date())
 
@@ -57,12 +59,7 @@ def enrich_source(ds: pd.Series, source: str) -> pd.Series:
 
 
 def pipeline(ds: pd.Series, source: str) -> pd.Series:
-    return (
-        ds
-        .pipe(enrich_location)
-        .pipe(enrich_vaccine)
-        .pipe(enrich_source, source)
-    )
+    return ds.pipe(enrich_location).pipe(enrich_vaccine).pipe(enrich_source, source)
 
 
 def main(paths):
@@ -77,7 +74,7 @@ def main(paths):
         people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url=data["source_url"],
-        vaccine=data["vaccine"]
+        vaccine=data["vaccine"],
     )
 
 

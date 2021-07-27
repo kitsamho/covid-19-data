@@ -16,7 +16,7 @@ DATE_FORMAT = "%Y-%m-%d"
 
 def clean_date(date_or_text, fmt=None, lang=None, loc="", minus_days=0):
     """Extract a date from a `text`.
-    
+
     The date from text is extracted using locale `loc`. Alternatively, you can provide language `lang` instead.
 
     By default, system default locale is used.
@@ -24,7 +24,7 @@ def clean_date(date_or_text, fmt=None, lang=None, loc="", minus_days=0):
     Args:
         date_or_text (str): Input text or date.
         fmt (str, optional): Text format. More details at
-                             https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes. 
+                             https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes.
         lang (str, optional): Language two-letter code, e.g. 'da' (dansk). If given, `loc` will be ignored and redefined
                                 based on `lang`. Defaults to None.
         loc (str, optional): Locale, e.g es_ES. Get list of available locales with `locale.locale_alias` or
@@ -52,8 +52,15 @@ def clean_date(date_or_text, fmt=None, lang=None, loc="", minus_days=0):
         ).strftime(DATE_FORMAT)
 
 
-def extract_clean_date(text: str, regex: str, date_format: str, lang: str = None, loc: str = "", minus_days: int = 0,
-                       unicode_norm: bool = True):
+def extract_clean_date(
+    text: str,
+    regex: str,
+    date_format: str,
+    lang: str = None,
+    loc: str = "",
+    minus_days: int = 0,
+    unicode_norm: bool = True,
+):
     """Export clean date from raw text using RegEx.
 
     Example:
@@ -68,7 +75,7 @@ def extract_clean_date(text: str, regex: str, date_format: str, lang: str = None
         minus_days=1,
     )
     ```
-    
+
     Args:
         text (str): Raw original text.
         regex (str): RegEx to export date fragment. Should have the data grouped (group number 1)
@@ -81,10 +88,13 @@ def extract_clean_date(text: str, regex: str, date_format: str, lang: str = None
         unicode_norm (bool, optional): [description]. Defaults to True.
     """
     if unicode_norm:
-        text = unicodedata.normalize('NFKC', text)
+        text = unicodedata.normalize("NFKC", text)
     date_raw = re.search(regex, text).group(1)
-    date_str = clean_date(date_raw, fmt=date_format, lang=lang, loc=loc, minus_days=minus_days)
+    date_str = clean_date(
+        date_raw, fmt=date_format, lang=lang, loc=loc, minus_days=minus_days
+    )
     return date_str
+
 
 def localdatenow(tz=None):
     if tz is None:
@@ -112,7 +122,9 @@ def localdate(tz, hour_limit=None, date_format=None):
     return local_time.strftime(date_format)
 
 
-def clean_date_series(ds: pd.Series, format_input: str = None, format_output: str = "%Y-%m-%d") -> pd.Series:
+def clean_date_series(
+    ds: pd.Series, format_input: str = None, format_output: str = "%Y-%m-%d"
+) -> pd.Series:
     if format_output is None:
         format_output = DATE_FORMAT
     return pd.to_datetime(ds, format=format_input).dt.strftime(format_output)

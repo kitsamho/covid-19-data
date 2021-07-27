@@ -9,48 +9,76 @@ from vax.utils.dates import clean_date
 
 
 class Serbia:
-
     def __init__(self):
         self.location = "Serbia"
         self.source_url = "https://vakcinacija.gov.rs/"
         self.regex = {
-            "metrics": r"Обе дозе вакцине примило је ([\d.]+) особа. Укупно вакцинација: ([\d.]+) доза",
+            "metrics": r"Број доза: ([\d.]+) – прва доза ([\d.]+), друга доза ([\d.]+)",
             "date": r"ажурирано .*",
-            "total_vaccinations": r"Укупан број датих доза: ([\d.]+)",
-            "people_vaccinated": (
-                r"Укупан број грађана који су примили прву дозу и оних којих су примили обе дозе: ([\d.]+)"
-            ),
-            "people_fully_vaccinated": r"Укупан број грађана који су примили обе дозе: ([\d.]+)",
+            "total_vaccinations": r"Укупан број (?:датих )?доза: ([\d.]+)",
+            "citizen": r"Држављанин РС – прва доза ([\d.]+), друга доза ([\d.]+)",
+            "resident": r"Страни држављанин са боравком у РС – прва доза ([\d.]+), друга доза ([\d.]+)",
+            "foreign": r"Страни држављанин без боравка у РС – прва доза ([\d.]+), друга доза ([\d.]+)",
         }
 
     def read(self) -> pd.Series:
         soup = get_soup(self.source_url)
-        total_vaccinations, people_vaccinated, people_fully_vaccinated = self._parse_metrics(soup)
-        return pd.Series({
-            "total_vaccinations": total_vaccinations,
-            "people_vaccinated": people_vaccinated,
-            "people_fully_vaccinated": people_fully_vaccinated,
-            "source_url": self.source_url,
-            "date": self._parse_date(soup)
-        })
+        (
+            total_vaccinations,
+            people_vaccinated,
+            people_fully_vaccinated,
+        ) = self._parse_metrics(soup)
+        return pd.Series(
+            {
+                "total_vaccinations": total_vaccinations,
+                "people_vaccinated": people_vaccinated,
+                "people_fully_vaccinated": people_fully_vaccinated,
+                "source_url": self.source_url,
+                "date": self._parse_date(soup),
+            }
+        )
 
-    def _parse_metrics(self, soup: BeautifulSoup):
+    def _parse_metrics_old(self, soup: BeautifulSoup):
         total_vaccinations = clean_count(
             re.search(self.regex["total_vaccinations"], soup.text).group(1)
         )
-        people_vaccinated = clean_count(
-            re.search(self.regex["people_vaccinated"], soup.text).group(1)
+        # Citizenships
+        people_vaccinated_cit = clean_count(
+            re.search(self.regex["citizen"], soup.text).group(1)
         )
-        people_fully_vaccinated = clean_count(
-            re.search(self.regex["people_fully_vaccinated"], soup.text).group(1)
+        people_fully_vaccinated_cit = clean_count(
+            re.search(self.regex["citizen"], soup.text).group(2)
+        )
+        # Residenship
+        people_vaccinated_res = clean_count(
+            re.search(self.regex["resident"], soup.text).group(1)
+        )
+        people_fully_vaccinated_res = clean_count(
+            re.search(self.regex["resident"], soup.text).group(2)
+        )
+        # Foreigners
+        people_vaccinated_for = clean_count(
+            re.search(self.regex["foreign"], soup.text).group(1)
+        )
+        people_fully_vaccinated_for = clean_count(
+            re.search(self.regex["foreign"], soup.text).group(2)
+        )
+        people_vaccinated = (
+            people_vaccinated_cit + people_vaccinated_res + people_vaccinated_for
+        )
+        people_fully_vaccinated = (
+            people_fully_vaccinated_cit
+            + people_fully_vaccinated_res
+            + people_fully_vaccinated_for
         )
         return total_vaccinations, people_vaccinated, people_fully_vaccinated
 
-    def _parse_metrics_old(self, soup: BeautifulSoup):
+    def _parse_metrics(self, soup: BeautifulSoup):
         match = re.search(self.regex["metrics"], soup.text)
-        total_vaccinations = clean_count(match.group(2))
-        people_fully_vaccinated = clean_count(match.group(1))
-        return total_vaccinations, people_fully_vaccinated
+        total_vaccinations = clean_count(match.group(1))
+        people_vaccinated = clean_count(match.group(2))
+        people_fully_vaccinated = clean_count(match.group(3))
+        return total_vaccinations, people_vaccinated, people_fully_vaccinated
 
     def _parse_date(self, soup: BeautifulSoup) -> str:
         elems = soup.find_all("p")
@@ -71,13 +99,15 @@ class Serbia:
         return enrich_data(ds, "location", self.location)
 
     def pipe_vaccine(self, ds: pd.Series) -> pd.Series:
-        return enrich_data(ds, "vaccine", "Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V")
+        return enrich_data(
+            ds,
+            "vaccine",
+            "Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V",
+        )
 
     def pipeline(self, ds: pd.Series) -> pd.Series:
         return (
-            ds
-            .pipe(self.pipe_vaccine)
-            .pipe(self.pipe_location)
+            ds.pipe(self.pipe_vaccine).pipe(self.pipe_location)
             # .pipe(self.pipe_metrics)
         )
 
@@ -91,7 +121,7 @@ class Serbia:
             people_fully_vaccinated=data["people_fully_vaccinated"],
             date=data["date"],
             source_url=data["source_url"],
-            vaccine=data["vaccine"]
+            vaccine=data["vaccine"],
         )
 
 

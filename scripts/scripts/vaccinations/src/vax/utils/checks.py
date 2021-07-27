@@ -28,18 +28,32 @@ VACCINES_ONE_DOSE = [
     "CanSino",
 ]
 
+
 def country_df_sanity_checks(
-        df: pd.DataFrame, allow_extra_cols: bool = True, monotonic_check_skip: list = [],
-        anomalies: bool = True, anomaly_check_skip: list = []) -> pd.DataFrame:
+    df: pd.DataFrame,
+    allow_extra_cols: bool = True,
+    monotonic_check_skip: list = [],
+    anomalies: bool = True,
+    anomaly_check_skip: list = [],
+) -> pd.DataFrame:
     checker = CountryChecker(
-        df, monotonic_check_skip=monotonic_check_skip, anomalies=anomalies, anomaly_check_skip=anomaly_check_skip
+        df,
+        monotonic_check_skip=monotonic_check_skip,
+        anomalies=anomalies,
+        anomaly_check_skip=anomaly_check_skip,
     )
     checker.run()
 
 
 class CountryChecker:
-    def __init__(self, df: pd.DataFrame, allow_extra_cols: bool = True, monotonic_check_skip: list = [],
-                 anomalies: bool = True, anomaly_check_skip: list = []):
+    def __init__(
+        self,
+        df: pd.DataFrame,
+        allow_extra_cols: bool = True,
+        monotonic_check_skip: list = [],
+        anomalies: bool = True,
+        anomaly_check_skip: list = [],
+    ):
         self.location = self._get_location(df)
         self.df = df
         self.allow_extra_cols = allow_extra_cols
@@ -50,7 +64,9 @@ class CountryChecker:
     def _get_location(self, df):
         x = df.loc[:, "location"].unique()
         if len(x) != 1:
-            raise ValueError(f"More than one location found: {df.loc[:, 'location'].unique()}")
+            raise ValueError(
+                f"More than one location found: {df.loc[:, 'location'].unique()}"
+            )
         return x[0]
 
     def _skip_check_ids(self, check_skip):
@@ -59,7 +75,7 @@ class CountryChecker:
             if isinstance(x["metrics"], list):
                 return [dt + m for m in x["metrics"]]
             return [x["date"].strftime("%Y%m%d") + x["metrics"]]
-    
+
         res = [_f(x) for x in check_skip]
         return list(chain.from_iterable(res))
 
@@ -77,29 +93,43 @@ class CountryChecker:
         cols_extra = cols + ["people_vaccinated", "people_fully_vaccinated"]
         cols_missing = [col for col in cols if col not in self.df.columns]
         if cols_missing:
-            raise ValueError(f"{self.location} -- df missing column(s): {cols_missing}.")
+            raise ValueError(
+                f"{self.location} -- df missing column(s): {cols_missing}."
+            )
         # Ensure validity of column names in df
         if not self.allow_extra_cols:
             cols_wrong = [col for col in self.df.columns if col not in cols_extra]
             if cols_wrong:
-                raise ValueError(f"{self.location} -- df contains invalid column(s): {cols_wrong}.")
+                raise ValueError(
+                    f"{self.location} -- df contains invalid column(s): {cols_wrong}."
+                )
 
     def check_source_url(self):
         if self.df.source_url.isnull().any():
-            raise ValueError(f"{self.location} -- Invalid source_url! NaN values found.")
+            raise ValueError(
+                f"{self.location} -- Invalid source_url! NaN values found."
+            )
 
     def check_vaccine(self):
         if self.df.vaccine.isnull().any():
             raise ValueError(f"{self.location} -- Invalid vaccine! NaN values found.")
-        vaccines_used = set([xx for x in self.df.vaccine.tolist() for xx in x.split(', ')])
+        vaccines_used = set(
+            [xx for x in self.df.vaccine.tolist() for xx in x.split(", ")]
+        )
         if not all([vac in VACCINES_ACCEPTED for vac in vaccines_used]):
-            vaccines_wrong = [vac for vac in vaccines_used if vac not in VACCINES_ACCEPTED]
-            raise ValueError(f"{self.location} -- Invalid vaccine detected! Check {vaccines_wrong}.")
+            vaccines_wrong = [
+                vac for vac in vaccines_used if vac not in VACCINES_ACCEPTED
+            ]
+            raise ValueError(
+                f"{self.location} -- Invalid vaccine detected! Check {vaccines_wrong}."
+            )
 
     def check_date(self):
         if self.df.date.isnull().any():
             raise ValueError(f"{self.location} -- Invalid dates! NaN values found.")
-        if (self.df.date.min() < datetime(2020, 12, 1)) or (self.df.date.max() > datetime.now().date()):
+        if (self.df.date.min() < datetime(2020, 12, 1)) or (
+            self.df.date.max().date() > datetime.now().date()
+        ):
             raise ValueError(
                 f"{self.location} -- Invalid dates! Check {self.df.date.min()} and/or {self.df.date.max()}"
             )
@@ -107,7 +137,9 @@ class CountryChecker:
         dates_wrong = ds[ds > 1].index
         msk = self.df.date.isin(dates_wrong)
         if not self.df[msk].empty:
-            raise ValueError(f"{self.location} -- Check `date` field, there are duplicates: {self.df[msk]}")
+            raise ValueError(
+                f"{self.location} -- Check `date` field, there are duplicates: {self.df[msk]}"
+            )
 
     def check_location(self):
         if self.df.location.isnull().any():
@@ -120,7 +152,7 @@ class CountryChecker:
             )
 
     def check_metrics(self):
-        df = self.df.sort_values(by="date")# [self.metrics_present]
+        df = self.df.sort_values(by="date")  # [self.metrics_present]
         # Monotonically
         self._check_metrics_monotonic(df)
         # Inequalities
@@ -146,15 +178,25 @@ class CountryChecker:
         if ("total_vaccinations" in df.columns) and ("people_vaccinated" in df.columns):
             df_ = df[["people_vaccinated", "total_vaccinations"]].dropna().copy()
             if (df_["total_vaccinations"] < df_["people_vaccinated"]).any():
-                raise ValueError(f"{self.location} -- total_vaccinations can't be < people_vaccinated!")
-        if ("people_vaccinated" in df.columns) and ("people_fully_vaccinated" in df.columns):
+                raise ValueError(
+                    f"{self.location} -- total_vaccinations can't be < people_vaccinated!"
+                )
+        if ("people_vaccinated" in df.columns) and (
+            "people_fully_vaccinated" in df.columns
+        ):
             df_ = df[["people_vaccinated", "people_fully_vaccinated"]].dropna().copy()
             if (df_["people_vaccinated"] < df_["people_fully_vaccinated"]).any():
-                raise ValueError(f"{self.location} -- people_vaccinated can't be < people_fully_vaccinated!")
-        if ("total_vaccinations" in df.columns) and ("people_fully_vaccinated" in df.columns):
+                raise ValueError(
+                    f"{self.location} -- people_vaccinated can't be < people_fully_vaccinated!"
+                )
+        if ("total_vaccinations" in df.columns) and (
+            "people_fully_vaccinated" in df.columns
+        ):
             df_ = df[["people_fully_vaccinated", "total_vaccinations"]].dropna().copy()
             if (df_["total_vaccinations"] < df_["people_fully_vaccinated"]).any():
-                raise ValueError(f"{self.location} -- people_fully_vaccinated can't be < people_vaccinated!")
+                raise ValueError(
+                    f"{self.location} -- people_fully_vaccinated can't be < people_vaccinated!"
+                )
 
     def _check_metrics_anomalies(self, df):
         for metric in self.metrics_present:
@@ -169,16 +211,20 @@ class CountryChecker:
         m = df_metric.rolling(window_size, min_periods=2).mean().shift(1)
         m.loc[m.isnull()] = df_metric[m.isnull()]
         # Compute ratio between rolling average and value. Build Anomalies dataframe
-        t = df_metric / (m+1e-9)
-        t = pd.DataFrame({
-            f"{metric}_{window_size}": m[t > th],
-            f"{metric}_ratio": t[t > th],
-        })
+        t = df_metric / (m + 1e-9)
+        t = pd.DataFrame(
+            {
+                f"{metric}_{window_size}": m[t > th],
+                f"{metric}_ratio": t[t > th],
+            }
+        )
         anomalies = df_.loc[t.index, [metric]].merge(t, on="date").reset_index()
         if not anomalies.empty:
             wrong_ids = anomalies.date.dt.strftime("%Y%m%d") + metric
             if not wrong_ids.isin(self.skip_anomalcheck_ids).all():
-                raise ValueError(f"{self.location} -- Potential anomalies found ⚠️:\n{anomalies}")
+                raise ValueError(
+                    f"{self.location} -- Potential anomalies found ⚠️:\n{anomalies}"
+                )
 
     def run(self):
         # Ensure required columns are present

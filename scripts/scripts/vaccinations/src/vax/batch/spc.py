@@ -11,7 +11,7 @@ from vax.utils.utils import make_monotonic
 metrics_mapping = {
     "COVIDVACAD1": "people_vaccinated",
     "COVIDVACAD2": "people_fully_vaccinated",
-    "COVIDVACADT": "total_vaccinations"
+    "COVIDVACADT": "total_vaccinations",
 }
 country_mapping = {
     "CK": "Cook Islands",
@@ -35,13 +35,16 @@ vaccines_startdates = {
     "New Caledonia": [
         ["Pfizer/BioNTech", None],
     ],
+    "French Polynesia": [
+        ["Johnson&Johnson, Pfizer/BioNTech", None],
+    ],
     "default": [
         ["Oxford/AstraZeneca", None],
-    ]
+    ],
 }
 
-class SPC:
 
+class SPC:
     def __init__(self, source_url: str):
         self.source_url = source_url
 
@@ -59,9 +62,9 @@ class SPC:
         for k, v in series.items():
             _, country_idx, metric_idx = k.split(":")
             if metric_idx in metrics_info:
-                vaccination_data[country_info[country_idx]][metrics_info[metric_idx]] = self._build_data_array(
-                    v["observations"], date_info
-                )
+                vaccination_data[country_info[country_idx]][
+                    metrics_info[metric_idx]
+                ] = self._build_data_array(v["observations"], date_info)
         return self._build_df_list(vaccination_data)
 
     def _parse_country_info(self, data: dict):
@@ -70,7 +73,7 @@ class SPC:
         if country_info["id"] != "GEO_PICT":
             raise AttributeError("JSON data has changed")
         return {
-            str(i): country_mapping[c["id"]] 
+            str(i): country_mapping[c["id"]]
             for i, c in enumerate(country_info["values"])
         }
 
@@ -81,20 +84,18 @@ class SPC:
             raise AttributeError("JSON data has changed")
         return {
             str(i): metrics_mapping[m["id"]]
-            for i, m in enumerate(metrics_info["values"]) if m["id"] in metrics_mapping
+            for i, m in enumerate(metrics_info["values"])
+            if m["id"] in metrics_mapping
         }
 
     def _parse_date_info(self, data: dict):
         # Get date info
         date_info = data["data"]["structure"]["dimensions"]["observation"][0]["values"]
-        return {
-            str(i): d["name"] for i, d in enumerate(date_info)
-        }
+        return {str(i): d["name"] for i, d in enumerate(date_info)}
 
     def _build_data_array(self, observations: dict, date_info: dict):
         return {
-            date_info[k]: v[0] if len(v) == 1 else None 
-            for k, v in observations.items()
+            date_info[k]: v[0] if len(v) == 1 else None for k, v in observations.items()
         }
 
     def _build_df_list(self, data: dict):
@@ -138,7 +139,11 @@ class SPC:
         return pd.concat([df, df_legacy]).sort_values("date")
 
     def pipe_drop_duplicates(self, df: pd.DataFrame) -> pd.DataFrame:
-        column_metrics = ["people_vaccinated", "total_vaccinations", "people_fully_vaccinated"]
+        column_metrics = [
+            "people_vaccinated",
+            "total_vaccinations",
+            "people_fully_vaccinated",
+        ]
         msk = df.people_vaccinated == 0
         df.loc[msk, "people_fully_vaccinated"] = pd.NA
         df = df.drop_duplicates(subset=column_metrics)
@@ -155,6 +160,7 @@ class SPC:
                 if date >= dt:
                     return vaccines
             raise ValueError(f"Invalid date {date} in DataFrame!")
+
         return df.assign(vaccine=df.date.apply(_enrich_vaccine))
 
     def _pretty_vaxdates(self, country, date_min):
@@ -166,14 +172,14 @@ class SPC:
             if dt is None:
                 records[i][1] = date_min
         # print(records)
-        records = sorted(records, key=lambda x:x[1])
+        records = sorted(records, key=lambda x: x[1])
         # Build mapping dictionary
         vax_date_mapping = [
-            (dt, ", ".join(sorted(r[0] for r in records[:i+1])))
+            (dt, ", ".join(sorted(r[0] for r in records[: i + 1])))
             for i, (vax, dt) in enumerate(records)
         ]
         return vax_date_mapping
-        
+
     def to_csv(self, paths):
         data = self.read()
         for country, df in data.items():

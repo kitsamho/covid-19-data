@@ -8,25 +8,24 @@ def read(source: str) -> pd.DataFrame:
 def parse_data(source: str) -> pd.DataFrame:
     df = pd.read_json(source)[["StatisticsDate", "VaccinationStatus", "TotalCount"]]
     df = (
-        df
-        .pivot(
-            index="StatisticsDate",
-            columns="VaccinationStatus",
-            values="TotalCount"
+        df.pivot(
+            index="StatisticsDate", columns="VaccinationStatus", values="TotalCount"
         )
         .reset_index()
-        .rename(columns={
-            "Completed": "people_fully_vaccinated",
-            "InProgress": "people_vaccinated",
-            "StatisticsDate": "date"
-        })
+        .rename(
+            columns={
+                "Completed": "people_fully_vaccinated",
+                "InProgress": "people_vaccinated",
+                "StatisticsDate": "date",
+            }
+        )
     )
     return df
 
 
 def add_totals(df: pd.DataFrame) -> pd.DataFrame:
     return df.assign(
-        total_vaccinations=df.people_fully_vaccinated + df.people_vaccinated 
+        total_vaccinations=df.people_fully_vaccinated + df.people_vaccinated
     )
 
 
@@ -40,12 +39,13 @@ def enrich_vaccine_name(df: pd.DataFrame) -> pd.DataFrame:
             return "Pfizer/BioNTech"
         elif "2021-01-14" <= date < "2021-02-09":
             return "Moderna, Pfizer/BioNTech"
-        elif "2021-02-09" <= date < "2021-04-14": 
+        elif "2021-02-09" <= date < "2021-04-14":
             return "Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
         elif "2021-04-14" <= date:
             # https://vaktsineeri.ee/covid-19/vaktsineerimine-eestis/
             # https://vaktsineeri.ee/uudised/sel-nadalal-alustatakse-lamavate-haigete-ja-liikumisraskustega-inimeste-kodus-vaktsineerimist/
             return "Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
+
     return df.assign(vaccine=df.date.apply(_enrich_vaccine_name))
 
 
@@ -55,8 +55,7 @@ def enrich_source(df: pd.DataFrame) -> pd.DataFrame:
 
 def pipeline(df: pd.DataFrame) -> pd.DataFrame:
     return (
-        df
-        .pipe(add_totals)
+        df.pipe(add_totals)
         .pipe(enrich_location)
         .pipe(enrich_vaccine_name)
         .pipe(enrich_source)

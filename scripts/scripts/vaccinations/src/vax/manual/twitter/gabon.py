@@ -14,7 +14,7 @@ class Gabon(TwitterCollectorBase):
             add_metrics_nan=True,
             paths=paths,
         )
-    
+
     def _propose_df(self):
         regex = r"Recevez la situation .* au (\d{1,2} [a-z]+ 202\d)\."
         data = []
@@ -24,12 +24,16 @@ class Gabon(TwitterCollectorBase):
                 dt = clean_date(match.group(1), "%d %B %Y", lang="fr")
                 if self.stop_search(dt):
                     break
-                data.append({
-                    "date": dt,
-                    "text": tweet.full_text,
-                    "source_url": self.build_post_url(tweet.id),
-                    "media_url": tweet.entities["media"][0]["media_url_https"] if "media" in tweet.entities else None,
-                })
+                data.append(
+                    {
+                        "date": dt,
+                        "text": tweet.full_text,
+                        "source_url": self.build_post_url(tweet.id),
+                        "media_url": tweet.entities["media"][0]["media_url_https"]
+                        if "media" in tweet.entities
+                        else None,
+                    }
+                )
         return pd.DataFrame(data)
 
 

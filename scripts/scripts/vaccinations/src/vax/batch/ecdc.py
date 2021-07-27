@@ -7,33 +7,33 @@ from vax.utils.files import export_metadata
 
 
 age_groups_known = {
-    'ALL',
-    'Age0_4',
-    'Age15_17',
-    'Age5_9',
-    'Age10_14',
-    'Age<18',
-    'Age18_24',
-    'Age25_49',
-    'Age50_59',
-    'Age60_69',
-    'Age70_79',
-    '1_Age<60',
-    '1_Age60+',
-    'Age80+',
-    'AgeUNK',
-    'HCW',
-    'LTCF'
+    "ALL",
+    "Age0_4",
+    "Age15_17",
+    "Age5_9",
+    "Age10_14",
+    "Age<18",
+    "Age18_24",
+    "Age25_49",
+    "Age50_59",
+    "Age60_69",
+    "Age70_79",
+    "1_Age<60",
+    "1_Age60+",
+    "Age80+",
+    "AgeUNK",
+    "HCW",
+    "LTCF",
 }
 
 
 age_groups_relevant = {
-    'Age18_24',
-    'Age25_49',
-    'Age50_59',
-    'Age60_69',
-    'Age70_79',
-    'Age80+',
+    "Age18_24",
+    "Age25_49",
+    "Age50_59",
+    "Age60_69",
+    "Age70_79",
+    "Age80+",
 }
 
 
@@ -56,25 +56,26 @@ vaccines_one_dose = ["JANSS"]
 
 
 columns = {
-    'Denominator',
-    'FirstDose',
-    'FirstDoseRefused',
-    'NumberDosesReceived',
-    'Population',
-    'Region',
-    'ReportingCountry',
-    'SecondDose',
-    'TargetGroup',
-    'UnknownDose',
-    'Vaccine',
-    'YearWeekISO'
+    "Denominator",
+    "FirstDose",
+    "FirstDoseRefused",
+    "NumberDosesReceived",
+    "Population",
+    "Region",
+    "ReportingCountry",
+    "SecondDose",
+    "TargetGroup",
+    "UnknownDose",
+    "Vaccine",
+    "YearWeekISO",
 }
 
 
 class ECDC:
-
     def __init__(self, iso_path: str):
-        self.source_url = "https://opendata.ecdc.europa.eu/covid19/vaccine_tracker/csv/data.csv"
+        self.source_url = (
+            "https://opendata.ecdc.europa.eu/covid19/vaccine_tracker/csv/data.csv"
+        )
         self.source_url_ref = "https://www.ecdc.europa.eu/en/publications-data/data-covid-19-vaccination-eu-eea"
         self.country_mapping = self._load_country_mapping(iso_path)
         self.vaccine_mapping = {
@@ -90,14 +91,14 @@ class ECDC:
     def read(self):
         return pd.read_csv(self.source_url)
 
-    def _load_country_mapping(self ,iso_path: str):
+    def _load_country_mapping(self, iso_path: str):
         country_mapping = pd.read_csv(iso_path)
         return dict(zip(country_mapping["alpha-2"], country_mapping["location"]))
 
     def _weekday_to_date(self, d):
-        new_date = clean_date(d + '+5', "%Y-W%W+%w")
+        new_date = clean_date(d + "+5", "%Y-W%W+%w")
         if new_date > localdate("Europe/London"):
-            new_date = clean_date(d + '+2', "%Y-W%W+%w")
+            new_date = clean_date(d + "+2", "%Y-W%W+%w")
         return new_date
 
     def pipe_initial_check(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -116,7 +117,9 @@ class ECDC:
     def pipe_base(self, df: pd.DataFrame) -> pd.DataFrame:
         df = df.pipe(self.pipe_initial_check)
         df = df.assign(
-            total_vaccinations=df[["FirstDose", "SecondDose", "UnknownDose"]].sum(axis=1),
+            total_vaccinations=df[["FirstDose", "SecondDose", "UnknownDose"]].sum(
+                axis=1
+            ),
             people_vaccinated=df.FirstDose,
             people_fully_vaccinated=df.SecondDose,
             date=df.YearWeekISO.apply(self._weekday_to_date),
@@ -129,31 +132,53 @@ class ECDC:
         )
         return df.loc[df.Region.isin(self.country_mapping.keys())]
 
-    def pipe_group(self, df: pd.DataFrame, group_field: str, group_field_renamed: str) -> pd.DataFrame:
+    def pipe_group(
+        self, df: pd.DataFrame, group_field: str, group_field_renamed: str
+    ) -> pd.DataFrame:
         return (
-            df
-            .groupby(["date", "location", group_field], as_index=False)
-            [["total_vaccinations", "people_vaccinated", "people_fully_vaccinated", "UnknownDose"]]
+            df.groupby(["date", "location", group_field], as_index=False)[
+                [
+                    "total_vaccinations",
+                    "people_vaccinated",
+                    "people_fully_vaccinated",
+                    "UnknownDose",
+                ]
+            ]
             .sum()
             .rename(columns={group_field: group_field_renamed})
         )
 
     def pipe_cumsum(self, df: pd.DataFrame, group_field_renamed: str) -> pd.DataFrame:
         return df.assign(
-            total_vaccinations=df.groupby(["location", group_field_renamed])["total_vaccinations"].cumsum(),
-            people_vaccinated=df.groupby(["location", group_field_renamed])["people_vaccinated"].cumsum(),
-            people_fully_vaccinated=df.groupby(["location", group_field_renamed])["people_fully_vaccinated"].cumsum(),
-            UnknownDose=df.groupby(["location", group_field_renamed])["UnknownDose"].cumsum(),
+            total_vaccinations=df.groupby(["location", group_field_renamed])[
+                "total_vaccinations"
+            ].cumsum(),
+            people_vaccinated=df.groupby(["location", group_field_renamed])[
+                "people_vaccinated"
+            ].cumsum(),
+            people_fully_vaccinated=df.groupby(["location", group_field_renamed])[
+                "people_fully_vaccinated"
+            ].cumsum(),
+            UnknownDose=df.groupby(["location", group_field_renamed])[
+                "UnknownDose"
+            ].cumsum(),
         )
 
-    def pipeline_common(self, df: pd.DataFrame, group_field: str, group_field_renamed: str) -> pd.DataFrame:
+    def pipeline_common(
+        self, df: pd.DataFrame, group_field: str, group_field_renamed: str
+    ) -> pd.DataFrame:
         return (
-            df
-            .pipe(self.pipe_group, group_field, group_field_renamed)
-            [[
-                "date", "location", group_field_renamed, "total_vaccinations", "people_vaccinated",
-                "people_fully_vaccinated", "UnknownDose",
-            ]]
+            df.pipe(self.pipe_group, group_field, group_field_renamed)[
+                [
+                    "date",
+                    "location",
+                    group_field_renamed,
+                    "total_vaccinations",
+                    "people_vaccinated",
+                    "people_fully_vaccinated",
+                    "UnknownDose",
+                ]
+            ]
             .sort_values("date")
             .pipe(self.pipe_cumsum, group_field_renamed)
         )
@@ -163,16 +188,20 @@ class ECDC:
 
     def pipe_manufacturer_filter_locations(self, df: pd.DataFrame):
         """Filters countries to be excluded and those with a high number of unknown doses."""
+
         def _get_perc_unk(x):
             res = x.groupby("vaccine").total_vaccinations.sum()
             res /= res.sum()
             if not "Unknown" in res:
                 return 0
             return res.loc["Unknown"]
+
         threshold_unk_ratio = 0.05
-        mask = (df.groupby("location").apply(_get_perc_unk) < threshold_unk_ratio)
+        mask = df.groupby("location").apply(_get_perc_unk) < threshold_unk_ratio
         locations_valid = mask[mask].index.tolist()
-        locations_valid = [loc for loc in locations_valid if loc not in locations_manufacturer_exclude]
+        locations_valid = [
+            loc for loc in locations_valid if loc not in locations_manufacturer_exclude
+        ]
         df = df[df.location.isin(locations_valid)]
         return df
 
@@ -182,13 +211,13 @@ class ECDC:
     def pipeline_manufacturer(self, df: pd.DataFrame):
         group_field_renamed = "vaccine"
         return (
-            df
-            .loc[df.TargetGroup == "ALL"]
+            df.loc[df.TargetGroup == "ALL"]
             .pipe(self.pipeline_common, "Vaccine", group_field_renamed)
             .pipe(self.pipe_rename_vaccines)
             .pipe(self.pipe_manufacturer_filter_locations)
-            .pipe(self.pipe_manufacturer_filter_entries)
-            [["location", "date", "vaccine", "total_vaccinations"]]
+            .pipe(self.pipe_manufacturer_filter_entries)[
+                ["location", "date", "vaccine", "total_vaccinations"]
+            ]
             .sort_values(["location", "date", "vaccine"])
         )
 
@@ -204,25 +233,29 @@ class ECDC:
         locations = df.location.unique()
         locations_valid = []
         for location in locations:
-            df_c = df.loc[df.location==location]
+            df_c = df.loc[df.location == location]
             if not age_groups_relevant.difference(df_c.age_group.unique()):
                 locations_valid.append(location)
-        locations_valid = [loc for loc in locations_valid if loc not in locations_age_exclude]
+        locations_valid = [
+            loc for loc in locations_valid if loc not in locations_age_exclude
+        ]
         df = df[df.location.isin(locations_valid)]
         return df
 
     def pipe_age_filter_entries(self, df: pd.DataFrame) -> pd.DataFrame:
         """More granular filter. Keep entries where data is deemed reliable."""
         # Find valid dates + location
-        x = df.pivot(index=["date", "location"], columns="age_group", values="total_vaccinations").reset_index()
+        x = df.pivot(
+            index=["date", "location"], columns="age_group", values="total_vaccinations"
+        ).reset_index()
         x = x.dropna(subset=age_groups_relevant, how="any")
         x = x.assign(debug=x[age_groups_relevant].sum(axis=1))
         x = x.assign(
             debug_diff=x.ALL - x.debug,
-            debug_diff_perc=(x.ALL - x.debug)/x.ALL,
+            debug_diff_perc=(x.ALL - x.debug) / x.ALL,
         )
-        threshold_missmatch_ratio = 0.05 # Keep only those days where missmatch between sum(ages) and total is <5%
-        x = x[x.debug_diff_perc<=threshold_missmatch_ratio]  
+        threshold_missmatch_ratio = 0.05  # Keep only those days where missmatch between sum(ages) and total is <5%
+        x = x[x.debug_diff_perc <= threshold_missmatch_ratio]
         valid_entries_ids = x[["date", "location"]]
         if not valid_entries_ids.value_counts().max() == 1:
             raise ValueError("Some entries appear to be duplicated")
@@ -230,7 +263,9 @@ class ECDC:
 
         # Filter entries with too many unknown doses (where more 5% of doses are unknown)
         threshold_unknown_doses_ratio = 0.05
-        df = df[(df.UnknownDose / df.total_vaccinations) < threshold_unknown_doses_ratio]
+        df = df[
+            (df.UnknownDose / df.total_vaccinations) < threshold_unknown_doses_ratio
+        ]
         return df
 
     def pipe_age_groups(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -243,27 +278,36 @@ class ECDC:
         # df.loc[df.age_group == "1_Age<60", ["age_group_min", "age_group_max"]] = [0, 60]
         return df_
 
-    def pipe_age_relative_metrics(self, df: pd.DataFrame, df_og: pd.DataFrame) -> pd.DataFrame:
-        df_den = df_og.loc[df_og.TargetGroup.isin(age_groups_relevant)].dropna(subset=["Denominator"])
-        if df_den.Denominator.isnull().any():
-            raise ValueError(f"Denomintor found to be null: {df_den[df_den.Denominator.isnull()]}")
-        res = df_den.groupby(["date", "location", "TargetGroup"]).Denominator.nunique()
-        if (res!=1).any():
-            raise ValueError(f"Several Denomintor values found for same (date, location, TargetGroup): {res[res== 1].index.tolist()}")
-        df_den = df_den[["date", "location", "TargetGroup", "Denominator"]].drop_duplicates()
-        df = (
-            df
-            .merge(
-                df_den,
-                left_on=["date", "age_group", "location"],
-                right_on=["date", "TargetGroup", "location"]
-            )
+    def pipe_age_relative_metrics(
+        self, df: pd.DataFrame, df_og: pd.DataFrame
+    ) -> pd.DataFrame:
+        df_den = df_og.loc[df_og.TargetGroup.isin(age_groups_relevant)].dropna(
+            subset=["Denominator"]
         )
-        return (
-            df.assign(
-                people_vaccinated_per_hundred=(100*df.people_vaccinated/df.Denominator).round(2),
-                people_fully_vaccinated_per_hundred=(100*df.people_fully_vaccinated/df.Denominator).round(2),
+        if df_den.Denominator.isnull().any():
+            raise ValueError(
+                f"Denomintor found to be null: {df_den[df_den.Denominator.isnull()]}"
             )
+        res = df_den.groupby(["date", "location", "TargetGroup"]).Denominator.nunique()
+        if (res != 1).any():
+            raise ValueError(
+                f"Several Denomintor values found for same (date, location, TargetGroup): {res[res== 1].index.tolist()}"
+            )
+        df_den = df_den[
+            ["date", "location", "TargetGroup", "Denominator"]
+        ].drop_duplicates()
+        df = df.merge(
+            df_den,
+            left_on=["date", "age_group", "location"],
+            right_on=["date", "TargetGroup", "location"],
+        )
+        return df.assign(
+            people_vaccinated_per_hundred=(
+                100 * df.people_vaccinated / df.Denominator
+            ).round(2),
+            people_fully_vaccinated_per_hundred=(
+                100 * df.people_fully_vaccinated / df.Denominator
+            ).round(2),
         )
 
     def pipeline_age(self, df: pd.DataFrame):
@@ -277,16 +321,23 @@ class ECDC:
             .pipe(self.pipe_age_filter_entries)
             .pipe(self.pipe_age_groups)
             .pipe(self.pipe_age_relative_metrics, df)
-            .drop(columns=[group_field_renamed])
-            [[
-                "location", "date", "age_group_min", "age_group_max",
-                "people_vaccinated_per_hundred", "people_fully_vaccinated_per_hundred",
-            ]]
+            .drop(columns=[group_field_renamed])[
+                [
+                    "location",
+                    "date",
+                    "age_group_min",
+                    "age_group_max",
+                    "people_vaccinated_per_hundred",
+                    "people_fully_vaccinated_per_hundred",
+                ]
+            ]
             .sort_values(["location", "date", "age_group_min"])
         )
 
-    def _export_country_data(self, df: pd.DataFrame, location: str, output_path: str, columns: list):
-        df_c = df[df.location==location]
+    def _export_country_data(
+        self, df: pd.DataFrame, location: str, output_path: str, columns: list
+    ):
+        df_c = df[df.location == location]
         df_c.to_csv(
             output_path,
             index=False,
@@ -303,9 +354,13 @@ class ECDC:
                 location=location,
                 output_path=paths.tmp_vax_out_by_age_group(location),
                 columns=[
-                    "location", "date", "age_group_min", "age_group_max",
-                    "people_vaccinated_per_hundred", "people_fully_vaccinated_per_hundred",
-                ]
+                    "location",
+                    "date",
+                    "age_group_min",
+                    "age_group_max",
+                    "people_vaccinated_per_hundred",
+                    "people_fully_vaccinated_per_hundred",
+                ],
             )
         self._export_metadata(df_age, paths.tmp_vax_metadata_age)
 
@@ -318,7 +373,7 @@ class ECDC:
                 df=df_manufacuter,
                 location=location,
                 output_path=paths.tmp_vax_out_man(location),
-                columns=["location", "date", "vaccine", "total_vaccinations"]
+                columns=["location", "date", "vaccine", "total_vaccinations"],
             )
         self._export_metadata(df_manufacuter, paths.tmp_vax_metadata_man)
 
@@ -327,7 +382,7 @@ class ECDC:
             df=df,
             source_name="European Centre for Disease Prevention and Control (ECDC)",
             source_url=self.source_url_ref,
-            output_path=output_path
+            output_path=output_path,
         )
 
     def export(self, paths):
@@ -340,6 +395,4 @@ class ECDC:
 
 
 def main(paths):
-    ECDC(
-        iso_path=os.path.join(paths.tmp_inp, "iso", "iso.csv")
-    ).export(paths)
+    ECDC(iso_path=os.path.join(paths.tmp_inp, "iso", "iso.csv")).export(paths)

@@ -7,13 +7,17 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from pdfreader import SimplePDFViewer
 
-from vax.utils.incremental import enrich_data, increment, clean_count, merge_with_current_data
+from vax.utils.incremental import (
+    enrich_data,
+    increment,
+    clean_count,
+    merge_with_current_data,
+)
 from vax.utils.utils import get_soup
 from vax.utils.dates import clean_date
 
 
 class Thailand:
-
     def __init__(self):
         self.location = "Thailand"
         self.source_url = "https://ddc.moph.go.th/dcd/pagecontent.php?page=643&dept=dcd"
@@ -23,7 +27,9 @@ class Thailand:
     def read(self, last_update: str) -> pd.DataFrame:
         yearly_report_page = get_soup(self.source_url)
         # Get Newest Month Report Page
-        monthly_report_link = yearly_report_page.find("div", class_="col-lg-12", id="content-detail").find("a")["href"]
+        monthly_report_link = yearly_report_page.find(
+            "div", class_="col-lg-12", id="content-detail"
+        ).find("a")["href"]
         monthly_report_page = get_soup(monthly_report_link)
         # Get links
         df = self._parse_data(monthly_report_page, last_update)
@@ -69,23 +75,27 @@ class Thailand:
     def _substitute_special_chars(self, raw_text: str):
         """Correct Thai Special Character Error."""
         special_char_replace = {
-            '\uf701': u'\u0e34',
-            '\uf702': u'\u0e35',
-            '\uf703': u'\u0e36',
-            '\uf704': u'\u0e37',
-            '\uf705': u'\u0e48',
-            '\uf706': u'\u0e49',
-            '\uf70a': u'\u0e48',
-            '\uf70b': u'\u0e49',
-            '\uf70e': u'\u0e4c',
-            '\uf710': u'\u0e31',
-            '\uf712': u'\u0e47',
-            '\uf713': u'\u0e48',
-            '\uf714': u'\u0e49',
+            "\uf701": u"\u0e34",
+            "\uf702": u"\u0e35",
+            "\uf703": u"\u0e36",
+            "\uf704": u"\u0e37",
+            "\uf705": u"\u0e48",
+            "\uf706": u"\u0e49",
+            "\uf70a": u"\u0e48",
+            "\uf70b": u"\u0e49",
+            "\uf70e": u"\u0e4c",
+            "\uf710": u"\u0e31",
+            "\uf712": u"\u0e47",
+            "\uf713": u"\u0e48",
+            "\uf714": u"\u0e49",
         }
-        special_char_replace = dict((re.escape(k), v) for k, v in special_char_replace.items())
+        special_char_replace = dict(
+            (re.escape(k), v) for k, v in special_char_replace.items()
+        )
         pattern = re.compile("|".join(special_char_replace.keys()))
-        text = pattern.sub(lambda m: special_char_replace[re.escape(m.group(0))], raw_text)
+        text = pattern.sub(
+            lambda m: special_char_replace[re.escape(m.group(0))], raw_text
+        )
         return text
 
     def _parse_metrics(self, text: str):
@@ -93,8 +103,6 @@ class Thailand:
         people_vaccinated = clean_count(metrics[0])
         people_fully_vaccinated = clean_count(metrics[1])
         total_vaccinations = clean_count(metrics[2])
-        if total_vaccinations != people_vaccinated + people_fully_vaccinated:
-            raise ValueError("total_vaccinations != people_vaccinated + people_fully_vaccinated")
         return {
             "total_vaccinations": total_vaccinations,
             "people_vaccinated": people_vaccinated,
@@ -133,11 +141,7 @@ class Thailand:
         return df.assign(vaccine="Oxford/AstraZeneca, Sinovac")
 
     def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:
-        return (
-            df
-            .pipe(self.pipe_location)
-            .pipe(self.pipe_vaccine)
-        )
+        return df.pipe(self.pipe_location).pipe(self.pipe_vaccine)
 
     def to_csv(self, paths):
         output_file = paths.tmp_vax_out(self.location)

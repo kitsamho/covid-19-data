@@ -30,7 +30,9 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
 
     data["people_vaccinated"] = int(re.sub(r"[^\d]", "", spans[-3].text))
     data["people_fully_vaccinated"] = int(re.sub(r"[^\d]", "", spans[-2].text))
-    data["total_vaccinations"] = data["people_vaccinated"] + data["people_fully_vaccinated"]
+    data["total_vaccinations"] = (
+        data["people_vaccinated"] + data["people_fully_vaccinated"]
+    )
 
     return data
 
@@ -54,8 +56,7 @@ def enrich_source(ds: pd.Series, source: str) -> pd.Series:
 
 def pipeline(ds: pd.Series, source: str) -> pd.Series:
     return (
-        ds
-        .pipe(enrich_date)
+        ds.pipe(enrich_date)
         .pipe(enrich_location)
         .pipe(enrich_vaccine)
         .pipe(enrich_source, source)
@@ -73,7 +74,7 @@ def main(paths):
         people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url=data["source_url"],
-        vaccine=data["vaccine"]
+        vaccine=data["vaccine"],
     )
 
 

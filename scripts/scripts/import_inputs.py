@@ -19,19 +19,18 @@ import pandas as pd
 def _parse_args():
     parser = argparse.ArgumentParser(
         description="Import necessary input files.",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
-        "dataset", choices=["wb-income-groups", "all"], default="all",
-        help=(
-            "Choose which data to import."
-        )
+        "dataset",
+        choices=["wb-income-groups", "all"],
+        default="all",
+        help=("Choose which data to import."),
     )
     parser.add_argument(
-        "--input-dir", default=os.path.abspath(os.path.join("..", "input")),
-        help=(
-            "Path to folder containing input."
-        )
+        "--input-dir",
+        default=os.path.abspath(os.path.join("..", "input")),
+        help=("Path to folder containing input."),
     )
     args = parser.parse_args()
     return args
@@ -41,11 +40,16 @@ def import_wb_income_groups(output: str, url: str = None):
     if url is None:
         url = "http://databank.worldbank.org/data/download/site-content/CLASS.xls"
     df_wb = (
-        pd.read_excel(url, skiprows=3, header=1, nrows=219, usecols=["Economy", "Code", "Income group"])
+        pd.read_excel(
+            url,
+            skiprows=3,
+            header=1,
+            nrows=219,
+            usecols=["Economy", "Code", "Income group"],
+        )
         .drop(0)
         .rename(columns={"Economy": "Country"})
-        .assign(
-            Year=2020)
+        .assign(Year=2020)
     )
     replace_countries = {
         "Bahamas, The": "Bahamas",
@@ -88,12 +92,12 @@ def import_wb_income_groups(output: str, url: str = None):
         "Lower middle income": "Lower-middle-income countries",
         "Low income": "Low-income countries",
     }
-    df_wb.loc[df_wb.Country=="Kosovo", "Code"] = "OWID_KOS"  # Legacy
-    df_wb = df_wb.assign(
-        Country=df_wb.Country.replace(replace_countries)
-    )
+    df_wb.loc[df_wb.Country == "Kosovo", "Code"] = "OWID_KOS"  # Legacy
+    df_wb = df_wb.assign(Country=df_wb.Country.replace(replace_countries))
     df_wb["Income group"] = df_wb["Income group"].replace(replace_income_groups)
-    df_wb.to_csv(os.path.join(output, "wb", "income_groups.csv"), index=False)  # Folder 'wb' assumed to exist!
+    df_wb.to_csv(
+        os.path.join(output, "wb", "income_groups.csv"), index=False
+    )  # Folder 'wb' assumed to exist!
 
     # Additional
     df_extra = pd.DataFrame(
@@ -102,18 +106,20 @@ def import_wb_income_groups(output: str, url: str = None):
             # ["Scotland","OWID_SCT",2020,"High income"],
             # ["Wales","OWID_WLS",2020,"High income"],
             # ["Northern Ireland","OWID_NIR",2020,"High income"],
-            ["Falkland Islands","FLK",2020,"High income"],
-            ["Guernsey","GGY",2020,"High income"],
-            ["Jersey","JEY",2020,"High income"],
-            ["Saint Helena","SHN",2020,"High income"],
-            ["Montserrat","MSR",2020,"High income"],
-            ["Northern Cyprus","OWID_CYN",2020,"High income"],
-            ["Wallis and Futuna","WLF",2020,"High income"],
-            ["Anguilla","AIA",2020,"High income"],
+            ["Falkland Islands", "FLK", 2020, "High income"],
+            ["Guernsey", "GGY", 2020, "High income"],
+            ["Jersey", "JEY", 2020, "High income"],
+            ["Saint Helena", "SHN", 2020, "High income"],
+            ["Montserrat", "MSR", 2020, "High income"],
+            ["Northern Cyprus", "OWID_CYN", 2020, "High income"],
+            ["Wallis and Futuna", "WLF", 2020, "High income"],
+            ["Anguilla", "AIA", 2020, "High income"],
         ],
-        columns=["Country", "Code", "Year", "Income group"]
+        columns=["Country", "Code", "Year", "Income group"],
     )
-    df_extra.to_csv(os.path.join(output, "owid", "income_groups_complement.csv"), index=False)
+    df_extra.to_csv(
+        os.path.join(output, "owid", "income_groups_complement.csv"), index=False
+    )
 
 
 def main():
@@ -122,6 +128,7 @@ def main():
         import_wb_income_groups(args.input_dir)
     elif args.dataset == "all":
         import_wb_income_groups(args.input_dir)
+
 
 if __name__ == "__main__":
     main()

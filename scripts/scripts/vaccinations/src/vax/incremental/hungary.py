@@ -9,13 +9,12 @@ from vax.utils.dates import extract_clean_date
 
 
 class Hungary:
-
     def __init__(self):
         self.source_url = "https://koronavirus.gov.hu"
         self.location = "Hungary"
         self._num_max_pages = 10
         self.regex = {
-            "title": r"\d+ [millió]+ \d+ [ezer]+ a beoltott, \d+ az új fertőzött, elhunyt \d+ beteg",
+            "title": r"\d+ [millió]+ \d+ [ezer]+ a beoltott, \d+ az új fertőzött",
             "metrics": (
                 r"(?:A|a) beoltottak száma ([\d ]+)\s{1,2}(?:fő)?(?:, )?(?:közülük )?([\d ]+) fő már a második "
                 r"oltását is megkapta."
@@ -47,16 +46,14 @@ class Hungary:
             if record["date"] > last_update:
                 # print(record["date"], record["people_vaccinated"], record["people_fully_vaccinated"], "added")
                 records.append(record)
-            else: 
+            else:
                 # print(record["date"], "END")
                 return records, False
         return records, True
 
     def get_elements(self, soup: BeautifulSoup) -> list:
         elems = soup.find_all("h3", text=re.compile(self.regex["title"]))
-        elems = [
-            {"link": self.parse_link(elem)} 
-        for elem in elems]
+        elems = [{"link": self.parse_link(elem)} for elem in elems]
         return elems
 
     def parse_data_news_page(self, soup: BeautifulSoup):
@@ -71,7 +68,7 @@ class Hungary:
                 date_format="%Y. %B %d.",
                 loc="hu_HU.UTF-8",
                 minus_days=1,
-            )
+            ),
         }
         return metrics
 
@@ -80,12 +77,8 @@ class Hungary:
         return f"{self.source_url}/{href}"
 
     def pipe_drop_duplicates(self, df: pd.DataFrame) -> pd.DataFrame:
-        return (
-            df.sort_values("date")
-            .drop_duplicates(
-                subset=["people_vaccinated", "people_fully_vaccinated"],
-                keep="first"
-            )
+        return df.sort_values("date").drop_duplicates(
+            subset=["people_vaccinated", "people_fully_vaccinated"], keep="first"
         )
 
     def pipe_location(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -97,19 +90,20 @@ class Hungary:
         )
 
     def pipe_select_output_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df[[
-            "location",
-            "date",
-            "vaccine",
-            "source_url",
-            "people_vaccinated",
-            "people_fully_vaccinated"
-        ]]
+        return df[
+            [
+                "location",
+                "date",
+                "vaccine",
+                "source_url",
+                "people_vaccinated",
+                "people_fully_vaccinated",
+            ]
+        ]
 
     def pipeline(self, df: pd.Series) -> pd.Series:
         return (
-            df
-            .pipe(self.pipe_drop_duplicates)
+            df.pipe(self.pipe_drop_duplicates)
             .pipe(self.pipe_location)
             .pipe(self.pipe_vaccine)
             .pipe(self.pipe_select_output_columns)
@@ -129,7 +123,7 @@ class Hungary:
 
 
 def main(paths):
-    Hungary().to_csv(paths) 
+    Hungary().to_csv(paths)
 
 
 if __name__ == "__main__":

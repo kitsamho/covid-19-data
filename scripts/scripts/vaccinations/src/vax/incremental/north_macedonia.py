@@ -18,10 +18,12 @@ def connect_parse_data(source: str) -> pd.Series:
 
     total_vaccinations = people_vaccinated
 
-    return pd.Series(data={
-        "total_vaccinations": total_vaccinations,
-        "people_vaccinated": people_vaccinated,
-    })
+    return pd.Series(
+        data={
+            "total_vaccinations": total_vaccinations,
+            "people_vaccinated": people_vaccinated,
+        }
+    )
 
 
 def enrich_date(ds: pd.Series) -> pd.Series:
@@ -35,7 +37,9 @@ def enrich_location(ds: pd.Series) -> pd.Series:
 
 def enrich_vaccine(ds: pd.Series) -> pd.Series:
     return enrich_data(
-        ds, "vaccine", "Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V"
+        ds,
+        "vaccine",
+        "Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V",
     )
 
 
@@ -45,8 +49,7 @@ def enrich_source(ds: pd.Series, source: str) -> pd.Series:
 
 def pipeline(ds: pd.Series, source: str) -> pd.Series:
     return (
-        ds
-        .pipe(enrich_date)
+        ds.pipe(enrich_date)
         .pipe(enrich_location)
         .pipe(enrich_vaccine)
         .pipe(enrich_source, source)
@@ -63,7 +66,7 @@ def main(paths):
         people_vaccinated=data["people_vaccinated"],
         date=data["date"],
         source_url=data["source_url"],
-        vaccine=data["vaccine"]
+        vaccine=data["vaccine"],
     )
 
 

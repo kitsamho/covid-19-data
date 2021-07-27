@@ -6,7 +6,6 @@ from bs4 import BeautifulSoup
 
 
 class BosniaHerzegovina:
-
     def __init__(self):
         self.location = "Bosnia and Herzegovina"
         self.source_url = [
@@ -22,19 +21,20 @@ class BosniaHerzegovina:
     def _load_data(self, url: str):
         df = pd.DataFrame(self._get_records(url))
         df = df[~df["Cumulative total"].isna()]
-        df = df.assign(**{
-            "Source URL": url
-        })
+        df = df.assign(**{"Source URL": url})
         return df
 
     def _get_records(self, url: str) -> dict:
-        soup = BeautifulSoup(requests.get(url).content, 'html.parser')
+        soup = BeautifulSoup(requests.get(url).content, "html.parser")
         elem = soup.find(id="newsContent")
         elems = elem.find_all("table")
-        records = [{
-            "Date": self._parse_date(elem),
-            "Cumulative total": self._parse_metric(elem),
-        } for elem in elems]
+        records = [
+            {
+                "Date": self._parse_date(elem),
+                "Cumulative total": self._parse_metric(elem),
+            }
+            for elem in elems
+        ]
         return records
 
     def _parse_metric(self, elem):
@@ -43,18 +43,23 @@ class BosniaHerzegovina:
         return value
 
     def _parse_date(self, elem):
-        return datetime.strptime(elem.find("p").text.strip(), "%d.%m.%Y.").strftime("%Y-%m-%d")
+        return datetime.strptime(elem.find("p").text.strip(), "%d.%m.%Y.").strftime(
+            "%Y-%m-%d"
+        )
 
-    def pipeline(self, df:pd.DataFrame) -> pd.DataFrame:
-        df = df.assign(**{
-            "Country": self.location,
-            "Source label": "Ministry of Civil Affairs",
-            "Units": "tests performed",
-            "Notes": pd.NA,
-        }).sort_values("Date")
+    def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:
+        df = df.assign(
+            **{
+                "Country": self.location,
+                "Source label": "Ministry of Civil Affairs",
+                "Units": "tests performed",
+                "Notes": pd.NA,
+            }
+        ).sort_values("Date")
         df.loc[:, "Cumulative total"] = (
             df.loc[:, "Cumulative total"]
-            .astype(str).str.replace(r"\s|\*", "", regex=True)
+            .astype(str)
+            .str.replace(r"\s|\*", "", regex=True)
             .astype(int)
         )
         df = df.pipe(self._remove_typo)
@@ -68,14 +73,11 @@ class BosniaHerzegovina:
             id_remove = ds.idxmax()
             df = df.drop(id_remove)
         return df
-        
+
     def to_csv(self):
-        output_path = f"automated_sheets_new/{self.location}.csv"
+        output_path = f"automated_sheets/{self.location}.csv"
         df = self.read().pipe(self.pipeline)
-        df.to_csv(
-            output_path,
-            index=False
-        )
+        df.to_csv(output_path, index=False)
 
 
 def main():

@@ -4,6 +4,7 @@ import datetime
 from bs4 import BeautifulSoup
 import pandas as pd
 
+
 def main():
     data = pd.read_csv("automated_sheets/Indonesia.csv")
 
@@ -22,18 +23,21 @@ def main():
 
         if count > data["Cumulative total"].max():
 
-            new = pd.DataFrame({
-                "Cumulative total": count,
-                "Date": date,
-                "Country": "Indonesia",
-                "Units": "people tested",
-                "Testing type": "unclear",
-                "Source URL": url,
-                "Source label": "Emerging infections, Indonesian Ministry of Health"
-            })
+            new = pd.DataFrame(
+                {
+                    "Cumulative total": count,
+                    "Date": date,
+                    "Country": "Indonesia",
+                    "Units": "people tested",
+                    "Testing type": "unclear",
+                    "Source URL": url,
+                    "Source label": "Emerging infections, Indonesian Ministry of Health",
+                }
+            )
 
             df = pd.concat([new, data], sort=False)
             df.to_csv("automated_sheets/Indonesia.csv", index=False)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

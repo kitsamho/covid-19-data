@@ -9,20 +9,26 @@ VACCINES_ONE_DOSE = ["JANSS"]
 
 def main(paths):
 
-    df = pd.read_csv(URL, usecols=["YearWeekISO", "FirstDose", "SecondDose", "Region", "Vaccine"])
+    df = pd.read_csv(
+        URL, usecols=["YearWeekISO", "FirstDose", "SecondDose", "Region", "Vaccine"]
+    )
 
     df = df[df.Region == "NL"]
 
-    df = df.rename(columns={
-        "YearWeekISO": "date",
-        "FirstDose": "people_vaccinated",
-        "SecondDose": "people_fully_vaccinated",
-        "Region": "location",
-    })
+    df = df.rename(
+        columns={
+            "YearWeekISO": "date",
+            "FirstDose": "people_vaccinated",
+            "SecondDose": "people_fully_vaccinated",
+            "Region": "location",
+        }
+    )
 
     # Calculate metrics
     df = df.assign(total_vaccinations=df.people_vaccinated + df.people_fully_vaccinated)
-    df.loc[df.Vaccine.isin(VACCINES_ONE_DOSE), "people_fully_vaccinated"] = df.people_vaccinated
+    df.loc[
+        df.Vaccine.isin(VACCINES_ONE_DOSE), "people_fully_vaccinated"
+    ] = df.people_vaccinated
     df = df.drop(columns="Vaccine").groupby("date").sum().cumsum().reset_index()
 
     # Convert week numbers to dates (Sunday of each week)
@@ -53,6 +59,7 @@ def enrich_vaccine_name(df: pd.DataFrame) -> pd.DataFrame:
             return "Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
         elif date(2021, 4, 21) <= dt:
             return "Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
+
     return df.assign(vaccine=df.date.apply(_enrich_vaccine_name))
 
 

@@ -55,20 +55,17 @@ def enrich_vaccine_name(df: pd.DataFrame) -> pd.DataFrame:
             return "Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
         elif "2021-04-28" <= date:
             return "Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
+
     return df.assign(vaccine=df.date.apply(_enrich_vaccine_name))
 
 
 def enrich_columns(df: pd.DataFrame) -> pd.DataFrame:
-    return df.assign(
-        location="Belgium",
-        source_url="https://epistat.wiv-isp.be/covid/"
-    )
+    return df.assign(location="Belgium", source_url="https://epistat.wiv-isp.be/covid/")
 
 
 def pipeline(df: pd.DataFrame) -> pd.DataFrame:
     return (
-        df
-        .pipe(aggregate)
+        df.pipe(aggregate)
         .pipe(rename_columns)
         .pipe(add_totals)
         .pipe(enrich_cumsum)

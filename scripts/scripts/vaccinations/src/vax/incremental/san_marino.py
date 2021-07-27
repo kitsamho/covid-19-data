@@ -7,8 +7,11 @@ from bs4 import BeautifulSoup
 from vax.utils.incremental import enrich_data, increment, clean_count
 from vax.utils.dates import clean_date
 
+
 def read(source: str) -> pd.Series:
-    soup = BeautifulSoup(requests.get(source, verify=False).content, "html.parser")  # noqa: S501
+    soup = BeautifulSoup(
+        requests.get(source, verify=False).content, "html.parser"
+    )  # noqa: S501
     return parse_data(soup)
 
 
@@ -21,12 +24,14 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
     people_vaccinated = parse_people_vaccinated(chart_data)
     if people_vaccinated < people_fully_vaccinated:
         people_vaccinated = people_fully_vaccinated
-    return pd.Series(data={
-        "date": parse_date(chart_data),
-        "people_vaccinated": people_vaccinated,
-        "people_fully_vaccinated": people_fully_vaccinated,
-        "total_vaccinations": parse_total_vaccinations(chart_data),
-    })
+    return pd.Series(
+        data={
+            "date": parse_date(chart_data),
+            "people_vaccinated": people_vaccinated,
+            "people_fully_vaccinated": people_fully_vaccinated,
+            "total_vaccinations": parse_total_vaccinations(chart_data),
+        }
+    )
 
 
 def parse_date(df: pd.DataFrame) -> str:
@@ -40,7 +45,9 @@ def parse_people_vaccinated(df: pd.DataFrame) -> int:
 
 
 def parse_people_fully_vaccinated(df: pd.DataFrame) -> int:
-    people_fully_vaccinated = re.search(r"([\d,. ]+) [Vv]accinazioni Seconda Dose", df).group(1)
+    people_fully_vaccinated = re.search(
+        r"([\d,. ]+) [Vv]accinazioni Seconda Dose", df
+    ).group(1)
     return clean_count(people_fully_vaccinated)
 
 
@@ -62,12 +69,7 @@ def enrich_source(ds: pd.Series) -> pd.Series:
 
 
 def pipeline(ds: pd.Series) -> pd.Series:
-    return (
-        ds
-        .pipe(enrich_location)
-        .pipe(enrich_vaccine)
-        .pipe(enrich_source)
-    )
+    return ds.pipe(enrich_location).pipe(enrich_vaccine).pipe(enrich_source)
 
 
 def main(paths):
@@ -81,7 +83,7 @@ def main(paths):
         people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url=data["source_url"],
-        vaccine=data["vaccine"]
+        vaccine=data["vaccine"],
     )
 
 

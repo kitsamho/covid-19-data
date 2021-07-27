@@ -11,3 +11,4 @@ date,people_vaccinated,people_fully_vaccinated,total_vaccinations,location,sourc
 2021-06-15,40736,0,40736,Papua New Guinea,https://stats.pacificdata.org/vis?tm=covid&pg=0&df[ds]=SPC2&df[id]=DF_COVID_VACCINATION&df[ag]=SPC&df[vs]=1.0,"Oxford/AstraZeneca, Sinopharm/Beijing"
 2021-06-21,44327,0,44327,Papua New Guinea,https://stats.pacificdata.org/vis?tm=covid&pg=0&df[ds]=SPC2&df[id]=DF_COVID_VACCINATION&df[ag]=SPC&df[vs]=1.0,"Oxford/AstraZeneca, Sinopharm/Beijing"
 2021-06-25,50460,710,51170,Papua New Guinea,https://covid19.who.int/,"Oxford/AstraZeneca, Sinopharm/Beijing"
+2021-07-13,63376,2975,66351,Papua New Guinea,https://covid19.who.int/,"Oxford/AstraZeneca, Sinopharm/Beijing"

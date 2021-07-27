@@ -28,7 +28,9 @@ def process_nans(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def add_totals(df: pd.DataFrame) -> pd.DataFrame:
-    return df.assign(total_vaccinations=df.people_vaccinated + df.people_fully_vaccinated)
+    return df.assign(
+        total_vaccinations=df.people_vaccinated + df.people_fully_vaccinated
+    )
 
 
 def format_date(df: pd.DataFrame) -> pd.DataFrame:
@@ -40,7 +42,7 @@ def enrich_location(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def enrich_vaccine_name(df: pd.DataFrame) -> pd.DataFrame:
-    return df.assign(vaccine="Oxford/AstraZeneca")
+    return df.assign(vaccine="Oxford/AstraZeneca, Sinopharm/Beijing")
 
 
 def enrich_source(df: pd.DataFrame, source: str) -> pd.DataFrame:
@@ -55,8 +57,7 @@ def merge_legacy(df: pd.DataFrame) -> pd.DataFrame:
 
 def pipeline(df: pd.DataFrame, source: str) -> pd.DataFrame:
     return (
-        df
-        .pipe(process_nans)
+        df.pipe(process_nans)
         .pipe(add_totals)
         .pipe(enrich_location)
         .pipe(enrich_vaccine_name)
@@ -67,7 +68,9 @@ def pipeline(df: pd.DataFrame, source: str) -> pd.DataFrame:
 
 
 def main(paths):
-    source_ref = "https://experience.arcgis.com/experience/59226cacd2b441c7a939dca13f832112/"
+    source_ref = (
+        "https://experience.arcgis.com/experience/59226cacd2b441c7a939dca13f832112/"
+    )
     source = (
         "https://services3.arcgis.com/x3I4DqUw3b3MfTwQ/arcgis/rest/services/service_7a519502598f492a9094fd0ad503cf80/"
         "FeatureServer/0/query"

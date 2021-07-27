@@ -14,12 +14,14 @@ def read(source: str) -> pd.Series:
         if label.text == "Total vaccins administrés":
             container = label.parent.parent
 
-    return pd.Series(data={
-        "total_vaccinations": parse_total_vaccinations(container),
-        "people_vaccinated": parse_people_vaccinated(container),
-        "people_fully_vaccinated": parse_people_fully_vaccinated(container),
-        "source_url": source,
-    })
+    return pd.Series(
+        data={
+            "total_vaccinations": parse_total_vaccinations(container),
+            "people_vaccinated": parse_people_vaccinated(container),
+            "people_fully_vaccinated": parse_people_fully_vaccinated(container),
+            "source_url": source,
+        }
+    )
 
 
 def parse_total_vaccinations(container) -> int:
@@ -29,14 +31,18 @@ def parse_total_vaccinations(container) -> int:
 
 def parse_people_vaccinated(container) -> int:
     people_vaccinated = container.find(class_="cmp-text").text
-    people_vaccinated = re.search(r"Dose 1\:\s([\d\. ]{6,})", people_vaccinated).group(1)
+    people_vaccinated = re.search(r"Dose 1\:\s([\d\. ]{6,})", people_vaccinated).group(
+        1
+    )
     people_vaccinated = clean_count(people_vaccinated)
     return people_vaccinated
 
 
 def parse_people_fully_vaccinated(container) -> int:
     people_fully_vaccinated = container.find(class_="cmp-text").text
-    people_fully_vaccinated = re.search(r"Dose 2\:\s([\d\. ]{6,})", people_fully_vaccinated).group(1)
+    people_fully_vaccinated = re.search(
+        r"Dose 2\:\s([\d\. ]{6,})", people_fully_vaccinated
+    ).group(1)
     people_fully_vaccinated = clean_count(people_fully_vaccinated)
     return people_fully_vaccinated
 
@@ -54,12 +60,7 @@ def enrich_vaccine(ds: pd.Series) -> pd.Series:
 
 
 def pipeline(ds: pd.Series) -> pd.Series:
-    return (
-        ds
-        .pipe(enrich_date)
-        .pipe(enrich_location)
-        .pipe(enrich_vaccine)
-    )
+    return ds.pipe(enrich_date).pipe(enrich_location).pipe(enrich_vaccine)
 
 
 def main(paths):
@@ -73,7 +74,7 @@ def main(paths):
         people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url=data["source_url"],
-        vaccine=data["vaccine"]
+        vaccine=data["vaccine"],
     )
 
 

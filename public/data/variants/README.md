@@ -1,4 +1,4 @@
-# Data on COVID-19 (coronavirus) variants by _Our World in Data_
+# Data on SARS-CoV-2 variants by _Our World in Data_
 > For more general information on our COVID-19 data, see our main README file in [`/public/data`](https://github.com/owid/covid-19-data/tree/master/public/data).
 
 Enabled by data from <a href="https://gisaid.org"><img src="https://www.gisaid.org/fileadmin/gisaid/img/schild.png"

@@ -16,11 +16,13 @@ def main():
         df = pd.read_html(table.get_attribute("outerHTML"), thousands=".")[0]
         df = df[["Tarih", "Toplam Test Sayısı", "Bugünkü Test Sayısı"]].dropna()
 
-        df = df.rename(columns={
-            "Tarih": "Date",
-            "Toplam Test Sayısı": "Cumulative total",
-            "Bugünkü Test Sayısı": "Daily change in cumulative total"
-        })
+        df = df.rename(
+            columns={
+                "Tarih": "Date",
+                "Toplam Test Sayısı": "Cumulative total",
+                "Bugünkü Test Sayısı": "Daily change in cumulative total",
+            }
+        )
 
         # Set negative total changes to NA
         df["total_diff"] = df["Cumulative total"] - df["Cumulative total"].shift(-1)

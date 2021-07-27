@@ -10,15 +10,15 @@ from vax.utils.dates import clean_date
 
 def run_query(url: str, query: str) -> int:
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:88.0) Gecko/20100101 Firefox/88.0',
-        'Accept': 'application/json, text/plain, */*',
-        'X-PowerBI-ResourceKey': 'ea1f0f37-d994-4fa0-8871-78602545d370',
-        'Content-Type': 'application/json;charset=UTF-8',
-        'Origin': 'https://app.powerbi.com',
-        'Connection': 'keep-alive',
-        'Referer': 'https://app.powerbi.com/',
-        'Pragma': 'no-cache',
-        'Cache-Control': 'no-cache',
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:88.0) Gecko/20100101 Firefox/88.0",
+        "Accept": "application/json, text/plain, */*",
+        "X-PowerBI-ResourceKey": "ea1f0f37-d994-4fa0-8871-78602545d370",
+        "Content-Type": "application/json;charset=UTF-8",
+        "Origin": "https://app.powerbi.com",
+        "Connection": "keep-alive",
+        "Referer": "https://app.powerbi.com/",
+        "Pragma": "no-cache",
+        "Cache-Control": "no-cache",
     }
     response = requests.post(url, headers=headers, data=query)
     if response.ok:
@@ -30,16 +30,27 @@ def run_query(url: str, query: str) -> int:
 
 def read(url: str) -> pd.Series:
     date_str = parse_date(run_query(url, load_query("philippines-date")))
-    return pd.Series(data={
-        "total_vaccinations": run_query(url, load_query("philippines-total-vaccinations")),
-        "people_vaccinated": run_query(url, load_query("philippines-people-vaccinated")),
-        "people_fully_vaccinated": run_query(url, load_query("philippines-people-fully-vaccinated")),
-        "date": date_str
-    })
+    return pd.Series(
+        data={
+            "total_vaccinations": run_query(
+                url, load_query("philippines-total-vaccinations")
+            ),
+            "people_vaccinated": run_query(
+                url, load_query("philippines-people-vaccinated")
+            ),
+            "people_fully_vaccinated": run_query(
+                url, load_query("philippines-people-fully-vaccinated")
+            ),
+            "date": date_str,
+        }
+    )
 
 
 def parse_date(query_response: str):
-    return str(pd.to_datetime(query_response.replace("as of ", ""), dayfirst=False).date())
+    return str(
+        pd.to_datetime(query_response.replace("as of ", ""), dayfirst=False).date()
+    )
+
 
 def enrich_location(ds: pd.Series) -> pd.Series:
     return enrich_data(ds, "location", "Philippines")
@@ -50,7 +61,9 @@ def enrich_vaccine(ds: pd.Series) -> pd.Series:
     - Covaxin: https://www.gmanetwork.com/news/news/nation/784349/philppines-fda-approves-eua-for-india-covid-19-vaccine-covaxin/story/
     - J&J: https://www.gmanetwork.com/news/news/nation/784349/philppines-fda-approves-eua-for-india-covid-19-vaccine-covaxin/story/
     """
-    return enrich_data(ds, "vaccine", "Oxford/AstraZeneca, Pfizer/BioNTech, Sinovac, Sputnik V")
+    return enrich_data(
+        ds, "vaccine", "Oxford/AstraZeneca, Pfizer/BioNTech, Sinovac, Sputnik V"
+    )
 
 
 def enrich_source(ds: pd.Series) -> pd.Series:
@@ -58,12 +71,7 @@ def enrich_source(ds: pd.Series) -> pd.Series:
 
 
 def pipeline(ds: pd.Series) -> pd.Series:
-    return (
-        ds
-        .pipe(enrich_location)
-        .pipe(enrich_vaccine)
-        .pipe(enrich_source)
-    )
+    return ds.pipe(enrich_location).pipe(enrich_vaccine).pipe(enrich_source)
 
 
 def main(paths):
@@ -77,7 +85,7 @@ def main(paths):
         people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url=data["source_url"],
-        vaccine=data["vaccine"]
+        vaccine=data["vaccine"],
     )
 
 

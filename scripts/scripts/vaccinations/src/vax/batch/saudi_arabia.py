@@ -12,12 +12,14 @@ def main(paths):
 
     df = df.drop(columns=["ObjectId", "LastValue", "Total_Individuals"])
 
-    df = df.rename(columns={
-        "Reportdt": "date",
-        "Total_Vaccinations": "total_vaccinations",
-        "FirstDose": "people_vaccinated",
-        "SecondDose": "people_fully_vaccinated",
-    })
+    df = df.rename(
+        columns={
+            "Reportdt": "date",
+            "Total_Vaccinations": "total_vaccinations",
+            "FirstDose": "people_vaccinated",
+            "SecondDose": "people_fully_vaccinated",
+        }
+    )
 
     df["date"] = pd.to_datetime(df.date, unit="ms").dt.date.astype(str)
 
@@ -36,5 +38,5 @@ def main(paths):
     df.to_csv(paths.tmp_vax_out("Saudi Arabia"), index=False)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

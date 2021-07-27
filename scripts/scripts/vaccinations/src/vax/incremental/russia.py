@@ -7,6 +7,7 @@ import pandas as pd
 from vax.utils.incremental import enrich_data, increment, clean_count
 from vax.utils.dates import clean_date
 
+
 def read(source: str) -> pd.Series:
 
     headers = {
@@ -27,7 +28,8 @@ def read(source: str) -> pd.Series:
     date = clean_date(date, "%d.%m.%y")
 
     people_vaccinated = re.search(
-        r"([\d\s]+) чел\. \([\d\.]+% от населения[^)]*\) - привито хотя бы одним компонентом вакцины", text
+        r"([\d\s]+) чел\. \([\d\.]+% от населения[^)]*\) - привито хотя бы одним компонентом вакцины",
+        text,
     ).group(1)
     people_vaccinated = clean_count(people_vaccinated)
 
@@ -36,15 +38,19 @@ def read(source: str) -> pd.Series:
     ).group(1)
     people_fully_vaccinated = clean_count(people_fully_vaccinated)
 
-    total_vaccinations = re.search(r"([\d\s]+) шт\. - всего прививок сделано", text).group(1)
+    total_vaccinations = re.search(
+        r"([\d\s]+) шт\. - всего прививок сделано", text
+    ).group(1)
     total_vaccinations = clean_count(total_vaccinations)
 
-    return pd.Series({
-        "total_vaccinations": total_vaccinations,
-        "people_vaccinated": people_vaccinated,
-        "people_fully_vaccinated": people_fully_vaccinated,
-        "date": date,
-    })
+    return pd.Series(
+        {
+            "total_vaccinations": total_vaccinations,
+            "people_vaccinated": people_vaccinated,
+            "people_fully_vaccinated": people_fully_vaccinated,
+            "date": date,
+        }
+    )
 
 
 def enrich_location(ds: pd.Series) -> pd.Series:
@@ -60,12 +66,7 @@ def enrich_source(ds: pd.Series) -> pd.Series:
 
 
 def pipeline(ds: pd.Series) -> pd.Series:
-    return (
-        ds
-        .pipe(enrich_location)
-        .pipe(enrich_vaccine)
-        .pipe(enrich_source)
-    )
+    return ds.pipe(enrich_location).pipe(enrich_vaccine).pipe(enrich_source)
 
 
 def main(paths):
@@ -79,7 +80,7 @@ def main(paths):
         people_fully_vaccinated=int(data["people_fully_vaccinated"]),
         date=data["date"],
         source_url=data["source_url"],
-        vaccine=data["vaccine"]
+        vaccine=data["vaccine"],
     )
 
 

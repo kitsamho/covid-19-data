@@ -4,17 +4,25 @@ from vax.utils.utils import make_monotonic
 
 
 def read(source_url: str) -> pd.DataFrame:
-    return pd.read_csv(source_url, usecols=[
-        "data", "vacinas", "pessoas_vacinadas_completamente", "pessoas_vacinadas_parcialmente"
-    ])
+    return pd.read_csv(
+        source_url,
+        usecols=[
+            "data",
+            "vacinas",
+            "pessoas_vacinadas_completamente",
+            "pessoas_vacinadas_parcialmente",
+        ],
+    )
 
 
 def rename_columns(df: pd.DataFrame) -> pd.DataFrame:
-    return df.rename(columns={
-        "data": "date",
-        "vacinas": "total_vaccinations",
-        "pessoas_vacinadas_completamente": "people_fully_vaccinated",
-    })
+    return df.rename(
+        columns={
+            "data": "date",
+            "vacinas": "total_vaccinations",
+            "pessoas_vacinadas_completamente": "people_fully_vaccinated",
+        }
+    )
 
 
 def format_date(df: pd.DataFrame) -> pd.DataFrame:
@@ -25,7 +33,9 @@ def calculate_metrics(df: pd.DataFrame) -> pd.DataFrame:
     df = df.assign(
         people_vaccinated=df.pessoas_vacinadas_parcialmente + df.people_fully_vaccinated
     )
-    return df[["date", "total_vaccinations", "people_vaccinated", "people_fully_vaccinated"]]
+    return df[
+        ["date", "total_vaccinations", "people_vaccinated", "people_fully_vaccinated"]
+    ]
 
 
 def enrich_vaccine_name(df: pd.DataFrame) -> pd.DataFrame:
@@ -41,8 +51,7 @@ def enrich_vaccine_name(df: pd.DataFrame) -> pd.DataFrame:
 
 def enrich_columns(df: pd.DataFrame) -> pd.DataFrame:
     return df.assign(
-        location="Portugal",
-        source_url="https://github.com/dssg-pt/covid19pt-data"
+        location="Portugal", source_url="https://github.com/dssg-pt/covid19pt-data"
     )
 
 
@@ -53,8 +62,7 @@ def sanity_checks(df: pd.DataFrame) -> pd.DataFrame:
 
 def pipeline(df: pd.DataFrame) -> pd.DataFrame:
     return (
-        df
-        .pipe(rename_columns)
+        df.pipe(rename_columns)
         .pipe(format_date)
         .pipe(calculate_metrics)
         .pipe(enrich_vaccine_name)

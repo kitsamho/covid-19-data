@@ -6,6 +6,7 @@ from vax.utils.incremental import enrich_data, increment, clean_count
 from vax.utils.utils import get_soup
 from vax.utils.dates import clean_date
 
+
 def read(source: str) -> pd.Series:
     return connect_parse_data(source)
 
@@ -47,12 +48,7 @@ def enrich_source(ds: pd.Series) -> pd.Series:
 
 
 def pipeline(ds: pd.Series) -> pd.Series:
-    return (
-        ds
-        .pipe(enrich_location)
-        .pipe(enrich_vaccine)
-        .pipe(enrich_source)
-    )
+    return ds.pipe(enrich_location).pipe(enrich_vaccine).pipe(enrich_source)
 
 
 def main(paths):
@@ -66,7 +62,7 @@ def main(paths):
         people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url=data["source_url"],
-        vaccine=data["vaccine"]
+        vaccine=data["vaccine"],
     )
 
 

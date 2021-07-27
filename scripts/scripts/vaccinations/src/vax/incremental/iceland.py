@@ -31,15 +31,14 @@ def main(paths):
             json_data = json.loads(json_data)
             break
 
-    data = (
-        json_data["elements"]["content"]["content"]["entities"]["39ac25a9-8af7-4d26-bd19-62a3696920a2"]["props"]
-        ["chartData"]["data"][0]
-    )
+    data = json_data["elements"]["content"]["content"]["entities"][
+        "39ac25a9-8af7-4d26-bd19-62a3696920a2"
+    ]["props"]["chartData"]["data"][0]
 
     df = pd.DataFrame(data[1:], columns=data[0])
 
     assert set(df.iloc[:, 0]) == set(VACCINE_PROTOCOLS.keys()), "New vaccine found!"
-    
+
     total_vaccinations = 0
     people_vaccinated = 0
     people_fully_vaccinated = 0
@@ -70,22 +69,27 @@ def main(paths):
         people_fully_vaccinated=people_fully_vaccinated,
         date=date,
         source_url="https://www.covid.is/tolulegar-upplysingar-boluefni",
-        vaccine="Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
+        vaccine="Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",
     )
 
     # By manufacturer
-    data = (
-        json_data["elements"]["content"]["content"]["entities"]["e329559c-c3cc-48e9-8b7b-1a5f87ea7ad3"]["props"]
-        ["chartData"]["data"][0]
-    )
+    data = json_data["elements"]["content"]["content"]["entities"][
+        "e329559c-c3cc-48e9-8b7b-1a5f87ea7ad3"
+    ]["props"]["chartData"]["data"][0]
     df = pd.DataFrame(data[1:]).reset_index(drop=True)
     df.columns = ["date"] + data[0][1:]
 
     df = df.melt("date", var_name="vaccine", value_name="total_vaccinations")
 
     df["date"] = pd.to_datetime(df["date"], format="%d.%m.%y")
-    df["total_vaccinations"] = pd.to_numeric(df["total_vaccinations"], errors="coerce").fillna(0)
-    df["total_vaccinations"] = df.sort_values("date").groupby("vaccine", as_index=False)["total_vaccinations"].cumsum()
+    df["total_vaccinations"] = pd.to_numeric(
+        df["total_vaccinations"], errors="coerce"
+    ).fillna(0)
+    df["total_vaccinations"] = (
+        df.sort_values("date")
+        .groupby("vaccine", as_index=False)["total_vaccinations"]
+        .cumsum()
+    )
     df["location"] = "Iceland"
 
     vaccine_mapping = {
@@ -94,12 +98,14 @@ def main(paths):
         "Oxford/AstraZeneca": "Oxford/AstraZeneca",
         "Janssen": "Johnson&Johnson",
     }
-    assert set(df["vaccine"].unique()) == set(vaccine_mapping.keys()), \
-        f"Vaccines present in data: {df['vaccine'].unique()}"
+    assert set(df["vaccine"].unique()) == set(
+        vaccine_mapping.keys()
+    ), f"Vaccines present in data: {df['vaccine'].unique()}"
     df = df.replace(vaccine_mapping)
 
     df.to_csv(paths.tmp_vax_out_man("Iceland"), index=False)
     export_metadata(df, "Ministry of Health", url, paths.tmp_vax_metadata_man)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

@@ -24,7 +24,7 @@ class Malawi(TwitterCollectorBase):
         col_dominant = [160, 194, 195]
         records = []
         for tweet in self.tweets[:max_iter]:
-            cond = "media" in tweet.entities # and len(tweet.full_text) < 30
+            cond = "media" in tweet.entities  # and len(tweet.full_text) < 30
             if cond:
                 url = tweet.extended_entities["media"][0]["media_url_https"]
                 im = Image.open(requests.get(url, stream=True).raw, formats=["jpeg"])
@@ -35,12 +35,14 @@ class Malawi(TwitterCollectorBase):
                     dt = tweet.created_at.strftime("%Y-%m-%d")
                     if self.stop_search(dt):
                         break
-                    records.append({
-                        "date": dt,
-                        "text": tweet.full_text,
-                        "source_url": self.build_post_url(tweet.id),
-                        "media_url": url,
-                    })
+                    records.append(
+                        {
+                            "date": dt,
+                            "text": tweet.full_text,
+                            "source_url": self.build_post_url(tweet.id),
+                            "media_url": url,
+                        }
+                    )
         df = pd.DataFrame(records)
         return df
 

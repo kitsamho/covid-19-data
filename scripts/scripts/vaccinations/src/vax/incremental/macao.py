@@ -34,7 +34,7 @@ def parse_vaccinations(elem) -> dict:
     people_vaccinated = re.search(r"已接種人數共有(?P<count>[\d,]*)人", text)
     # people_fully_vaccinated = re.search(r"2劑疫苗共有(?P<count>[\d,]*)人次", text)
     # people_fully_vaccinated = re.search(r"已完成接種2劑有(?P<count>[\d,]*)人", text)
-    people_fully_vaccinated = re.search(r"已(?:完成)?接種第?2劑的?有(?P<count>[\d,]*)人", text)
+    people_fully_vaccinated = re.search(r"已接種第2劑的?有([\d,]{6,})", text)
     # people_fully_vaccinated = re.search(r"接種2劑有(?P<count>[\d,]*)人", text)
 
     if total_vaccinations:
@@ -42,7 +42,9 @@ def parse_vaccinations(elem) -> dict:
     if people_vaccinated:
         metrics["people_vaccinated"] = clean_count(people_vaccinated.group(1))
     if people_fully_vaccinated:
-        metrics["people_fully_vaccinated"] = clean_count(people_fully_vaccinated.group(1))
+        metrics["people_fully_vaccinated"] = clean_count(
+            people_fully_vaccinated.group(1)
+        )
     return metrics
 
 
@@ -56,11 +58,13 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
         if elem.find(text=re.compile(regex_pattern)):
             date = parse_date(elem)
             # print("added", date)
-            records.append({
-                "date": date,
-                "source_url": parse_source_url(elem),
-                **parse_vaccinations(elem)
-            })
+            records.append(
+                {
+                    "date": date,
+                    "source_url": parse_source_url(elem),
+                    **parse_vaccinations(elem),
+                }
+            )
     # print(records)
     return records
 
@@ -106,11 +110,7 @@ def enrich_vaccine(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def pipeline(df: pd.DataFrame) -> pd.DataFrame:
-    return (
-        df
-        .pipe(enrich_location)
-        .pipe(enrich_vaccine)
-    )
+    return df.pipe(enrich_location).pipe(enrich_vaccine)
 
 
 def merge_with_current_data(df: pd.DataFrame, filepath: str) -> pd.DataFrame:

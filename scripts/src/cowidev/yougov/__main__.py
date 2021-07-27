@@ -293,7 +293,7 @@ def _aggregate(df):
     df_agg.rename(columns={'date_end': 'date'}, inplace=True)
 
     # constructs date variable for internal Grapher usage.
-    df_agg.loc[:, "date_internal_use"] = (df_agg['date'] - datetime.datetime.strptime(ZERO_DAY, '%Y-%m-%d')).dt.days
+    df_agg.loc[:, "date_internal_use"] = (df_agg['date'] - datetime.datetime.strptime(ZERO_DAY, '%Y-%m-%d').date()).dt.days
     df_agg.drop('date', axis=1, inplace=True)
 
     return df_agg

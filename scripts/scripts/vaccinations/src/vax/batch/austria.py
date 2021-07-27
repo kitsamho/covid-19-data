@@ -36,11 +36,15 @@ def filter_rows(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _get_vaccine_names(df: pd.DataFrame, translate: bool = False):
-    ignore_fields = ['', 'Pro']
-    regex_vaccines = r'EingetrageneImpfungen([a-zA-Z]*).*'
-    vaccine_names = sorted(set(
-        re.search(regex_vaccines, col).group(1) for col in df.columns if re.match(regex_vaccines, col)
-    ))
+    ignore_fields = ["", "Pro"]
+    regex_vaccines = r"EingetrageneImpfungen([a-zA-Z]*).*"
+    vaccine_names = sorted(
+        set(
+            re.search(regex_vaccines, col).group(1)
+            for col in df.columns
+            if re.match(regex_vaccines, col)
+        )
+    )
     vaccine_names = [vax for vax in vaccine_names if vax not in ignore_fields]
     if translate:
         return sorted([vaccine_mapping[v] for v in vaccine_names])
@@ -62,22 +66,34 @@ def enrich_columns(df: pd.DataFrame) -> pd.DataFrame:
         source_url="https://info.gesundheitsministerium.gv.at/opendata/",
     )
     df = df.assign(vaccine="Moderna, Oxford/AstraZeneca, Pfizer/BioNTech")
-    df.loc[df.date > '2021-03-23', "vaccine"] = "Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
+    df.loc[
+        df.date > "2021-03-23", "vaccine"
+    ] = "Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
     return df
 
 
 def pipeline(df: pd.DataFrame) -> pd.DataFrame:
     return (
-        df
-        .pipe(filter_country)
+        df.pipe(filter_country)
         .pipe(_check_vaccine_names)
-        .pipe(select_columns, columns=["Datum", "Teilgeimpfte", "Vollimmunisierte", "EingetrageneImpfungen"])
-        .pipe(rename_columns, columns={
-            "Datum": "date",
-            "Teilgeimpfte": "people_vaccinated",
-            "Vollimmunisierte": "people_fully_vaccinated",
-            "EingetrageneImpfungen": "total_vaccinations"
-        })
+        .pipe(
+            select_columns,
+            columns=[
+                "Datum",
+                "Teilgeimpfte",
+                "Vollimmunisierte",
+                "EingetrageneImpfungen",
+            ],
+        )
+        .pipe(
+            rename_columns,
+            columns={
+                "Datum": "date",
+                "Teilgeimpfte": "people_vaccinated",
+                "Vollimmunisierte": "people_fully_vaccinated",
+                "EingetrageneImpfungen": "total_vaccinations",
+            },
+        )
         .pipe(filter_rows)
         .pipe(format_date)
         .pipe(enrich_columns)

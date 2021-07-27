@@ -15,12 +15,14 @@ def read(source: str) -> pd.Series:
     people_fully_vaccinated = data[0]["CijepljeniDvijeDoze"]
     date = str((pd.to_datetime(data[0]["Datum"]) - timedelta(days=1)).date())
 
-    return pd.Series(data={
-        "total_vaccinations": total_vaccinations,
-        "people_vaccinated": people_vaccinated,
-        "people_fully_vaccinated": people_fully_vaccinated,
-        "date": date,
-    })
+    return pd.Series(
+        data={
+            "total_vaccinations": total_vaccinations,
+            "people_vaccinated": people_vaccinated,
+            "people_fully_vaccinated": people_fully_vaccinated,
+            "date": date,
+        }
+    )
 
 
 def enrich_location(ds: pd.Series) -> pd.Series:
@@ -36,12 +38,7 @@ def enrich_source(ds: pd.Series) -> pd.Series:
 
 
 def pipeline(ds: pd.Series) -> pd.Series:
-    return (
-        ds
-        .pipe(enrich_location)
-        .pipe(enrich_vaccine)
-        .pipe(enrich_source)
-    )
+    return ds.pipe(enrich_location).pipe(enrich_vaccine).pipe(enrich_source)
 
 
 def main(paths):
@@ -55,7 +52,7 @@ def main(paths):
         people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url=data["source_url"],
-        vaccine=data["vaccine"]
+        vaccine=data["vaccine"],
     )
 
 

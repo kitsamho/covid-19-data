@@ -20,12 +20,14 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
     date = re.search(r"[\d\.]{10}", soup.find(class_="counter").text).group(0)
     date = clean_date(date, "%d.%m.%Y")
 
-    return pd.Series(data={
-        "total_vaccinations": int(numbers[0]["data-count"]),
-        "people_vaccinated": int(numbers[1]["data-count"]),
-        "people_fully_vaccinated": int(numbers[2]["data-count"]),
-        "date": date
-    })
+    return pd.Series(
+        data={
+            "total_vaccinations": int(numbers[0]["data-count"]),
+            "people_vaccinated": int(numbers[1]["data-count"]),
+            "people_fully_vaccinated": int(numbers[2]["data-count"]),
+            "date": date,
+        }
+    )
 
 
 def enrich_location(ds: pd.Series) -> pd.Series:
@@ -41,12 +43,7 @@ def enrich_source(ds: pd.Series, source: str) -> pd.Series:
 
 
 def pipeline(ds: pd.Series, source: str) -> pd.Series:
-    return (
-        ds
-        .pipe(enrich_location)
-        .pipe(enrich_vaccine)
-        .pipe(enrich_source, source)
-    )
+    return ds.pipe(enrich_location).pipe(enrich_vaccine).pipe(enrich_source, source)
 
 
 def main(paths):
@@ -60,7 +57,7 @@ def main(paths):
         people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url=data["source_url"],
-        vaccine=data["vaccine"]
+        vaccine=data["vaccine"],
     )
 
 

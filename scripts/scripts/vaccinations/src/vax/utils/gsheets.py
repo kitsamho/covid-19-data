@@ -11,7 +11,6 @@ from vax.utils.checks import country_df_sanity_checks
 
 
 class GSheetApi:
-
     def __init__(self, credentials) -> None:
         self.credentials = credentials
         self.sheets = Sheets.from_files(credentials)
@@ -42,7 +41,7 @@ class VaccinationGSheet:
             conf = json.load(f)
         return cls(
             credentials=conf["google_credentials"],
-            sheet_id=conf["google_spreadsheet_vax_id"]
+            sheet_id=conf["google_spreadsheet_vax_id"],
         )
 
     def get_metadata(self, refresh: bool = False) -> pd.DataFrame:
@@ -82,16 +81,22 @@ class VaccinationGSheet:
         location_counts = df.location.value_counts()
         if (location_counts > 1).any(None):
             locations_dup = location_counts[location_counts > 1].index.tolist()
-            raise ValueError(f"Duplicated location(s) found in LOCATIONS. Check {locations_dup}")
+            raise ValueError(
+                f"Duplicated location(s) found in LOCATIONS. Check {locations_dup}"
+            )
         if df[cols_stable].isnull().any(None):
             raise ValueError("Check LOCATIONS. Some fields missing (empty / NaNs)")
         # Ensure booleanity of columns automated, include
         if not df.automated.isin([True, False]).all():
             vals = df.automated.unique()
-            raise ValueError(f"LOCATIONS column `automated` should only contain TRUE/FALSE. Check {vals}")
+            raise ValueError(
+                f"LOCATIONS column `automated` should only contain TRUE/FALSE. Check {vals}"
+            )
         if not df.include.isin([True, False]).all():
             vals = df.include.unique()
-            raise ValueError(f"LOCATIONS column `include` should only contain TRUE/FALSE. Check {vals}")
+            raise ValueError(
+                f"LOCATIONS column `include` should only contain TRUE/FALSE. Check {vals}"
+            )
 
     @property
     def automated_countries(self):
@@ -103,7 +108,9 @@ class VaccinationGSheet:
         """Get list of countries that require manual process."""
         return self.metadata.loc[~self.metadata.automated, "location"].tolist()
 
-    def df_list(self, include_all: bool = False, refresh: bool = False) -> List[pd.DataFrame]:
+    def df_list(
+        self, include_all: bool = False, refresh: bool = False
+    ) -> List[pd.DataFrame]:
         """Read non-automated files.
 
         Args:
@@ -122,12 +129,20 @@ class VaccinationGSheet:
             # Read
             all_files = os.listdir(tmpdirname)
             if include_all:
-                filepaths = [os.path.join(tmpdirname, filepath) for filepath in all_files]
+                filepaths = [
+                    os.path.join(tmpdirname, filepath) for filepath in all_files
+                ]
             else:
-                exclude = ["LOCATIONS.csv"] \
-                    + [f"{country}.csv" for country in self.automated_countries] \
+                exclude = (
+                    ["LOCATIONS.csv"]
+                    + [f"{country}.csv" for country in self.automated_countries]
                     + [f"{country}.csv" for country in self.disabled_countries]
-                filepaths = [os.path.join(tmpdirname, filepath) for filepath in all_files if filepath not in exclude]
+                )
+                filepaths = [
+                    os.path.join(tmpdirname, filepath)
+                    for filepath in all_files
+                    if filepath not in exclude
+                ]
             df_list = [read_csv_and_check(filepath) for filepath in filepaths]
         self._check_with_metadata(df_list, filepaths)
         return df_list
@@ -139,16 +154,24 @@ class VaccinationGSheet:
         counts = pd.value_counts(tab_locations)
         if (counts > 1).any(None):
             duplicated_tabs = counts[counts > 1].index.tolist()
-            raise ValueError(f"Duplicated location(s)! Location(s) {duplicated_tabs} were found in multiple tabs.")
+            raise ValueError(
+                f"Duplicated location(s)! Location(s) {duplicated_tabs} were found in multiple tabs."
+            )
         # Find missing tabs / missing entries
-        metadata_missing = [loc for loc in tab_locations if loc not in self.manual_countries]
+        metadata_missing = [
+            loc for loc in tab_locations if loc not in self.manual_countries
+        ]
         tab_missing = [loc for loc in self.manual_countries if loc not in tab_locations]
         error_msg = []
         if metadata_missing:
-            error_msg.append(f"Tab containing a location missing in LOCATIONS: {str(metadata_missing)}")
+            error_msg.append(
+                f"Tab containing a location missing in LOCATIONS: {str(metadata_missing)}"
+            )
         if tab_missing:
-            error_msg.append(f"Location found in LOCATIONS but no tab with such location was found: "
-                             f"{str(tab_missing)}")
+            error_msg.append(
+                f"Location found in LOCATIONS but no tab with such location was found: "
+                f"{str(tab_missing)}"
+            )
         if error_msg:
             error_msg = "\n".join(error_msg)
             raise ValueError(error_msg)
@@ -169,9 +192,13 @@ def read_csv_and_check(filepath):
     try:
         df = df.assign(date=pd.to_datetime(df["date"], format="%Y-%m-%d"))
     except Exception:
-        raise ValueError(f"{location} -- Invalid date format! Should be %Y-%m-%d. Check {df.date}.")
+        raise ValueError(
+            f"{location} -- Invalid date format! Should be %Y-%m-%d. Check {df.date}."
+        )
     if not df.date.is_monotonic:
-        raise ValueError(f"{location} -- Check that date field is monotonically increasing.")
+        raise ValueError(
+            f"{location} -- Check that date field is monotonically increasing."
+        )
     # Checks
     country_df_sanity_checks(df, anomalies=False)
     return df

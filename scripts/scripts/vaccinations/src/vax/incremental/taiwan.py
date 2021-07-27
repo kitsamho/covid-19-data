@@ -14,7 +14,6 @@ vaccines_mapping = {
 
 
 class Taiwan:
-
     def __init__(self):
         self.source_url = "https://www.cdc.gov.tw"
         self.location = "Taiwan"
@@ -32,12 +31,14 @@ class Taiwan:
 
     def parse_data(self, dfs: list, soup):
         stats = self._parse_stats(dfs[0])
-        data = pd.Series({
-            "total_vaccinations": stats['total_vaccinations'],
-            "people_vaccinated": stats['people_vaccinated'],
-            "date": self._parse_date(soup),
-            "vaccine": self._parse_vaccines(dfs[0]),
-        })
+        data = pd.Series(
+            {
+                "total_vaccinations": stats["total_vaccinations"],
+                "people_vaccinated": stats["people_vaccinated"],
+                "date": self._parse_date(soup),
+                "vaccine": self._parse_vaccines(dfs[0]),
+            }
+        )
         return data
 
     def _parse_pdf_link(self, soup) -> str:
@@ -56,7 +57,12 @@ class Taiwan:
         return dfs
 
     def _parse_stats(self, df: pd.DataFrame) -> int:
-        if df.shape[1] != 4 or df.iloc[0,0] != "廠牌" or df.iloc[0,1] != "劑次" or not (df.iloc[-1,0] == "總計" or df.iloc[-2,0] == "總計"):
+        if (
+            df.shape[1] != 4
+            or df.iloc[0, 0] != "廠牌"
+            or df.iloc[0, 1] != "劑次"
+            or not (df.iloc[-1, 0] == "總計" or df.iloc[-2, 0] == "總計")
+        ):
             raise ValueError(f"Table 1: format has changed!")
 
         num_dose1 = df[df[1] == "第 1劑"].tail(1).values[0][-1]
@@ -71,7 +77,7 @@ class Taiwan:
         }
 
     def _parse_vaccines(self, df: pd.DataFrame) -> str:
-        vaccines = set(df.iloc[1:-1, 0].dropna()) - set(['總計'])
+        vaccines = set(df.iloc[1:-1, 0].dropna()) - set(["總計"])
         vaccines_wrong = vaccines.difference(vaccines_mapping)
         if vaccines_wrong:
             raise ValueError(f"Invalid vaccines: {vaccines_wrong}")
@@ -86,7 +92,11 @@ class Taiwan:
 
     def pipe_metrics(self, ds: pd.Series) -> pd.Series:
         if "people_vaccinated" in ds:
-            return enrich_data(ds, "people_fully_vaccinated", ds.total_vaccinations - ds.people_vaccinated)
+            return enrich_data(
+                ds,
+                "people_fully_vaccinated",
+                ds.total_vaccinations - ds.people_vaccinated,
+            )
         return ds
 
     def pipe_location(self, ds: pd.Series) -> pd.Series:
@@ -97,12 +107,8 @@ class Taiwan:
 
     def pipeline(self, ds: pd.Series) -> pd.Series:
         return (
-            ds
-            .pipe(self.pipe_metrics)
-            .pipe(self.pipe_location)
-            .pipe(self.pipe_source)
+            ds.pipe(self.pipe_metrics).pipe(self.pipe_location).pipe(self.pipe_source)
         )
-
 
     def to_csv(self, paths):
         data = self.read().pipe(self.pipeline)
@@ -115,7 +121,7 @@ class Taiwan:
                 people_fully_vaccinated=data["people_fully_vaccinated"],
                 date=data["date"],
                 source_url=data["source_url"],
-                vaccine=data["vaccine"]
+                vaccine=data["vaccine"],
             )
         else:
             increment(
@@ -124,8 +130,9 @@ class Taiwan:
                 total_vaccinations=data["total_vaccinations"],
                 date=data["date"],
                 source_url=data["source_url"],
-                vaccine=data["vaccine"]
+                vaccine=data["vaccine"],
             )
+
 
 def main(paths):
     Taiwan().to_csv(paths)

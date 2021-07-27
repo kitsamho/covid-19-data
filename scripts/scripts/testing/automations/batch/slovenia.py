@@ -22,13 +22,15 @@ def main():
         positive_pcr.append(elem["total"].get("positive").get("today"))
         positive_ag.append(elem["data"]["hagt"]["positive"].get("today"))
 
-    df = pd.DataFrame({
-        "Date": dates,
-        "pcr": pcr, 
-        "ag": ag, 
-        "positive_pcr": positive_pcr,
-        "positive_ag": positive_ag,
-    })
+    df = pd.DataFrame(
+        {
+            "Date": dates,
+            "pcr": pcr,
+            "ag": ag,
+            "positive_pcr": positive_pcr,
+            "positive_ag": positive_ag,
+        }
+    )
     df = df.fillna(0).sort_values("Date")
 
     # In February 2021, the governemnt started using PCR to confirm all antigen tests.
@@ -40,7 +42,8 @@ def main():
     df["cases"] = df.positive_pcr
 
     df["Positive rate"] = (
-        df["cases"].rolling(7).sum() / df["Daily change in cumulative total"].rolling(7).sum()
+        df["cases"].rolling(7).sum()
+        / df["Daily change in cumulative total"].rolling(7).sum()
     ).round(3)
 
     df = df[["Date", "Daily change in cumulative total", "Positive rate"]]
@@ -56,5 +59,5 @@ def main():
     df.to_csv("automated_sheets/Slovenia.csv", index=False)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -4,7 +4,6 @@ from vax.utils.dates import clean_date_series
 
 
 class Ecuador:
-
     def __init__(self, source_url: str, location: str, columns_rename: dict = None):
         """Constructor.
 
@@ -24,7 +23,9 @@ class Ecuador:
     def check_columns(self, df: pd.DataFrame, expected) -> pd.DataFrame:
         n_columns = df.shape[1]
         if n_columns != expected:
-            raise ValueError(f"The provided input does not have {expected} columns. It has n_columns columns")
+            raise ValueError(
+                f"The provided input does not have {expected} columns. It has n_columns columns"
+            )
         return df
 
     def rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -46,13 +47,15 @@ class Ecuador:
 
         REF: https://github.com/andrab/ecuacovid/blob/master/datos_crudos/vacunas/fabricantes.csv
         """
+
         def _enrich_vaccine(date: str):
-            if date < '2021-03-06':
-                return 'Pfizer/BioNTech'
-            elif date < '17/03/2021':
+            if date < "2021-03-06":
+                return "Pfizer/BioNTech"
+            elif date < "17/03/2021":
                 return "Pfizer/BioNTech, Sinovac"
             else:
                 return "Pfizer/BioNTech, Oxford/AstraZeneca, Sinovac"
+
         return df.assign(vaccine=df.date.apply(_enrich_vaccine))
 
     def exclude_data_points(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -63,8 +66,7 @@ class Ecuador:
 
     def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
-            df
-            .pipe(self.check_columns, expected=4)
+            df.pipe(self.check_columns, expected=4)
             .pipe(self.rename_columns)
             .pipe(self.format_date)
             .pipe(self.enrich_columns)
@@ -75,10 +77,7 @@ class Ecuador:
     def to_csv(self, paths):
         """Generalized."""
         df = self.read().pipe(self.pipeline)
-        df.to_csv(
-            paths.tmp_vax_out(self.location),
-            index=False
-        )
+        df.to_csv(paths.tmp_vax_out(self.location), index=False)
 
 
 def main(paths):
@@ -90,7 +89,7 @@ def main(paths):
             "dosis_total": "total_vaccinations",
             "primera_dosis": "people_vaccinated",
             "segunda_dosis": "people_fully_vaccinated",
-        }
+        },
     ).to_csv(paths)
 
 

@@ -21,25 +21,26 @@ COUNTRIES = {
     "Bermuda": "Bermuda",
     "Bahamas": "Bahamas",
     "Dominica": "Dominica",
+    "Honduras": "Honduras",
     "Jamaica": "Jamaica",
     "Venezuela": "Venezuela",
 }
 
 
 columns = {
-    'Country/ Territory',
-    'Country code',
-    'Single dose [5]',
-    'First dose [3,6]',
-    'Second dose [4,6]',
-    'Complete Schedule [2]',
-    'Total Doses [1]',
-    'Population 2021',
-    'date'
+    "Country/ Territory",
+    "Country code",
+    "Single dose [5]",
+    "First dose [3,6]",
+    "Second dose [4,6]",
+    "Complete Schedule [2]",
+    "Total Doses [1]",
+    "Population 2021",
+    "date",
 }
 
-class PAHO:
 
+class PAHO:
     def __init__(self) -> None:
         self.source_url = "https://ais.paho.org/imm/IM_DosisAdmin-Vacunacion.asp"
         self._download_path = "/tmp"
@@ -68,33 +69,34 @@ class PAHO:
             # Load downloadded file
             filename = self._get_downloaded_filename()
             df = pd.read_csv(
-                filename,
-                sep='\t',
-                encoding=get_file_encoding(filename),
-                thousands=','
+                filename, sep="\t", encoding=get_file_encoding(filename), thousands=","
             )
             os.remove(filename)
-            df = df.assign(
-                date=self._parse_date(driver)
-            )
+            df = df.assign(date=self._parse_date(driver))
         return df
 
     def _load_options(self):
         op = Options()
         op.add_argument("--disable-notifications")
-        op.add_experimental_option("prefs",{
-            "download.prompt_for_download": False,
-            "download.directory_upgrade": True,
-            "safebrowsing.enabled": True 
-        })
+        op.add_experimental_option(
+            "prefs",
+            {
+                "download.prompt_for_download": False,
+                "download.directory_upgrade": True,
+                "safebrowsing.enabled": True,
+            },
+        )
         op.add_argument("--headless")
         return op
 
     def _set_download_settings(self, driver):
-        driver.command_executor._commands["send_command"] = ("POST", "/session/$sessionId/chromium/send_command")
+        driver.command_executor._commands["send_command"] = (
+            "POST",
+            "/session/$sessionId/chromium/send_command",
+        )
         params = {
             "cmd": "Page.setDownloadBehavior",
-            "params": {"behavior": "allow", "downloadPath": self._download_path}
+            "params": {"behavior": "allow", "downloadPath": self._download_path},
         }
         _ = driver.execute("send_command", params)
 
@@ -110,6 +112,9 @@ class PAHO:
         time.sleep(2)
         # Choose CSV
         driver.find_element_by_xpath("//div[contains(text(),'CSV')]").click()
+        time.sleep(2)
+        # Select RDT Overview option
+        driver.find_element_by_xpath(f"//span[contains(text(),'{filename}')]").click()
         time.sleep(2)
         # Download
         driver.find_element_by_xpath("//button[contains(text(),'Download')]").click()
@@ -146,7 +151,7 @@ class PAHO:
         df["location"] = df.location.replace(COUNTRIES)
         df = df[df.location.isin(COUNTRIES)]
         return df
-        
+
     def pipe_metrics(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.assign(
             people_vaccinated=df["Single dose [5]"] + df["First dose [3,6]"],
@@ -161,25 +166,36 @@ class PAHO:
 
     def pipe_vaccine(self, df: pd.DataFrame) -> pd.DataFrame:
         url = "https://covid19.who.int/who-data/vaccination-data.csv"
-        df_who = pd.read_csv(url, usecols=["ISO3", "VACCINES_USED"]).rename(columns={"VACCINES_USED": "vaccine"})
+        df_who = pd.read_csv(url, usecols=["ISO3", "VACCINES_USED"]).rename(
+            columns={"VACCINES_USED": "vaccine"}
+        )
         df_who = df_who.dropna(subset=["vaccine"])
         df_who = df_who.assign(
             vaccine=df_who.vaccine.apply(
-                lambda x: ", ".join(sorted(set(VACCINES_WHO_MAPPING[xx.strip()] for xx in x.split(","))))
+                lambda x: ", ".join(
+                    sorted(set(VACCINES_WHO_MAPPING[xx.strip()] for xx in x.split(",")))
+                )
             )
         )
         df = df.merge(df_who, left_on="Country code", right_on="ISO3")
         return df
 
     def pipe_select_out_cols(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df[[
-            "location", "date", "vaccine", "source_url", "total_vaccinations", "people_vaccinated", "people_fully_vaccinated"
-        ]]
+        return df[
+            [
+                "location",
+                "date",
+                "vaccine",
+                "source_url",
+                "total_vaccinations",
+                "people_vaccinated",
+                "people_fully_vaccinated",
+            ]
+        ]
 
     def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
-            df
-            .pipe(self.pipe_check_columns)
+            df.pipe(self.pipe_check_columns)
             .pipe(self.pipe_rename_columns)
             .pipe(self.pipe_filter_countries)
             .pipe(self.pipe_metrics)

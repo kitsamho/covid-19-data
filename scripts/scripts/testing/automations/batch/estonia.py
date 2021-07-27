@@ -7,7 +7,9 @@ def main():
 
     df = pd.read_csv(url, usecols=["StatisticsDate", "TotalTests"])
 
-    df = df.groupby("StatisticsDate", as_index=False).sum().sort_values("StatisticsDate")
+    df = (
+        df.groupby("StatisticsDate", as_index=False).sum().sort_values("StatisticsDate")
+    )
 
     df = df.rename(columns={"StatisticsDate": "Date", "TotalTests": "Cumulative total"})
 
@@ -20,5 +22,5 @@ def main():
     df.to_csv("automated_sheets/Estonia.csv", index=False)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

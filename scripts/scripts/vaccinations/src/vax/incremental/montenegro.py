@@ -36,7 +36,11 @@ def enrich_location(ds: pd.Series) -> pd.Series:
 
 
 def enrich_vaccine(ds: pd.Series) -> pd.Series:
-    return enrich_data(ds, "vaccine", "Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V")
+    return enrich_data(
+        ds,
+        "vaccine",
+        "Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V",
+    )
 
 
 def enrich_source(ds: pd.Series) -> pd.Series:
@@ -44,12 +48,7 @@ def enrich_source(ds: pd.Series) -> pd.Series:
 
 
 def pipeline(ds: pd.Series) -> pd.Series:
-    return (
-        ds
-        .pipe(enrich_location)
-        .pipe(enrich_vaccine)
-        .pipe(enrich_source)
-    )
+    return ds.pipe(enrich_location).pipe(enrich_vaccine).pipe(enrich_source)
 
 
 def main(paths):
@@ -63,7 +62,7 @@ def main(paths):
         people_fully_vaccinated=int(data["people_fully_vaccinated"]),
         date=str(data["date"]),
         source_url=str(data["source_url"]),
-        vaccine=str(data["vaccine"])
+        vaccine=str(data["vaccine"]),
     )
 
 

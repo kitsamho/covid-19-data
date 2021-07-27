@@ -21,12 +21,14 @@ def read(source: str) -> pd.Series:
 
     date = localdate("Asia/Dhaka")
 
-    return pd.Series(data={
-        "total_vaccinations": total_vaccinations,
-        "people_vaccinated": people_vaccinated,
-        "people_fully_vaccinated": people_fully_vaccinated,
-        "date": date,
-    })
+    return pd.Series(
+        data={
+            "total_vaccinations": total_vaccinations,
+            "people_vaccinated": people_vaccinated,
+            "people_fully_vaccinated": people_fully_vaccinated,
+            "date": date,
+        }
+    )
 
 
 def enrich_location(ds: pd.Series) -> pd.Series:
@@ -34,7 +36,9 @@ def enrich_location(ds: pd.Series) -> pd.Series:
 
 
 def enrich_vaccine(ds: pd.Series) -> pd.Series:
-    return enrich_data(ds, "vaccine", "Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing")
+    return enrich_data(
+        ds, "vaccine", "Moderna, Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing"
+    )
 
 
 def enrich_source(ds: pd.Series, source: str) -> pd.Series:
@@ -42,12 +46,7 @@ def enrich_source(ds: pd.Series, source: str) -> pd.Series:
 
 
 def pipeline(ds: pd.Series, source: str) -> pd.Series:
-    return (
-        ds
-        .pipe(enrich_location)
-        .pipe(enrich_vaccine)
-        .pipe(enrich_source, source)
-    )
+    return ds.pipe(enrich_location).pipe(enrich_vaccine).pipe(enrich_source, source)
 
 
 def main(paths):
@@ -61,7 +60,7 @@ def main(paths):
         people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url=data["source_url"],
-        vaccine=data["vaccine"]
+        vaccine=data["vaccine"],
     )
 
 

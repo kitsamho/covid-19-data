@@ -22,15 +22,19 @@ class Panama(TwitterCollectorBase):
         for tweet in self.tweets:
             match = re.search(regex, tweet.full_text)
             if match:
-                dt = from_tz_to_tz(tweet.created_at, to_tz="America/Panama").strftime("%Y-%m-%d")
+                dt = from_tz_to_tz(tweet.created_at, to_tz="America/Panama").strftime(
+                    "%Y-%m-%d"
+                )
                 if self.stop_search(dt):
                     break
-                data.append({
-                    "date": dt,
-                    "text": tweet.full_text,
-                    "source_url": self.build_post_url(tweet.id),
-                    "num": match.group(1),
-                })
+                data.append(
+                    {
+                        "date": dt,
+                        "text": tweet.full_text,
+                        "source_url": self.build_post_url(tweet.id),
+                        "num": match.group(1),
+                    }
+                )
                 self.tweets_relevant.append(tweet)
         df = pd.DataFrame(data)
         df = df.drop_duplicates(subset=["num"], keep="last")

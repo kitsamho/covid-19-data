@@ -7,11 +7,13 @@ from vax.utils.dates import localdate
 
 def read(source: str) -> pd.Series:
     data = parse_data(source)
-    return pd.Series({
-        "total_vaccinations": data["total"],
-        "people_vaccinated": data["total.dosis1"],
-        "people_fully_vaccinated": data["total.dosis2"]
-    })
+    return pd.Series(
+        {
+            "total_vaccinations": data["total"],
+            "people_vaccinated": data["total.dosis1"],
+            "people_fully_vaccinated": data["total.dosis2"],
+        }
+    )
 
 
 def parse_data(source: str) -> dict:
@@ -20,7 +22,7 @@ def parse_data(source: str) -> dict:
 
 
 def enrich_date(ds: pd.Series) -> pd.Series:
-    date_str = localdate('America/Curacao')
+    date_str = localdate("America/Curacao")
     return enrich_data(ds, "date", date_str)
 
 
@@ -33,12 +35,7 @@ def enrich_location(ds: pd.Series) -> pd.Series:
 
 
 def pipeline(ds: pd.Series) -> pd.Series:
-    return (
-        ds
-        .pipe(enrich_location)
-        .pipe(enrich_vaccine)
-        .pipe(enrich_date)
-    )
+    return ds.pipe(enrich_location).pipe(enrich_vaccine).pipe(enrich_date)
 
 
 def main(paths):
@@ -52,7 +49,7 @@ def main(paths):
         people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url="https://bakuna.cw/",
-        vaccine=data["vaccine"]
+        vaccine=data["vaccine"],
     )
 
 

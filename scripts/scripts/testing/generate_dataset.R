@@ -310,9 +310,9 @@ public_latest <- public_latest[, c(
 )]
 
 fwrite(public_latest, "../../../public/data/testing/covid-testing-latest-data-source-details.csv")
-rio::export(public_latest, "../../../public/data/testing/covid-testing-latest-data-source-details.xlsx")
+rio::export(public_latest, "../../../public/data/testing/covid-testing-latest-data-source-details.xlsx", overwrite=TRUE)
 fwrite(public, "../../../public/data/testing/covid-testing-all-observations.csv")
-rio::export(public, "../../../public/data/testing/covid-testing-all-observations.xlsx")
+rio::export(public, "../../../public/data/testing/covid-testing-all-observations.xlsx", overwrite=TRUE)
 
 # Make sanity check graph
 sanity_plot <- ggplot(data = public[!is.na(`Cumulative total`)],
@@ -321,23 +321,11 @@ sanity_plot <- ggplot(data = public[!is.na(`Cumulative total`)],
     scale_y_log10()
 print(sanity_plot)
 
-old_updates <- head(setorder(public[, .(LastUpdate = max(Date)), Entity], LastUpdate), 10)
-old_updates <- paste0(old_updates$Entity, ": ", old_updates$LastUpdate, collapse = "\n")
-
-log <- sprintf(
-    "%s series from %s countries were included in the output\nLeast up-to-date time series:\n%s",
-    nrow(public_latest),
-    length(countries),
-    old_updates
-)
-
 # Timestamp
 tm <- as.POSIXlt(Sys.time(), "UTC")
 tm <- strftime(tm, "%Y-%m-%dT%H:%M:%S")
 writeLines(tm, "../../../public/data/internal/timestamp/owid-covid-data-last-updated-timestamp-test.txt")
 
-message("-----")
-message(log)
 message("-----")
 message(update_time)
 if (any(public_latest$`Short-term positive rate` > 0.9, na.rm = TRUE)) warning("POSITIVE RATE ABOVE >90%")

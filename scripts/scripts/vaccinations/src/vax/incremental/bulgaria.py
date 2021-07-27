@@ -14,7 +14,9 @@ def read(source: str) -> pd.Series:
 
 
 def parse_data(soup: BeautifulSoup) -> pd.Series:
-    table = soup.find("p", string=re.compile("Поставени ваксини по")).parent.find("table")
+    table = soup.find("p", string=re.compile("Поставени ваксини по")).parent.find(
+        "table"
+    )
     data = pd.read_html(str(table))[0]
     data = data.droplevel(level=0, axis=1)
     data = data[data["Област"] == "Общо"]
@@ -27,14 +29,18 @@ def enrich_date(ds: pd.Series) -> pd.Series:
 
 
 def translate_index(ds: pd.Series) -> pd.Series:
-    return ds.rename({
-        "Общ брой лица със завършен ваксинационен цикъл": "people_fully_vaccinated",
-        "Общо поставени дози": "total_vaccinations",
-    })
+    return ds.rename(
+        {
+            "Общ брой лица със завършен ваксинационен цикъл": "people_fully_vaccinated",
+            "Общо поставени дози": "total_vaccinations",
+        }
+    )
 
 
 def add_totals(ds: pd.Series) -> pd.Series:
-    people_vaccinated = int(ds["total_vaccinations"]) - int(ds["people_fully_vaccinated"])
+    people_vaccinated = int(ds["total_vaccinations"]) - int(
+        ds["people_fully_vaccinated"]
+    )
     return enrich_data(ds, "people_vaccinated", people_vaccinated)
 
 
@@ -43,7 +49,9 @@ def enrich_location(ds: pd.Series) -> pd.Series:
 
 
 def enrich_vaccine(ds: pd.Series) -> pd.Series:
-    return enrich_data(ds, "vaccine", "Johnson&Johnson, Oxford/AstraZeneca, Moderna, Pfizer/BioNTech")
+    return enrich_data(
+        ds, "vaccine", "Johnson&Johnson, Oxford/AstraZeneca, Moderna, Pfizer/BioNTech"
+    )
 
 
 def enrich_source(ds: pd.Series) -> pd.Series:
@@ -52,8 +60,7 @@ def enrich_source(ds: pd.Series) -> pd.Series:
 
 def pipeline(ds: pd.Series) -> pd.Series:
     return (
-        ds
-        .pipe(translate_index)
+        ds.pipe(translate_index)
         .pipe(add_totals)
         .pipe(enrich_date)
         .pipe(enrich_location)
@@ -67,13 +74,13 @@ def main(paths):
     data = read(source).pipe(pipeline)
     increment(
         paths=paths,
-        location=data['location'],
-        total_vaccinations=int(data['total_vaccinations']),
-        people_vaccinated=int(data['people_vaccinated']),
-        people_fully_vaccinated=int(data['people_fully_vaccinated']),
-        date=data['date'],
-        source_url=data['source_url'],
-        vaccine=data['vaccine']
+        location=data["location"],
+        total_vaccinations=int(data["total_vaccinations"]),
+        people_vaccinated=int(data["people_vaccinated"]),
+        people_fully_vaccinated=int(data["people_fully_vaccinated"]),
+        date=data["date"],
+        source_url=data["source_url"],
+        vaccine=data["vaccine"],
     )
 
 

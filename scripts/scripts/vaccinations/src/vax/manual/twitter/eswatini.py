@@ -26,12 +26,16 @@ class Eswatini(TwitterCollectorBase):
                 dt = clean_date(match.group(1), "%d %B %Y")
                 if self.stop_search(dt):
                     break
-                data.append({
-                    "date": dt,
-                    "text": tweet.full_text,
-                    "source_url": self.build_post_url(tweet.id),
-                    "media_url": tweet.extended_entities["media"][0]["media_url_https"],
-                })
+                data.append(
+                    {
+                        "date": dt,
+                        "text": tweet.full_text,
+                        "source_url": self.build_post_url(tweet.id),
+                        "media_url": tweet.extended_entities["media"][0][
+                            "media_url_https"
+                        ],
+                    }
+                )
         df = pd.DataFrame(data)
         return df
 

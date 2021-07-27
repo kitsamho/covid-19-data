@@ -8,11 +8,12 @@ def main(paths):
     df = pd.read_csv(url, usecols=["fecha_vacunacion", "fabricante", "dosis", "n_reg"])
 
     df = df.rename(columns={"fecha_vacunacion": "date", "fabricante": "vaccine"})
+    df = df.dropna(subset=["vaccine"])
 
     vaccine_mapping = {
         "SINOPHARM": "Sinopharm/Beijing",
         "PFIZER": "Pfizer/BioNTech",
-        "ASTRAZENECA": "Oxford/AstraZeneca"
+        "ASTRAZENECA": "Oxford/AstraZeneca",
     }
     unknown_vaccines = set(df["vaccine"].unique()).difference(vaccine_mapping.keys())
     if unknown_vaccines:
@@ -20,8 +21,7 @@ def main(paths):
     df = df.replace(vaccine_mapping)
 
     df = (
-        df
-        .drop(columns="vaccine")
+        df.drop(columns="vaccine")
         .groupby(["date", "dosis"], as_index=False)
         .sum()
         .pivot(index="date", columns="dosis", values="n_reg")
@@ -36,12 +36,12 @@ def main(paths):
 
     df.loc[:, "location"] = "Peru"
     df.loc[:, "vaccine"] = ", ".join(sorted(vaccine_mapping.values()))
-    df.loc[:, "source_url"] = (
-        "https://www.datosabiertos.gob.pe/dataset/vacunaci%C3%B3n-contra-covid-19-ministerio-de-salud-minsa"
-    )
+    df.loc[
+        :, "source_url"
+    ] = "https://www.datosabiertos.gob.pe/dataset/vacunaci%C3%B3n-contra-covid-19-ministerio-de-salud-minsa"
 
     df.to_csv(paths.tmp_vax_out("Peru"), index=False)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

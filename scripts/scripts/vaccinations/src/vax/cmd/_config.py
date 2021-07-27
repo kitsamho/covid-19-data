@@ -6,7 +6,10 @@ from itertools import chain
 
 from vax.utils.gsheets import GSheetApi
 from vax.cmd.get_data import (
-    modules_name, modules_name_batch, modules_name_incremental, country_to_module
+    modules_name,
+    modules_name_batch,
+    modules_name_incremental,
+    country_to_module,
 )
 from vax.cmd._parser import _parse_args, CHOICES
 from vax.cmd.utils import normalize_country_name
@@ -27,12 +30,23 @@ class ConfigParamsStep(object):
             secret_keys = ["id", "token", "credentials", "credential", "secret"]
             return any(x in name for x in secret_keys)
 
-        return f"\n".join([f"* {k}: {v}" for k, v in self._dict.items() if not _is_secret(k)])
+        return f"\n".join(
+            [f"* {k}: {v}" for k, v in self._dict.items() if not _is_secret(k)]
+        )
 
 
 class ConfigParams(object):
-
-    def __init__(self, config_file, parallel, njobs, countries, mode, display, credentials_file, check_r=False):
+    def __init__(
+        self,
+        config_file,
+        parallel,
+        njobs,
+        countries,
+        mode,
+        display,
+        credentials_file,
+        check_r=False,
+    ):
         self._parallel = parallel
         self._njobs = njobs
         self._countries = countries
@@ -60,13 +74,13 @@ class ConfigParams(object):
             mode=mode,
             display=args.show_config,
             credentials_file=args.credentials,
-            check_r=args.checkr
+            check_r=args.checkr,
         )
 
     @property
     def config_file_exists(self):
         return os.path.isfile(self.config_file)
-    
+
     @property
     def credentials_file_exists(self):
         return os.path.isfile(self.credentials_file)
@@ -77,7 +91,9 @@ class ConfigParams(object):
         if field in self._credentials:
             return self._credentials[field]
         else:
-            raise ValueError(f"Field 'google_credentials' not found in credentials file. Please check.")
+            raise ValueError(
+                f"Field 'google_credentials' not found in credentials file. Please check."
+            )
 
     @property
     def gsheets_api(self):
@@ -91,10 +107,10 @@ class ConfigParams(object):
             raise KeyError("Missing global.project_dir variable in config.yaml")
 
     def _get_credentials_file_from_config(self, credentials):
-            try:
-                return self._config["global"]["credentials"]
-            except KeyError:
-                return credentials
+        try:
+            return self._config["global"]["credentials"]
+        except KeyError:
+            return credentials
 
     def _load_yaml(self):
         if self.config_file_exists:
@@ -106,56 +122,98 @@ class ConfigParams(object):
             with open(self.credentials_file) as f:
                 return json.load(f)
         else:
-            raise FileNotFoundError(f"Credentials file not found. Check path {self.credentials_file}. We recommend"
-                                     "setting this in `config.yaml`.")
+            raise FileNotFoundError(
+                f"Credentials file not found. Check path {self.credentials_file}. We recommend"
+                "setting this in `config.yaml`."
+            )
 
     def GetDataConfig(self):
         """Use `_token`/`id`/`secret` for variables that are secret"""
-        return ConfigParamsStep({
-            "parallel": self._return_value_pipeline("get-data", "parallel", self._parallel),
-            "njobs": self._return_value_pipeline("get-data", "njobs", self._njobs),
-            "countries": _countries_to_modules(self._return_value_pipeline("get-data", "countries", self._countries)),
-            "skip_countries": list(map(
-                normalize_country_name, self._return_value_pipeline("get-data", "skip_countries", [])
-            )),
-        })
+        return ConfigParamsStep(
+            {
+                "parallel": self._return_value_pipeline(
+                    "get-data", "parallel", self._parallel
+                ),
+                "njobs": self._return_value_pipeline("get-data", "njobs", self._njobs),
+                "countries": _countries_to_modules(
+                    self._return_value_pipeline(
+                        "get-data", "countries", self._countries
+                    )
+                ),
+                "skip_countries": list(
+                    map(
+                        normalize_country_name,
+                        self._return_value_pipeline("get-data", "skip_countries", []),
+                    )
+                ),
+            }
+        )
 
     def ProposeDataConfig(self):
         """Use `_token`/`id`/`secret` for variables that are secret"""
-        return ConfigParamsStep({
-            "parallel": self._return_value_pipeline("get-data", "parallel", self._parallel),
-            "njobs": self._return_value_pipeline("get-data", "njobs", self._njobs),
-            "countries": _countries_to_modules(self._return_value_pipeline("get-data", "countries", self._countries)),
-            "skip_countries": list(map(
-                normalize_country_name, self._return_value_pipeline("get-data", "skip_countries", [])
-            )),
-        })
+        return ConfigParamsStep(
+            {
+                "parallel": self._return_value_pipeline(
+                    "get-data", "parallel", self._parallel
+                ),
+                "njobs": self._return_value_pipeline("get-data", "njobs", self._njobs),
+                "countries": _countries_to_modules(
+                    self._return_value_pipeline(
+                        "get-data", "countries", self._countries
+                    )
+                ),
+                "skip_countries": list(
+                    map(
+                        normalize_country_name,
+                        self._return_value_pipeline("get-data", "skip_countries", []),
+                    )
+                ),
+            }
+        )
 
     def ProcessDataConfig(self):
         """Use `_token`/`id`/`secret` for variables that are secret"""
-        return ConfigParamsStep({
-            "skip_complete": self._return_value_pipeline("process-data", "skip_complete", []),
-            "skip_monotonic_check": self._get_skip_check("skip_monotonic_check"),
-            "skip_anomaly_check": self._get_skip_check("skip_anomaly_check"),
-        })
+        return ConfigParamsStep(
+            {
+                "skip_complete": self._return_value_pipeline(
+                    "process-data", "skip_complete", []
+                ),
+                "skip_monotonic_check": self._get_skip_check("skip_monotonic_check"),
+                "skip_anomaly_check": self._get_skip_check("skip_anomaly_check"),
+            }
+        )
 
     def CredentialsConfig(self):
         """Use `_token`/`id`/`secret` for variables that are secret"""
-        return ConfigParamsStep({
-            "greece_api_token": self._return_value_credentials("greece_api_token"),
-            "owid_cloud_table_post": self._return_value_credentials("owid_cloud_table_post"),
-            "google_credentials": self._return_value_credentials("google_credentials"),
-            "google_spreadsheet_vax_id": self._return_value_credentials("google_spreadsheet_vax_id"),
-            "twitter_consumer_key": self._return_value_credentials("twitter_consumer_key"),
-            "twitter_consumer_secret": self._return_value_credentials("twitter_consumer_secret"),
-        })
+        return ConfigParamsStep(
+            {
+                "greece_api_token": self._return_value_credentials("greece_api_token"),
+                "owid_cloud_table_post": self._return_value_credentials(
+                    "owid_cloud_table_post"
+                ),
+                "google_credentials": self._return_value_credentials(
+                    "google_credentials"
+                ),
+                "google_spreadsheet_vax_id": self._return_value_credentials(
+                    "google_spreadsheet_vax_id"
+                ),
+                "twitter_consumer_key": self._return_value_credentials(
+                    "twitter_consumer_key"
+                ),
+                "twitter_consumer_secret": self._return_value_credentials(
+                    "twitter_consumer_secret"
+                ),
+            }
+        )
 
     def _return_value_credentials(self, feature_name):
         if feature_name in self._credentials:
             v = self._credentials[feature_name]
             if v:
                 return v
-        raise AttributeError(f"Missing field {feature_name} or value was None in credentials")
+        raise AttributeError(
+            f"Missing field {feature_name} or value was None in credentials"
+        )
 
     def _get_skip_check(self, metric):
         def _valid_value(x):
@@ -169,6 +227,7 @@ class ConfigParams(object):
             if not all(isinstance(xx["date"], date) for xx in x):
                 return False
             return True
+
         x = self._return_value_pipeline("process-data", metric, {})
         for _, v in x.items():
             if v is None:
@@ -224,7 +283,9 @@ def _countries_to_modules(countries):
         countries_wrong = [c for c in countries if c not in country_to_module]
         countries_valid = sorted(list(country_to_module.keys()))
         if countries_wrong:
-            print(f"Invalid countries: {countries_wrong}. Valid countries are: {countries_valid}")
+            print(
+                f"Invalid countries: {countries_wrong}. Valid countries are: {countries_valid}"
+            )
             raise ValueError("Invalid country")
         # Get module equivalent names
         modules = [country_to_module[country] for country in countries]

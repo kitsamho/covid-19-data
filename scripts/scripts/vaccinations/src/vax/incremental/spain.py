@@ -48,14 +48,22 @@ def parse_data(last_update: str, max_iter: int = 10):
 
 
 def _parse_ds_data(df: pd.DataFrame, source: str) -> pd.Series:
-    return pd.Series(data={
-        "total_vaccinations": df.loc["Totales", "Dosis administradas (2)"].item(),
-        "people_vaccinated": df.loc["Totales", "Nº Personas con al menos 1 dosis"].item(),
-        "people_fully_vaccinated": df.loc["Totales", "Nº Personas vacunadas(pauta completada)"].item(),
-        "date": df["Fecha de la última vacuna registrada (2)"].max().strftime("%Y-%m-%d"),
-        "source_url": source,
-        "vaccine": ", ".join(_get_vaccine_names(df, translate=True)),
-    })
+    return pd.Series(
+        data={
+            "total_vaccinations": df.loc["Totales", "Dosis administradas (2)"].item(),
+            "people_vaccinated": df.loc[
+                "Totales", "Nº Personas con al menos 1 dosis"
+            ].item(),
+            "people_fully_vaccinated": df.loc[
+                "Totales", "Nº Personas vacunadas(pauta completada)"
+            ].item(),
+            "date": df["Fecha de la última vacuna registrada (2)"]
+            .max()
+            .strftime("%Y-%m-%d"),
+            "source_url": source,
+            "vaccine": ", ".join(_get_vaccine_names(df, translate=True)),
+        }
+    )
 
 
 def _get_source_url(dt_str):
@@ -66,16 +74,23 @@ def _get_source_url(dt_str):
 
 
 def _get_vaccine_names(df: pd.DataFrame, translate: bool = False):
-    regex_vaccines = r'Dosis entregadas ([a-zA-Z]*) \(1\)'
+    regex_vaccines = r"Dosis entregadas ([a-zA-Z]*) \(1\)"
     if translate:
-        return sorted([
-            vaccine_mapping[re.search(regex_vaccines, col).group(1)]
-            for col in df.columns if re.match(regex_vaccines, col)
-        ])
+        return sorted(
+            [
+                vaccine_mapping[re.search(regex_vaccines, col).group(1)]
+                for col in df.columns
+                if re.match(regex_vaccines, col)
+            ]
+        )
     else:
-        return sorted([
-            re.search(regex_vaccines, col).group(1) for col in df.columns if re.match(regex_vaccines, col)
-        ])
+        return sorted(
+            [
+                re.search(regex_vaccines, col).group(1)
+                for col in df.columns
+                if re.match(regex_vaccines, col)
+            ]
+        )
 
 
 def _check_vaccine_names(df: pd.DataFrame):
@@ -90,10 +105,7 @@ def enrich_location(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def pipeline(df: pd.DataFrame) -> pd.DataFrame:
-    return (
-        df
-        .pipe(enrich_location)
-    )
+    return df.pipe(enrich_location)
 
 
 def merge_with_current_data(df: pd.DataFrame, filepath: str) -> pd.DataFrame:

@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.options import Options
 from vax.utils.incremental import increment, clean_count
 from vax.utils.dates import clean_date
 
+
 def main(paths):
 
     data = {
@@ -22,12 +23,22 @@ def main(paths):
         driver.get(data["source_url"])
         driver.find_element_by_class_name("fa-syringe").click()
         date = driver.find_element_by_class_name("logo").text
-        dose1 = driver.find_element_by_id("dosisaplicadas1").find_element_by_tag_name("h3").text
-        dose2 = driver.find_element_by_id("dosisaplicadas2").find_element_by_tag_name("h3").text
+        dose1 = (
+            driver.find_element_by_id("dosisaplicadas1")
+            .find_element_by_tag_name("h3")
+            .text
+        )
+        dose2 = (
+            driver.find_element_by_id("dosisaplicadas2")
+            .find_element_by_tag_name("h3")
+            .text
+        )
 
     data["people_vaccinated"] = clean_count(dose1)
     data["people_fully_vaccinated"] = clean_count(dose2)
-    data["total_vaccinations"] = data["people_vaccinated"] + data["people_fully_vaccinated"]
+    data["total_vaccinations"] = (
+        data["people_vaccinated"] + data["people_fully_vaccinated"]
+    )
 
     date = re.search(r"\d+/\d+/202\d", date).group(0)
     data["date"] = clean_date(date, "%d/%m/%Y")

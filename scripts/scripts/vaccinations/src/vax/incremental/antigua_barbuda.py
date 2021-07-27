@@ -8,13 +8,10 @@ from vax.utils.dates import extract_clean_date
 
 
 class AntiguaBarbuda:
-
     def __init__(self, source_url: str, location: str):
         self.source_url = source_url
         self.location = location
-        self.regex = {
-            "date": r'\[Updated on ([a-zA-Z]+ \d{1,2}, 202\d)\]'
-        }
+        self.regex = {"date": r"\[Updated on ([a-zA-Z]+ \d{1,2}, 202\d)\]"}
 
     def read(self) -> pd.DataFrame:
         soup = get_soup(self.source_url)
@@ -22,11 +19,13 @@ class AntiguaBarbuda:
 
     def parse_data(self, soup):
         dose1_elem, dose2_elem = self._get_elements(soup)
-        return pd.Series({
-            "date": self._parse_date(dose1_elem, dose2_elem),
-            "people_vaccinated": self._parse_metric(dose1_elem),
-            "people_fully_vaccinated": self._parse_metric(dose2_elem),
-        })
+        return pd.Series(
+            {
+                "date": self._parse_date(dose1_elem, dose2_elem),
+                "people_vaccinated": self._parse_metric(dose1_elem),
+                "people_fully_vaccinated": self._parse_metric(dose2_elem),
+            }
+        )
 
     def _get_elements(self, soup):
         # Get elements
@@ -59,7 +58,9 @@ class AntiguaBarbuda:
                 return clean_count(elem.find(class_="case-Number").text)
 
     def pipe_people_vaccinated(self, ds: pd.Series) -> pd.Series:
-        total_vaccinations = ds.loc["people_vaccinated"] + ds.loc["people_fully_vaccinated"]
+        total_vaccinations = (
+            ds.loc["people_vaccinated"] + ds.loc["people_fully_vaccinated"]
+        )
         return enrich_data(ds, "total_vaccinations", total_vaccinations)
 
     def pipe_location(self, ds: pd.Series) -> pd.Series:
@@ -73,8 +74,7 @@ class AntiguaBarbuda:
 
     def pipeline(self, df: pd.Series) -> pd.Series:
         return (
-            df
-            .pipe(self.pipe_people_vaccinated)
+            df.pipe(self.pipe_people_vaccinated)
             .pipe(self.pipe_location)
             .pipe(self.pipe_vaccine)
             .pipe(self.pipe_source)
@@ -85,13 +85,13 @@ class AntiguaBarbuda:
         ds = self.read().pipe(self.pipeline)
         increment(
             paths=paths,
-            location=ds['location'],
-            total_vaccinations=ds['total_vaccinations'],
-            people_vaccinated=ds['people_vaccinated'],
-            people_fully_vaccinated=ds['people_fully_vaccinated'],
-            date=ds['date'],
-            source_url=ds['source_url'],
-            vaccine=ds['vaccine']
+            location=ds["location"],
+            total_vaccinations=ds["total_vaccinations"],
+            people_vaccinated=ds["people_vaccinated"],
+            people_fully_vaccinated=ds["people_fully_vaccinated"],
+            date=ds["date"],
+            source_url=ds["source_url"],
+            vaccine=ds["vaccine"],
         )
 
 

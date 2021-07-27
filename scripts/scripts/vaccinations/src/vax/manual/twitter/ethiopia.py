@@ -14,7 +14,7 @@ class Ethiopia(TwitterCollectorBase):
             add_metrics_nan=["total_vaccinations"],
             paths=paths,
         )
-    
+
     def _propose_df(self):
         regex = r"ባለፉት 24 .*"
         data = []
@@ -23,12 +23,16 @@ class Ethiopia(TwitterCollectorBase):
                 dt = tweet.created_at.strftime("%Y-%m-%d")
                 if self.stop_search(dt):
                     break
-                data.append({
-                    "date": dt,
-                    "text": tweet.full_text,
-                    "source_url": self.build_post_url(tweet.id),
-                    "media_url": tweet.extended_entities["media"][1]["media_url_https"],
-                })
+                data.append(
+                    {
+                        "date": dt,
+                        "text": tweet.full_text,
+                        "source_url": self.build_post_url(tweet.id),
+                        "media_url": tweet.extended_entities["media"][1][
+                            "media_url_https"
+                        ],
+                    }
+                )
         return pd.DataFrame(data)
 
 

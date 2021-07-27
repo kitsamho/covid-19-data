@@ -40,15 +40,19 @@ class Paraguay(TwitterCollectorBase):
                 dt = clean_date(match.group(1), "%d.%m.%Y")
                 if self.stop_search(dt):
                     break
-                data.append({
-                    "date": dt,
-                    "total_vaccinations": total_vaccinations,
-                    "people_vaccinated": people_vaccinated,
-                    "people_fully_vaccinated": people_fully_vaccinated,
-                    "text": tweet.full_text,
-                    "source_url": 1,#pan.build_post_url(tweet.id),
-                    "media_url": tweet.extended_entities["media"][0]["media_url_https"],
-                })
+                data.append(
+                    {
+                        "date": dt,
+                        "total_vaccinations": total_vaccinations,
+                        "people_vaccinated": people_vaccinated,
+                        "people_fully_vaccinated": people_fully_vaccinated,
+                        "text": tweet.full_text,
+                        "source_url": 1,  # pan.build_post_url(tweet.id),
+                        "media_url": tweet.extended_entities["media"][0][
+                            "media_url_https"
+                        ],
+                    }
+                )
         df = pd.DataFrame(data)
         return df
 

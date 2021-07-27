@@ -29,7 +29,9 @@ class Gibraltar(TwitterCollectorBase):
             if cond:
                 url = tweet.extended_entities["media"][0]["media_url_https"]
                 # print(url)
-                im = Image.open(requests.get(url, stream=True).raw, formats=["png", "jpeg"])
+                im = Image.open(
+                    requests.get(url, stream=True).raw, formats=["png", "jpeg"]
+                )
                 pixel_values = [x for i, x in enumerate(im.getdata()) if i < 100000]
                 h = pd.value_counts(pixel_values, normalize=True).index[0][:3]
                 # print(h)
@@ -40,12 +42,14 @@ class Gibraltar(TwitterCollectorBase):
                     dt = tweet.created_at.strftime("%Y-%m-%d")
                     if self.stop_search(dt):
                         break
-                    records.append({
-                        "date": dt,
-                        "text": tweet.full_text,
-                        "source_url": self.build_post_url(tweet.id),
-                        "media_url": url,
-                    })
+                    records.append(
+                        {
+                            "date": dt,
+                            "text": tweet.full_text,
+                            "source_url": self.build_post_url(tweet.id),
+                            "media_url": url,
+                        }
+                    )
         df = pd.DataFrame(records)
         return df
 

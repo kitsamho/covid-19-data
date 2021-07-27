@@ -13,14 +13,14 @@ def main(paths):
         "covid_vaccinations_by_drug_name_new/FeatureServer/0/query"
     )
     PARAMS = {
-        'f': 'json',
-        'where': "municipality_code='00'",
-        'returnGeometry': False,
-        'spatialRel': 'esriSpatialRelIntersects',
-        'outFields': 'date,vaccine_name,vaccination_state,vaccinated_cum',
-        'resultOffset': 0,
-        'resultRecordCount': 32000,
-        'resultType': 'standard'
+        "f": "json",
+        "where": "municipality_code='00'",
+        "returnGeometry": False,
+        "spatialRel": "esriSpatialRelIntersects",
+        "outFields": "date,vaccine_name,vaccination_state,vaccinated_cum",
+        "resultOffset": 0,
+        "resultRecordCount": 32000,
+        "resultType": "standard",
     }
     res = requests.get(DATA_URL, params=PARAMS)
 
@@ -44,15 +44,17 @@ def main(paths):
         "Pfizer-BioNTech": "Pfizer/BioNTech",
         "Moderna": "Moderna",
         "AstraZeneca": "Oxford/AstraZeneca",
-        "Johnson & Johnson": "Johnson&Johnson"
+        "Johnson & Johnson": "Johnson&Johnson",
     }
     assert set(df["vaccine_name"].unique()) == set(vaccine_mapping.keys())
     df = df.replace(vaccine_mapping)
     vax = (
-        df.groupby(["date", "vaccine_name"], as_index=False)
-        ["vaccinated_cum"].sum()
+        df.groupby(["date", "vaccine_name"], as_index=False)["vaccinated_cum"]
+        .sum()
         .sort_values("date")
-        .rename(columns={"vaccine_name": "vaccine", "vaccinated_cum": "total_vaccinations"})
+        .rename(
+            columns={"vaccine_name": "vaccine", "vaccinated_cum": "total_vaccinations"}
+        )
     )
     vax["location"] = "Lithuania"
     vax.to_csv(paths.tmp_vax_out_man("Lithuania"), index=False)
@@ -60,16 +62,16 @@ def main(paths):
 
     # Unpivot
     df = (
-        df
-        .groupby(["date", "dose_number", "vaccine_name"], as_index=False)
+        df.groupby(["date", "dose_number", "vaccine_name"], as_index=False)
         .sum()
-        .pivot(index=["date", "vaccine_name"], columns="dose_number", values="vaccinated_cum")
+        .pivot(
+            index=["date", "vaccine_name"],
+            columns="dose_number",
+            values="vaccinated_cum",
+        )
         .fillna(0)
         .reset_index()
-        .rename(columns={
-            1: "people_vaccinated",
-            2: "people_fully_vaccinated"
-        })
+        .rename(columns={1: "people_vaccinated", 2: "people_fully_vaccinated"})
         .sort_values("date")
     )
 
@@ -81,18 +83,25 @@ def main(paths):
     df.loc[msk, "people_fully_vaccinated"] = df.loc[msk, "people_vaccinated"]
 
     # Group by date
-    df = df.groupby("date").agg({
-        "people_fully_vaccinated": sum,
-        "people_vaccinated": sum,
-        "total_vaccinations": sum,
-        "vaccine_name": lambda x: ", ".join(sorted(x))
-    }).rename(columns={"vaccine_name": "vaccine"}).reset_index()
+    df = (
+        df.groupby("date")
+        .agg(
+            {
+                "people_fully_vaccinated": sum,
+                "people_vaccinated": sum,
+                "total_vaccinations": sum,
+                "vaccine_name": lambda x: ", ".join(sorted(x)),
+            }
+        )
+        .rename(columns={"vaccine_name": "vaccine"})
+        .reset_index()
+    )
     df = df.replace(0, pd.NA)
 
     df.loc[:, "location"] = "Lithuania"
-    df.loc[:, "source_url"] = (
-        "https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/"
-    )
+    df.loc[
+        :, "source_url"
+    ] = "https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/"
 
     df.to_csv(paths.tmp_vax_out("Lithuania"), index=False)
 

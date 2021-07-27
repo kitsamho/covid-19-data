@@ -5,7 +5,9 @@ from vax.utils.checks import country_df_sanity_checks
 from vax.process.urls import clean_urls
 
 
-def process_location(df: pd.DataFrame, monotonic_check_skip: list = [], anomaly_check_skip: list = []) -> pd.DataFrame:
+def process_location(
+    df: pd.DataFrame, monotonic_check_skip: list = [], anomaly_check_skip: list = []
+) -> pd.DataFrame:
     # Only report up to previous day to avoid partial reporting
     df = df.assign(date=pd.to_datetime(df.date, dayfirst=True))
     df = df[df.date.dt.date < datetime.now().date()]
@@ -21,8 +23,13 @@ def process_location(df: pd.DataFrame, monotonic_check_skip: list = [], anomaly_
     df[cols] = df[cols].astype(float).astype("Int64").fillna(pd.NA)
     # Order columns and rows
     usecols = [
-        "location", "date", "vaccine", "source_url", "total_vaccinations", "people_vaccinated",
-        "people_fully_vaccinated"
+        "location",
+        "date",
+        "vaccine",
+        "source_url",
+        "total_vaccinations",
+        "people_vaccinated",
+        "people_fully_vaccinated",
     ]
     df = df[usecols]
     df = df.sort_values(by="date")

@@ -10,7 +10,7 @@ from vax.utils.files import export_metadata
 
 vaccine_mapping = {
     "Comirnaty": "Pfizer/BioNTech",
-    "COVID-19 Vaccine Moderna": "Moderna",
+    "Spikevax": "Moderna",
     "VAXZEVRIA": "Oxford/AstraZeneca",
     "COVID-19 Vaccine Janssen": "Johnson&Johnson",
 }
@@ -43,9 +43,7 @@ def check_columns(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def check_vaccine_names(df: pd.DataFrame) -> pd.DataFrame:
-    unknown_vaccines = set(df.vakcina.unique()).difference(
-        set(vaccine_mapping.keys())
-    )
+    unknown_vaccines = set(df.vakcina.unique()).difference(set(vaccine_mapping.keys()))
     if unknown_vaccines:
         raise ValueError("Found unknown vaccines: {}".format(unknown_vaccines))
     return df
@@ -69,19 +67,19 @@ def enrich_metadata(df: pd.DataFrame) -> pd.DataFrame:
 
 def base_pipeline(df: pd.DataFrame) -> pd.DataFrame:
     return (
-        df.pipe(check_columns)
-        .pipe(check_vaccine_names)
-        .pipe(translate_vaccine_names)
+        df.pipe(check_columns).pipe(check_vaccine_names).pipe(translate_vaccine_names)
     )
 
 
 def breakdown_per_vaccine(df: pd.DataFrame) -> pd.DataFrame:
     return (
-        df.groupby(by=["datum", "vakcina"], as_index=False)
-        [["celkem_davek"]].sum()
+        df.groupby(by=["datum", "vakcina"], as_index=False)[["celkem_davek"]]
+        .sum()
         .sort_values("datum")
         .assign(
-            size=lambda df: df.groupby(by=["vakcina"], as_index=False)["celkem_davek"].cumsum()
+            size=lambda df: df.groupby(by=["vakcina"], as_index=False)[
+                "celkem_davek"
+            ].cumsum()
         )
         .drop("celkem_davek", axis=1)
         .rename(
@@ -97,13 +95,16 @@ def breakdown_per_vaccine(df: pd.DataFrame) -> pd.DataFrame:
 
 def aggregate_by_date_vaccine(df: pd.DataFrame) -> pd.DataFrame:
     return (
-        df.groupby(by=["datum", "vakcina"])
-        [["prvnich_davek", "druhych_davek"]].sum()
+        df.groupby(by=["datum", "vakcina"])[["prvnich_davek", "druhych_davek"]]
+        .sum()
         .reset_index()
-        .rename({
-            "prvnich_davek": 1,
-            "druhych_davek": 2,
-        }, axis=1)
+        .rename(
+            {
+                "prvnich_davek": 1,
+                "druhych_davek": 2,
+            },
+            axis=1,
+        )
     )
 
 
@@ -114,7 +115,9 @@ def infer_one_dose_vaccines(df: pd.DataFrame) -> pd.DataFrame:
 
 def infer_total_vaccinations(df: pd.DataFrame) -> pd.DataFrame:
     df.loc[df.vakcina.isin(one_dose_vaccines), "total_vaccinations"] = df[1].fillna(0)
-    df.loc[-df.vakcina.isin(one_dose_vaccines), "total_vaccinations"] = df[1].fillna(0) + df[2].fillna(0)
+    df.loc[-df.vakcina.isin(one_dose_vaccines), "total_vaccinations"] = df[1].fillna(
+        0
+    ) + df[2].fillna(0)
     return df
 
 

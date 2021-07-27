@@ -32,17 +32,19 @@ class Kenya(TwitterCollectorBase):
                 h = pd.value_counts(pixel_values, normalize=True).index[0]
                 dist = np.linalg.norm(np.array(h) - np.array(col_dominant))
                 if dist < dist_th:
-        #             print("Found:", hist[0])
-        #             print(tweet.full_text)
+                    #             print("Found:", hist[0])
+                    #             print(tweet.full_text)
                     dt = tweet.created_at.strftime("%Y-%m-%d")
                     if self.stop_search(dt):
                         break
-                    records.append({
-                        "date": dt,
-                        "text": tweet.full_text,
-                        "source_url": self.build_post_url(tweet.id),
-                        "media_url": url,
-                    })
+                    records.append(
+                        {
+                            "date": dt,
+                            "text": tweet.full_text,
+                            "source_url": self.build_post_url(tweet.id),
+                            "media_url": url,
+                        }
+                    )
         df = pd.DataFrame(records)
         return df
 

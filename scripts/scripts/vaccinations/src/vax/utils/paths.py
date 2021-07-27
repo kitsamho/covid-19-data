@@ -2,7 +2,6 @@ import os
 
 
 class Paths:
-
     def __init__(self, project_dir):
         self.project_dir = project_dir
 
@@ -36,7 +35,7 @@ class Paths:
     @property
     def tmp(self):
         return os.path.join(self.project_dir, "scripts")
-    
+
     @property
     def tmp_inp(self):
         return os.path.join(self.tmp, "input")

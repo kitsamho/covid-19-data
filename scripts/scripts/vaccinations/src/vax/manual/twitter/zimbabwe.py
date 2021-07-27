@@ -15,7 +15,7 @@ class Zimbabwe(TwitterCollectorBase):
             add_metrics_nan=True,
             paths=paths,
         )
-    
+
     def _propose_df(self):
         regex = r"COVID-19 update: As at (\d{1,2} [a-zA-Z]+ 202\d), .* a total of ([\d ]+) people have been vaccinated"
         data = []
@@ -27,13 +27,17 @@ class Zimbabwe(TwitterCollectorBase):
                 dt = tweet.created_at.strftime("%Y-%m-%d")
                 if self.stop_search(dt):
                     break
-                data.append({
-                    "date": dt,
-                    "people_vaccinated": total_vaccinations,
-                    "text": tweet.full_text,
-                    "source_url": self.build_post_url(tweet.id),
-                    "media_url": tweet.entities["media"][0]["media_url_https"] if "media" in tweet.entities else None,
-                })
+                data.append(
+                    {
+                        "date": dt,
+                        "people_vaccinated": total_vaccinations,
+                        "text": tweet.full_text,
+                        "source_url": self.build_post_url(tweet.id),
+                        "media_url": tweet.entities["media"][0]["media_url_https"]
+                        if "media" in tweet.entities
+                        else None,
+                    }
+                )
         return pd.DataFrame(data)
 
 

@@ -1,6 +1,7 @@
 import re
 import requests
 import tempfile
+import itertools
 
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -10,16 +11,23 @@ from vax.utils.incremental import increment
 from vax.utils.dates import clean_date
 from vax.utils.utils import get_soup
 
-
 vaccines_mapping = {
-    "Covishield": "Oxford/AstraZeneca",
-    "Sinopharm": "Sinopharm/Beijing",
+    "Covishield Vaccine": "Oxford/AstraZeneca",
+    "Sinopharm Vaccine": "Sinopharm/Beijing",
     "Sputnik V": "Sputnik V",
+    "Pfizer": "Pfizer/BioNTech",
+    "Moderna": "Moderna",
 }
 
+regex_mapping = {
+    "Covishield Vaccine": r"(Covishield Vaccine) +1st\sDose (\d+) 2nd Dose (\d+)",
+    "Sinopharm Vaccine": r"(Sinopharm Vaccine) +1st\sDose (\d+) 2nd Dose (\d+)",
+    "Sputnik V": r"(Sputnik V) +1st\sDose (\d+) 2nd Dose (\d+)",
+    "Pfizer": r"(Pfizer) +(\d+)",
+    "Moderna": r"(Moderna) +(\d+)",
+}
 
 class SriLanka:
-
     def __init__(self):
         self.source_url = "https://www.epid.gov.lk/web/index.php?option=com_content&view=article&id=225&lang=en"
         self.location = "Sri Lanka"
@@ -44,15 +52,17 @@ class SriLanka:
         date = re.search(regex, text).group(1)
         date = clean_date(date, "%d.%m.%Y")
         # Build data series
-        return pd.Series(data={
-            "total_vaccinations": total_vaccinations,
-            "people_vaccinated": people_vaccinated,
-            "people_fully_vaccinated": people_fully_vaccinated,
-            "date": date,
-            "source_url": pdf_path,
-            "vaccine": vaccine,
-            "location": self.location,
-        })
+        return pd.Series(
+            data={
+                "total_vaccinations": total_vaccinations,
+                "people_vaccinated": people_vaccinated,
+                "people_fully_vaccinated": people_fully_vaccinated,
+                "date": date,
+                "source_url": pdf_path,
+                "vaccine": vaccine,
+                "location": self.location,
+            }
+        )
 
     def _parse_last_pdf_link(self, soup):
         links = soup.find(class_="rt-article").find_all("a")
@@ -76,18 +86,22 @@ class SriLanka:
 
     def _parse_vaccines_table_as_df(self, text):
         # Extract doses relevant sentence
-        regex = r"COVID-19 Vaccination (.*) District"# Country(/Region)? Cumulative Cases"
-        vax_info = re.search(regex, text).group(1).strip().replace('No', '').replace('Vaccine', '')
-        # Sentence to DataFrame
-        results = re.findall(r"([a-zA-Z ]+?) +1st\sDose (\d+) 2nd Dose (\d+)", vax_info)
-        df = (
-            pd.DataFrame(results, columns=["vaccine", "doses_1", "doses_2"])
-            .replace("-", 0)
+        regex = (
+            r"COVID-19 Vaccination (.*) District"  # Country(/Region)? Cumulative Cases"
         )
-        df = (
-            df
-            .astype({"doses_1": int, "doses_2": int})
-            .assign(vaccine=df.vaccine.str.strip())
+        vax_info = re.search(regex, text).group(1).strip().replace("No", "")
+        # Sentence to DataFrame
+        allresults = []
+        for vaccine_regex in regex_mapping.values():
+            results = re.findall(vaccine_regex, vax_info)
+            allresults.append(results)
+        flat_ls = list(itertools.chain(*allresults))
+        df = pd.DataFrame(flat_ls, columns=["vaccine", "doses_1", "doses_2"]).replace(
+            "-", 0
+        )
+        df.replace(to_replace=[None], value=0, inplace=True)
+        df = df.astype({"doses_1": int, "doses_2": int}).assign(
+            vaccine=df.vaccine.str.strip()
         )
         return df
 
@@ -101,7 +115,7 @@ class SriLanka:
             people_fully_vaccinated=data["people_fully_vaccinated"],
             date=data["date"],
             source_url=data["source_url"],
-            vaccine=data["vaccine"]
+            vaccine=data["vaccine"],
         )
 
 

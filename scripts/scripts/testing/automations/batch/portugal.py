@@ -11,15 +11,17 @@ def main():
     data = [elem["attributes"] for elem in data["features"]]
 
     df = pd.DataFrame.from_records(data)
-    df = df[["Total_Amostras__Ac", "Data_do_Relatorio"]].rename(columns={
-        "Data_do_Relatorio": "Date", "Total_Amostras__Ac": "Cumulative total"
-    })
+    df = df[["Total_Amostras__Ac", "Data_do_Relatorio"]].rename(
+        columns={"Data_do_Relatorio": "Date", "Total_Amostras__Ac": "Cumulative total"}
+    )
 
     df["Date"] = pd.to_datetime(df["Date"], unit="ms")
 
     df["Country"] = "Portugal"
     df["Units"] = "tests performed"
-    df["Source URL"] = "https://covid19.min-saude.pt/ponto-de-situacao-atual-em-portugal/"
+    df[
+        "Source URL"
+    ] = "https://covid19.min-saude.pt/ponto-de-situacao-atual-em-portugal/"
     df["Source label"] = "Ministry of Health"
     df["Notes"] = pd.NA
     df["Testing type"] = "includes non-PCR"
@@ -27,5 +29,5 @@ def main():
     df.to_csv("automated_sheets/Portugal.csv", index=False)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

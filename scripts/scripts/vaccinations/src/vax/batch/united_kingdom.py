@@ -1,11 +1,11 @@
 import pandas as pd
 
 from vax.utils.pipeline import enrich_total_vaccinations
+from vax.utils.utils import make_monotonic
 from uk_covid19 import Cov19API
 
 
 class UnitedKingdom:
-
     def __init__(self) -> None:
         self.location = "United Kingdom"
         self.source_url = "https://coronavirus.data.gov.uk/details/vaccinations"
@@ -38,21 +38,25 @@ class UnitedKingdom:
         return df
 
     def _fix_metric(self, df: pd.DataFrame, metric: str) -> pd.DataFrame:
-        return df.assign(**{
-            metric: df[f"{metric}_report"].fillna(df[metric])
-        })
+        return df.assign(**{metric: df[f"{metric}_report"].fillna(df[metric])})
 
     def pipe_fix_metrics(self, df: pd.DataFrame) -> pd.DataFrame:
-        df = (
-            df
-            .pipe(self._fix_metric, "people_vaccinated")
-            .pipe(self._fix_metric, "people_fully_vaccinated")
+        df = df.pipe(self._fix_metric, "people_vaccinated").pipe(
+            self._fix_metric, "people_fully_vaccinated"
         )
         cols = ["people_vaccinated", "people_fully_vaccinated", "total_vaccinations"]
         df = df.sort_values(["location", "date"])
-        _tmp = df.groupby("location", as_index=False)[cols].fillna(method="ffill").fillna(0)
+        _tmp = (
+            df.groupby("location", as_index=False)[cols]
+            .fillna(method="ffill")
+            .fillna(0)
+        )
         df.loc[_tmp.index, cols] = _tmp
-        df = df.assign(total_vaccinations=df[["total_vaccinations", "people_vaccinated"]].max(axis=1))
+        df = df.assign(
+            total_vaccinations=df[["total_vaccinations", "people_vaccinated"]].max(
+                axis=1
+            )
+        )
         return df
 
     def pipe_aggregate_first_date(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -83,34 +87,28 @@ class UnitedKingdom:
             elif date >= "2021-04-07":
                 # https://www.reuters.com/article/us-health-coronavirus-britain-moderna-idUSKBN2BU0KG
                 return "Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
+
         return df.assign(vaccine=df.date.apply(_enrich_vaccine))
 
-    def pipe_exclude_data_points(self, df: pd.DataFrame) -> pd.DataFrame:
-        # The data contains an error that creates a negative change
-        df = df[(df.location != "Northern Ireland") | (df.date != "2021-02-20")]
-        df = df[(df.location != "Northern Ireland") | (df.date != "2021-04-27")]
-        df = df[(df.location != "Northern Ireland") | (df.date != "2021-04-28")]
-        df = df[(df.location != "England") | (df.date != "2021-01-09")]
-        df = df[(df.location != "Scotland") | (df.date != "2021-01-09")]
-        return df
-
     def pipe_select_output_cols(self, df: pd.DataFrame) -> pd.DataFrame:
-        return (
-            df
-            [[
-                "location", "date", "vaccine", "source_url", "total_vaccinations", "people_vaccinated",
+        return df[
+            [
+                "location",
+                "date",
+                "vaccine",
+                "source_url",
+                "total_vaccinations",
+                "people_vaccinated",
                 "people_fully_vaccinated",
-            ]]
-        )
+            ]
+        ]
 
     def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
-            df
-            .pipe(self.pipe_fix_metrics)
+            df.pipe(self.pipe_fix_metrics)
             .pipe(self.pipe_aggregate_first_date)
             .pipe(self.pipe_source_url)
             .pipe(self.pipe_vaccine)
-            .pipe(self.pipe_exclude_data_points)
             .pipe(self.pipe_select_output_cols)
             .sort_values(by=["location", "date"])
         )
@@ -121,9 +119,8 @@ class UnitedKingdom:
     def to_csv(self, paths):
         df = self.read().pipe(self.pipeline)
         for location in set(df.location):
-            df.pipe(self._filter_location, location).to_csv(
-                paths.tmp_vax_out(location),
-                index=False
+            df.pipe(self._filter_location, location).pipe(make_monotonic).to_csv(
+                paths.tmp_vax_out(location), index=False
             )
 
 

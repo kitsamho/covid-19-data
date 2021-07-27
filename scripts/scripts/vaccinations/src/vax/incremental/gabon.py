@@ -9,13 +9,10 @@ from vax.utils.dates import extract_clean_date
 
 
 class Gabon:
-
     def __init__(self, source_url: str, location: str):
         self.source_url = source_url
         self.location = location
-        self.regex = {
-            "date": r'(\d{1,2}-\d{1,2}-202\d) \d{1,2}:\d{1,2}:\d{1,2}'
-        }
+        self.regex = {"date": r"(\d{1,2}-\d{1,2}-202\d) \d{1,2}:\d{1,2}:\d{1,2}"}
 
     def read(self) -> pd.DataFrame:
         soup = get_soup(self.source_url)
@@ -34,14 +31,18 @@ class Gabon:
                 match = re.search(self.regex["date"], text)
                 if match:
                     date_str = extract_clean_date(text, self.regex["date"], "%d-%m-%Y")
-        return pd.Series({
-            "people_vaccinated": people_vaccinated,
-            "people_fully_vaccinated": people_fully_vaccinated,
-            "date": date_str,
-        })
+        return pd.Series(
+            {
+                "people_vaccinated": people_vaccinated,
+                "people_fully_vaccinated": people_fully_vaccinated,
+                "date": date_str,
+            }
+        )
 
     def pipe_people_vaccinated(self, ds: pd.Series) -> pd.Series:
-        total_vaccinations = ds.loc["people_vaccinated"] + ds.loc["people_fully_vaccinated"]
+        total_vaccinations = (
+            ds.loc["people_vaccinated"] + ds.loc["people_fully_vaccinated"]
+        )
         return enrich_data(ds, "total_vaccinations", total_vaccinations)
 
     def pipe_location(self, ds: pd.Series) -> pd.Series:
@@ -55,8 +56,7 @@ class Gabon:
 
     def pipeline(self, df: pd.Series) -> pd.Series:
         return (
-            df
-            .pipe(self.pipe_people_vaccinated)
+            df.pipe(self.pipe_people_vaccinated)
             .pipe(self.pipe_location)
             .pipe(self.pipe_vaccine)
             .pipe(self.pipe_source)
@@ -67,13 +67,13 @@ class Gabon:
         ds = self.read().pipe(self.pipeline)
         increment(
             paths=paths,
-            location=ds['location'],
-            total_vaccinations=ds['total_vaccinations'],
-            people_vaccinated=ds['people_vaccinated'],
-            people_fully_vaccinated=ds['people_fully_vaccinated'],
-            date=ds['date'],
-            source_url=ds['source_url'],
-            vaccine=ds['vaccine']
+            location=ds["location"],
+            total_vaccinations=ds["total_vaccinations"],
+            people_vaccinated=ds["people_vaccinated"],
+            people_fully_vaccinated=ds["people_fully_vaccinated"],
+            date=ds["date"],
+            source_url=ds["source_url"],
+            vaccine=ds["vaccine"],
         )
 
 

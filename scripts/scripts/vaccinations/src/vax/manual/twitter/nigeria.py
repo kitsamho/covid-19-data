@@ -36,31 +36,44 @@ class Nigeria(TwitterCollectorBase):
                 dt = clean_date(" ".join(match_1.group(2, 3, 4)), "%B %d %Y")
                 if self.stop_search(dt):
                     break
-                data.append({
-                    "date": dt,
-                    "total_vaccinations": people_vaccinated + people_fully_vaccinated,
-                    "people_vaccinated": people_vaccinated,
-                    "people_fully_vaccinated": people_fully_vaccinated,
-                    "text": tweet.full_text,
-                    "source_url": self.build_post_url(tweet.id),
-                    "media_url": tweet.extended_entities["media"][0]["media_url_https"],
-                })
+                data.append(
+                    {
+                        "date": dt,
+                        "total_vaccinations": people_vaccinated
+                        + people_fully_vaccinated,
+                        "people_vaccinated": people_vaccinated,
+                        "people_fully_vaccinated": people_fully_vaccinated,
+                        "text": tweet.full_text,
+                        "source_url": self.build_post_url(tweet.id),
+                        "media_url": tweet.extended_entities["media"][0][
+                            "media_url_https"
+                        ],
+                    }
+                )
             elif match_2:
                 dt = clean_date(" ".join(match_2.group(2, 3, 4)), "%B %d %Y")
                 if self.stop_search(dt):
                     break
-                data.append({
-                    "date": dt,
-                    "text": tweet.full_text,
-                    "source_url": self.build_post_url(tweet.id),
-                    "media_url": tweet.extended_entities["media"][0]["media_url_https"],
-                })
+                data.append(
+                    {
+                        "date": dt,
+                        "text": tweet.full_text,
+                        "source_url": self.build_post_url(tweet.id),
+                        "media_url": tweet.extended_entities["media"][0][
+                            "media_url_https"
+                        ],
+                    }
+                )
             elif match_3:
-                data.append({
-                    "text": tweet.full_text,
-                    "source_url": self.build_post_url(tweet.id),
-                    "media_url": tweet.extended_entities["media"][0]["media_url_https"],
-                })
+                data.append(
+                    {
+                        "text": tweet.full_text,
+                        "source_url": self.build_post_url(tweet.id),
+                        "media_url": tweet.extended_entities["media"][0][
+                            "media_url_https"
+                        ],
+                    }
+                )
         df = pd.DataFrame(data)
         return df
 

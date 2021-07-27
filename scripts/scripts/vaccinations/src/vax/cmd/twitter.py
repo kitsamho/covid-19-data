@@ -26,15 +26,16 @@ def _propose_data_country(api, module_name: str, paths: str):
     else:
         success = True
         logger.info(f"{module_name}: SUCCESS ✅")
-    return {
-        "module_name": module_name,
-        "success": success,
-        "skipped": False
-    }
+    return {"module_name": module_name, "success": success, "skipped": False}
 
 
-def main_propose_data_twitter(paths, consumer_key: str, consumer_secret: str, parallel: bool = False,
-                              n_jobs: int = -2):
+def main_propose_data_twitter(
+    paths,
+    consumer_key: str,
+    consumer_secret: str,
+    parallel: bool = False,
+    n_jobs: int = -2,
+):
     """Get data from Twitter and propose it."""
     print("-- Generating data proposals from Twitter sources... --")
     api = TwitterAPI(consumer_key, consumer_secret)
@@ -44,27 +45,34 @@ def main_propose_data_twitter(paths, consumer_key: str, consumer_secret: str, pa
                 api,
                 module_name,
                 paths,
-            ) for module_name in modules_name
+            )
+            for module_name in modules_name
         )
     else:
         modules_execution_results = []
         for module_name in modules_name:
-            modules_execution_results.append(_propose_data_country(
-                api,
-                module_name,
-                paths,
-            ))
+            modules_execution_results.append(
+                _propose_data_country(
+                    api,
+                    module_name,
+                    paths,
+                )
+            )
 
-    modules_failed = [m["module_name"] for m in modules_execution_results if m["success"] is False]
+    modules_failed = [
+        m["module_name"] for m in modules_execution_results if m["success"] is False
+    ]
     # Retry failed modules
     logger.info(f"\n---\n\nRETRIALS ({len(modules_failed)})")
     modules_execution_results = []
     for module_name in modules_failed:
-        modules_execution_results.append(
-            _propose_data_country(api, module_name, paths)
-        )
-    modules_failed_retrial = [m["module_name"] for m in modules_execution_results if m["success"] is False]
+        modules_execution_results.append(_propose_data_country(api, module_name, paths))
+    modules_failed_retrial = [
+        m["module_name"] for m in modules_execution_results if m["success"] is False
+    ]
     if len(modules_failed_retrial) > 0:
         failed_str = "\n".join([f"* {m}" for m in modules_failed_retrial])
-        print(f"\n---\n\nThe following scripts failed to run ({len(modules_failed_retrial)}):\n{failed_str}")
+        print(
+            f"\n---\n\nThe following scripts failed to run ({len(modules_failed_retrial)}):\n{failed_str}"
+        )
     print_eoe()

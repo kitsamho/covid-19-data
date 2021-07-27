@@ -15,7 +15,6 @@ COUNTRIES = {
     "Afghanistan": "Afghanistan",
     "Angola": "Angola",
     "Anguilla": "Anguilla",
-    "Armenia": "Armenia",
     "Belarus": "Belarus",
     "Benin": "Benin",
     "Bhutan": "Bhutan",
@@ -24,6 +23,7 @@ COUNTRIES = {
     "Burkina Faso": "Burkina Faso",
     "Cabo Verde": "Cape Verde",
     "Cameroon": "Cameroon",
+    "Central African Republic": "Central African Republic",
     "Chad": "Chad",
     "Comoros": "Comoros",
     "Democratic Republic of the Congo": "Democratic Republic of Congo",
@@ -36,8 +36,8 @@ COUNTRIES = {
     "Honduras": "Honduras",
     "Iran (Islamic Republic of)": "Iran",
     "Iraq": "Iraq",
-    # "Ireland": "Ireland",
     "Jamaica": "Jamaica",
+    "Lao People's Democratic Republic": "Laos",
     "Lesotho": "Lesotho",
     "Liberia": "Liberia",
     "Libya": "Libya",
@@ -77,7 +77,9 @@ def read(source: str) -> pd.DataFrame:
 
 def source_checks(df: pd.DataFrame) -> pd.DataFrame:
     if len(df) > 300:
-        raise ValueError(f"Check source, it may contain updates from several dates! Shape found was {df.shape}")
+        raise ValueError(
+            f"Check source, it may contain updates from several dates! Shape found was {df.shape}"
+        )
     if df.groupby("COUNTRY").DATE_UPDATED.nunique().nunique() == 1:
         if df.groupby("COUNTRY").DATE_UPDATED.nunique().unique()[0] != 1:
             raise ValueError("Countries have more than one date update!")
@@ -90,8 +92,8 @@ def filter_countries(df: pd.DataFrame) -> pd.DataFrame:
     """Get rows from selected countries."""
     df = df[df.DATA_SOURCE == "REPORTING"].copy()
     df = df[
-        (df.TOTAL_VACCINATIONS >= df.PERSONS_VACCINATED_1PLUS_DOSE) |
-        (df.PERSONS_VACCINATED_1PLUS_DOSE.isnull())
+        (df.TOTAL_VACCINATIONS >= df.PERSONS_VACCINATED_1PLUS_DOSE)
+        | (df.PERSONS_VACCINATED_1PLUS_DOSE.isnull())
     ]
     df["COUNTRY"] = df.COUNTRY.replace(COUNTRIES)
     df = df[df.COUNTRY.isin(COUNTRIES.values())]
@@ -100,8 +102,7 @@ def filter_countries(df: pd.DataFrame) -> pd.DataFrame:
 
 def vaccine_checks(df: pd.DataFrame) -> pd.DataFrame:
     vaccines_used = set(
-        df.VACCINES_USED
-        .dropna()
+        df.VACCINES_USED.dropna()
         .apply(lambda x: [xx.strip() for xx in x.split(",")])
         .sum()
     )
@@ -140,7 +141,8 @@ def calculate_metrics(df: pd.DataFrame) -> pd.DataFrame:
     df.loc[~df.only_2doses, "people_fully_vaccinated"] = None
     df[["PERSONS_VACCINATED_1PLUS_DOSE", "people_fully_vaccinated"]] = (
         df[["PERSONS_VACCINATED_1PLUS_DOSE", "people_fully_vaccinated"]]
-        .astype("Int64").fillna(pd.NA)
+        .astype("Int64")
+        .fillna(pd.NA)
     )
     df.loc[:, "TOTAL_VACCINATIONS"] = df["TOTAL_VACCINATIONS"].fillna(np.nan)
     return df
@@ -149,7 +151,17 @@ def calculate_metrics(df: pd.DataFrame) -> pd.DataFrame:
 def increment_countries(df: pd.DataFrame, paths):
     for row in df.sort_values("COUNTRY").iterrows():
         row = row[1]
-        cond = row[["PERSONS_VACCINATED_1PLUS_DOSE", "people_fully_vaccinated", "TOTAL_VACCINATIONS"]].isnull().all()
+        cond = (
+            row[
+                [
+                    "PERSONS_VACCINATED_1PLUS_DOSE",
+                    "people_fully_vaccinated",
+                    "TOTAL_VACCINATIONS",
+                ]
+            ]
+            .isnull()
+            .all()
+        )
         if not cond:
             increment(
                 paths=paths,
@@ -163,6 +175,7 @@ def increment_countries(df: pd.DataFrame, paths):
             )
             country = row["COUNTRY"]
             logger.info(f"\tvax.incremental.who.{country}: SUCCESS ✅")
+
 
 def main(paths):
     source_url = "https://covid19.who.int/who-data/vaccination-data.csv"

@@ -10,21 +10,23 @@ sys.path.append(CURRENT_DIR)
 from utils.db_imports import import_dataset
 
 URL = "https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/OxCGRT_latest.csv"
-DATASET_NAME = 'COVID Government Response (OxBSG)'
+DATASET_NAME = "COVID Government Response (OxBSG)"
 
 INPUT_PATH = os.path.join(CURRENT_DIR, "../input/bsg/")
-OUTPUT_PATH = os.path.join(CURRENT_DIR, '../grapher/')
-INPUT_CSV_PATH = os.path.join(INPUT_PATH, 'latest.csv')
+OUTPUT_PATH = os.path.join(CURRENT_DIR, "../grapher/")
+INPUT_CSV_PATH = os.path.join(INPUT_PATH, "latest.csv")
 OUTPUT_CSV_PATH = os.path.join(OUTPUT_PATH, f"{DATASET_NAME}.csv")
 
 ZERO_DAY = "2020-01-01"
 zero_day = datetime.strptime(ZERO_DAY, "%Y-%m-%d")
 
+
 def download_csv():
-    os.system('curl --silent -f -o %(INPUT_CSV_PATH)s -L %(URL)s' % {
-        'INPUT_CSV_PATH': INPUT_CSV_PATH,
-        'URL': URL
-    })
+    os.system(
+        "curl --silent -f -o %(INPUT_CSV_PATH)s -L %(URL)s"
+        % {"INPUT_CSV_PATH": INPUT_CSV_PATH, "URL": URL}
+    )
+
 
 def export_grapher():
 
@@ -51,7 +53,7 @@ def export_grapher():
         "H6_Facial Coverings",
         "H7_Vaccination policy",
         "StringencyIndex",
-        "ContainmentHealthIndex"
+        "ContainmentHealthIndex",
     ]
 
     cgrt = pd.read_csv(INPUT_CSV_PATH, low_memory=False)
@@ -67,7 +69,9 @@ def export_grapher():
 
     rows_before = cgrt.shape[0]
 
-    country_mapping = pd.read_csv(os.path.join(INPUT_PATH, "bsg_country_standardised.csv"))
+    country_mapping = pd.read_csv(
+        os.path.join(INPUT_PATH, "bsg_country_standardised.csv")
+    )
 
     cgrt = country_mapping.merge(cgrt, on="CountryName", how="right")
 
@@ -99,29 +103,32 @@ def export_grapher():
         "E2_Debt/contract relief": "debt_relief",
         "E4_International support": "international_support",
         "H7_Vaccination policy": "vaccination_policy",
-        "H2_Testing policy": "testing_policy"
+        "H2_Testing policy": "testing_policy",
     }
 
     cgrt = cgrt.rename(columns=rename_dict).sort_values(["Country", "Year"])
 
-    os.system('mkdir -p %s' % os.path.abspath(OUTPUT_PATH))
+    os.system("mkdir -p %s" % os.path.abspath(OUTPUT_PATH))
     cgrt.to_csv(OUTPUT_CSV_PATH, index=False)
 
+
 def update_db():
-    time_str = datetime.now().astimezone(pytz.timezone('Europe/London')).strftime("%-d %B, %H:%M")
+    time_str = (
+        datetime.now()
+        .astimezone(pytz.timezone("Europe/London"))
+        .strftime("%-d %B, %H:%M")
+    )
     source_name = f"Hale, Angrist, Goldszmidt, Kira, Petherick, Phillips, Webster, Cameron-Blake, Hallas, Majumdar, and Tatlow (2021). “A global panel database of pandemic policies (Oxford COVID-19 Government Response Tracker).” Nature Human Behaviour. – Last updated {time_str} (London time)"
     import_dataset(
         dataset_name=DATASET_NAME,
-        namespace='owid',
+        namespace="owid",
         csv_path=OUTPUT_CSV_PATH,
-        default_variable_display={
-            'yearIsDay': True,
-            'zeroDay': ZERO_DAY
-        },
+        default_variable_display={"yearIsDay": True, "zeroDay": ZERO_DAY},
         source_name=source_name,
-        slack_notifications=False
+        slack_notifications=False,
     )
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     download_csv()
     export_grapher()

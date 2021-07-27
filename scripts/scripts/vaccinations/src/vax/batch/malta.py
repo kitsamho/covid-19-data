@@ -24,7 +24,8 @@ def rename_columns(df: pd.DataFrame, columns: dict) -> pd.DataFrame:
 
 def correct_data(df: pd.DataFrame) -> pd.DataFrame:
     df.loc[
-        (df.people_fully_vaccinated == 0) | df.people_fully_vaccinated.isnull(), "people_vaccinated"
+        (df.people_fully_vaccinated == 0) | df.people_fully_vaccinated.isnull(),
+        "people_vaccinated",
     ] = df.total_vaccinations
     return df
 
@@ -44,6 +45,7 @@ def enrich_vaccine_name(df: pd.DataFrame) -> pd.DataFrame:
             return "Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
         elif "2021-05-06" <= date:
             return "Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
+
     return df.assign(vaccine=df.date.apply(_enrich_vaccine_name))
 
 
@@ -64,12 +66,15 @@ def exclude_data_points(df: pd.DataFrame) -> pd.DataFrame:
 def pipeline(df: pd.DataFrame) -> pd.DataFrame:
     return (
         df.pipe(check_columns, expected=4)
-        .pipe(rename_columns, columns={
-            "Date": "date",
-            "Total Vaccination Doses": "total_vaccinations",
-            "Fully vaccinated (2 of 2 or 1 of 1)": "people_fully_vaccinated",
-            "Received one dose": "people_vaccinated",
-        })
+        .pipe(
+            rename_columns,
+            columns={
+                "Date": "date",
+                "Total Vaccination Doses": "total_vaccinations",
+                "Fully vaccinated (2 of 2 or 1 of 1)": "people_fully_vaccinated",
+                "Received one dose": "people_vaccinated",
+            },
+        )
         .pipe(correct_data)
         .pipe(format_date)
         .pipe(enrich_columns)

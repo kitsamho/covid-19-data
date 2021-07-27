@@ -9,21 +9,20 @@ from vax.utils.dates import clean_date
 
 
 class Albania:
-
     def __init__(self, source_url: str, location: str):
         self.source_url = source_url
         self.location = location
         self._num_max_pages = 3
         self.regex = {
             "title": r"Vaksinimi antiCOVID\/ Kryhen [0-9,]+ vaksinime",
-            "date":  r"Postuar më: (\d{1,2}\/\d{1,2}\/202\d)",
+            "date": r"Postuar më: (\d{1,2}\/\d{1,2}\/202\d)",
             "total_vaccinations": r"total ([\d,]+) doza të vaksinës ndaj COVID19",
             "people_fully_vaccinated": r"Prej tyre,? ([\d,]+) ?qytetarë i kanë marrë të dyja dozat e vaksinës antiCOVID",
         }
 
     def read(self, last_update: str) -> pd.DataFrame:
         data = []
-        for cnt in range(1, self._num_max_pages+1):
+        for cnt in range(1, self._num_max_pages + 1):
             # print(f"page: {cnt}")
             url = f"{self.source_url}/{cnt}/"
             soup = get_soup(url, verify=False)
@@ -46,26 +45,30 @@ class Albania:
                     **self.parse_data_news_page(soup),
                 }
                 records.append(record)
-            else: 
+            else:
                 # print(elem["date"], "END")
                 return records, False
         return records, True
 
     def get_elements(self, soup: BeautifulSoup) -> list:
-        news = soup.find(id="leftContent").find_all("h2", text=re.compile(self.regex["title"]))
-        news = [
-            {"link": self.parse_link(n), "date": self.parse_date(n)} 
-        for n in news]
+        news = soup.find(id="leftContent").find_all(
+            "h2", text=re.compile(self.regex["title"])
+        )
+        news = [{"link": self.parse_link(n), "date": self.parse_date(n)} for n in news]
         return news
 
     def parse_data_news_page(self, soup: BeautifulSoup):
         total_vaccinations = re.search(self.regex["total_vaccinations"], soup.text)
-        people_fully_vaccinated = re.search(self.regex["people_fully_vaccinated"], soup.text)
+        people_fully_vaccinated = re.search(
+            self.regex["people_fully_vaccinated"], soup.text
+        )
         metrics = {}
         if total_vaccinations:
             metrics["total_vaccinations"] = clean_count(total_vaccinations.group(1))
         if people_fully_vaccinated:
-            metrics["people_fully_vaccinated"] = clean_count(people_fully_vaccinated.group(1))
+            metrics["people_fully_vaccinated"] = clean_count(
+                people_fully_vaccinated.group(1)
+            )
         return metrics
 
     def parse_date(self, elem):
@@ -76,38 +79,44 @@ class Albania:
         return elem.a.get("href")
 
     def pipe_people_vaccinated(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.assign(people_vaccinated=df.total_vaccinations-df.people_fully_vaccinated)
+        return df.assign(
+            people_vaccinated=df.total_vaccinations - df.people_fully_vaccinated
+        )
 
     def pipe_drop_duplicates(self, df: pd.DataFrame) -> pd.DataFrame:
-        return (
-            df.sort_values("date")
-            .drop_duplicates(
-                subset=["total_vaccinations", "people_vaccinated", "people_fully_vaccinated"],
-                keep="first"
-            )
+        return df.sort_values("date").drop_duplicates(
+            subset=[
+                "total_vaccinations",
+                "people_vaccinated",
+                "people_fully_vaccinated",
+            ],
+            keep="first",
         )
 
     def pipe_location(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.assign(location=self.location)
 
     def pipe_vaccine(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.assign(vaccine="Oxford/AstraZeneca, Pfizer/BioNTech, Sinovac, Sputnik V")
+        return df.assign(
+            vaccine="Oxford/AstraZeneca, Pfizer/BioNTech, Sinovac, Sputnik V"
+        )
 
     def pipe_select_output_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df[[
-            "location",
-            "date",
-            "vaccine",
-            "source_url",
-            "total_vaccinations",
-            "people_vaccinated",
-            "people_fully_vaccinated"
-        ]]
+        return df[
+            [
+                "location",
+                "date",
+                "vaccine",
+                "source_url",
+                "total_vaccinations",
+                "people_vaccinated",
+                "people_fully_vaccinated",
+            ]
+        ]
 
     def pipeline(self, df: pd.Series) -> pd.Series:
         return (
-            df
-            .pipe(self.pipe_people_vaccinated)
+            df.pipe(self.pipe_people_vaccinated)
             .pipe(self.pipe_drop_duplicates)
             .pipe(self.pipe_location)
             .pipe(self.pipe_vaccine)
@@ -131,7 +140,7 @@ def main(paths):
     Albania(
         source_url="https://shendetesia.gov.al/category/lajme/page",
         location="Albania",
-    ).to_csv(paths) 
+    ).to_csv(paths)
 
 
 if __name__ == "__main__":

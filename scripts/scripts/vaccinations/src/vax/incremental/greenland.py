@@ -26,11 +26,9 @@ def connect_parse_data(source: str) -> pd.Series:
         _sanity_checks(driver)
         # Get doses
         dose_1, dose_2 = parse_doses(driver)
-    return pd.Series({
-        "people_vaccinated": dose_1,
-        "people_fully_vaccinated": dose_2,
-        "date": date
-    })
+    return pd.Series(
+        {"people_vaccinated": dose_1, "people_fully_vaccinated": dose_2, "date": date}
+    )
 
 
 def parse_iframe_url(driver: webdriver.Chrome) -> str:
@@ -39,7 +37,9 @@ def parse_iframe_url(driver: webdriver.Chrome) -> str:
 
 
 def parse_doses(driver: webdriver.Chrome) -> tuple:
-    doses = driver.find_element_by_class_name("igc-graph-group").find_elements_by_tag_name("text")
+    doses = driver.find_element_by_class_name(
+        "igc-graph-group"
+    ).find_elements_by_tag_name("text")
     dose_1, dose_2 = [clean_count(dose.text) for dose in doses]
     return dose_1, dose_2
 
@@ -71,14 +71,13 @@ def enrich_location(ds: pd.Series) -> pd.Series:
 
 
 def add_totals(ds: pd.Series) -> pd.Series:
-    total_vaccinations = ds['people_vaccinated'] + ds['people_fully_vaccinated']
-    return enrich_data(ds, 'total_vaccinations', total_vaccinations)
+    total_vaccinations = ds["people_vaccinated"] + ds["people_fully_vaccinated"]
+    return enrich_data(ds, "total_vaccinations", total_vaccinations)
 
 
 def pipeline(ds: pd.Series, source: str) -> pd.Series:
     return (
-        ds
-        .pipe(enrich_location)
+        ds.pipe(enrich_location)
         .pipe(enrich_vaccine)
         .pipe(enrich_source, source)
         .pipe(add_totals)
@@ -96,7 +95,7 @@ def main(paths):
         people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url=data["source_url"],
-        vaccine=data["vaccine"]
+        vaccine=data["vaccine"],
     )
 
 

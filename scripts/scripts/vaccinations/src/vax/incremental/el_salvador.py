@@ -14,11 +14,13 @@ def read(source: str) -> pd.Series:
     link = parse_infogram_link(soup)
     soup = get_soup(link)
     infogram_data = parse_infogram_data(soup)
-    return pd.Series({
-        "date": parse_infogram_date(infogram_data),
-        "source_url": source,
-        **parse_infogram_vaccinations(infogram_data)
-    })
+    return pd.Series(
+        {
+            "date": parse_infogram_date(infogram_data),
+            "source_url": source,
+            **parse_infogram_vaccinations(infogram_data),
+        }
+    )
 
 
 def parse_infogram_link(soup: BeautifulSoup) -> str:
@@ -29,10 +31,7 @@ def parse_infogram_link(soup: BeautifulSoup) -> str:
 def parse_infogram_data(soup: BeautifulSoup) -> dict:
     for script in soup.find_all("script"):
         if "infographicData" in str(script):
-            json_data = (
-                script.string[:-1]
-                .replace("window.infographicData=", "")
-            )
+            json_data = script.string[:-1].replace("window.infographicData=", "")
             json_data = json.loads(json_data)
             break
     json_data = json_data["elements"]["content"]["content"]["entities"]
@@ -41,23 +40,33 @@ def parse_infogram_data(soup: BeautifulSoup) -> dict:
 
 def _get_infogram_value(infogram_data: dict, field_id: str, join_text: bool = False):
     if join_text:
-        return "".join(x["text"] for x in infogram_data[field_id]["props"]["content"]["blocks"])
+        return "".join(
+            x["text"] for x in infogram_data[field_id]["props"]["content"]["blocks"]
+        )
     return infogram_data[field_id]["props"]["content"]["blocks"][0]["text"]
 
 
 def parse_infogram_vaccinations(infogram_data: dict) -> int:
-    total_vaccinations = clean_count(_get_infogram_value(infogram_data, "4f66ed81-151f-4b97-aa3c-4927bde058b2"))
-    people_vaccinated = clean_count(_get_infogram_value(infogram_data, "4048eac1-24ba-4e24-b081-61dfa0281a0e"))
-    people_fully_vaccinated = clean_count(_get_infogram_value(infogram_data, "50a2486f-7dca-4afd-a551-bd24665d7314"))
+    total_vaccinations = clean_count(
+        _get_infogram_value(infogram_data, "4f66ed81-151f-4b97-aa3c-4927bde058b2")
+    )
+    people_vaccinated = clean_count(
+        _get_infogram_value(infogram_data, "4048eac1-24ba-4e24-b081-61dfa0281a0e")
+    )
+    people_fully_vaccinated = clean_count(
+        _get_infogram_value(infogram_data, "50a2486f-7dca-4afd-a551-bd24665d7314")
+    )
     return {
         "total_vaccinations": total_vaccinations,
         "people_vaccinated": people_vaccinated,
-        "people_fully_vaccinated": people_fully_vaccinated
+        "people_fully_vaccinated": people_fully_vaccinated,
     }
 
 
 def parse_infogram_date(infogram_data: dict) -> str:
-    x = _get_infogram_value(infogram_data, "525b6366-cc8a-4646-b67a-5c9bfca66e22", join_text=True)
+    x = _get_infogram_value(
+        infogram_data, "525b6366-cc8a-4646-b67a-5c9bfca66e22", join_text=True
+    )
     dt = clean_date(x, "RESUMEN DE VACUNACIÓN DIARIA %d-%b-%y", "es")
     return dt
 
@@ -71,11 +80,7 @@ def enrich_vaccine(ds: pd.Series) -> pd.Series:
 
 
 def pipeline(ds: pd.Series) -> pd.Series:
-    return (
-        ds
-        .pipe(enrich_location)
-        .pipe(enrich_vaccine)
-    )
+    return ds.pipe(enrich_location).pipe(enrich_vaccine)
 
 
 def main(paths):
@@ -89,7 +94,7 @@ def main(paths):
         people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url=data["source_url"],
-        vaccine=data["vaccine"]
+        vaccine=data["vaccine"],
     )
 
 

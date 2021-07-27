@@ -20,7 +20,11 @@ def connect_parse_data(source: str) -> pd.Series:
         driver.get(source)
         time.sleep(10)
 
-        date = driver.find_element_by_class_name("as_of").find_element_by_tag_name("span").text
+        date = (
+            driver.find_element_by_class_name("as_of")
+            .find_element_by_tag_name("span")
+            .text
+        )
         date = clean_date(date, "%d.%m.%Y")
 
         for elem in driver.find_elements_by_class_name("counter_block"):
@@ -47,7 +51,9 @@ def enrich_location(ds: pd.Series) -> pd.Series:
 
 
 def enrich_vaccine(ds: pd.Series) -> pd.Series:
-    return enrich_data(ds, "vaccine", "Oxford/AstraZeneca, Sinovac, Pfizer/BioNTech")
+    return enrich_data(
+        ds, "vaccine", "Moderna, Oxford/AstraZeneca, Sinovac, Pfizer/BioNTech"
+    )
 
 
 def enrich_source(ds: pd.Series) -> pd.Series:
@@ -56,8 +62,7 @@ def enrich_source(ds: pd.Series) -> pd.Series:
 
 def pipeline(ds: pd.Series) -> pd.Series:
     return (
-        ds
-        .pipe(add_totals)
+        ds.pipe(add_totals)
         .pipe(enrich_location)
         .pipe(enrich_vaccine)
         .pipe(enrich_source)
@@ -75,7 +80,7 @@ def main(paths):
         people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url=data["source_url"],
-        vaccine=data["vaccine"]
+        vaccine=data["vaccine"],
     )
 
 

@@ -10,7 +10,6 @@ from vax.utils.dates import clean_date
 
 
 class Cuba:
-
     def __init__(self):
         self.source_url = (
             "https://salud.msp.gob.cu/actualizacion-de-la-vacunacion-en-el-marco-de-los-estudios-de"
@@ -24,20 +23,22 @@ class Cuba:
             "data": (
                 r"([\d ]+) personas han recibido al menos una dosis de uno de los candidatos vacunales cubanos\. De "
                 r"ellas ya tienen segunda dosis ([\d ]+) personas y tercera dosis ([\d ]+) personas\."
-            )
+            ),
         }
 
     def read(self) -> pd.Series:
         soup = get_soup(self.source_url)
         return self.parse_data(soup)
-    
+
     def parse_data(self, soup: BeautifulSoup) -> pd.Series:
         data = {}
         match = re.search(self.regex["title"], soup.text)
         if match:
             # date
             date_str = match.group(1)
-            data["date"] = clean_date(f"{date_str} {datetime.now().year}", "%d de %B %Y", lang="es")
+            data["date"] = clean_date(
+                f"{date_str} {datetime.now().year}", "%d de %B %Y", lang="es"
+            )
             # vaccinations
             data["total_vaccinations"] = clean_count(match.group(2))
         match = re.search(self.regex["data"], soup.text)
@@ -50,10 +51,7 @@ class Cuba:
         return enrich_data(ds, "vaccine", "Abdala, Soberana02")
 
     def pipeline(self, df: pd.Series) -> pd.Series:
-        return (
-            df
-            .pipe(self.pipe_vaccine)
-        )
+        return df.pipe(self.pipe_vaccine)
 
     def to_csv(self, paths):
         """Generalized."""
@@ -66,10 +64,9 @@ class Cuba:
             people_fully_vaccinated=data["people_fully_vaccinated"],
             date=data["date"],
             source_url=self.source_url,
-            vaccine=data["vaccine"]
+            vaccine=data["vaccine"],
         )
 
 
 def main(paths):
-    Cuba().to_csv(paths) 
-
+    Cuba().to_csv(paths)

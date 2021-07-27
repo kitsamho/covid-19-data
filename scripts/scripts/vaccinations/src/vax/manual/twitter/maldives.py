@@ -14,7 +14,7 @@ class Maldives(TwitterCollectorBase):
             add_metrics_nan=True,
             paths=paths,
         )
-    
+
     def _propose_df(self):
         regex = r"COVID-19 : Vaccination Updates\n\n(\d{1,2}\.\d{1,2}\.202\d).*"
         data = []
@@ -24,12 +24,16 @@ class Maldives(TwitterCollectorBase):
                 dt = clean_date(match.group(1), "%d.%m.%Y")
                 if self.stop_search(dt):
                     break
-                data.append({
-                    "date": dt,
-                    "text": tweet.full_text,
-                    "source_url": self.build_post_url(tweet.id),
-                    "media_url": tweet.entities["media"][0]["media_url_https"] if "media" in tweet.entities else None,
-                })
+                data.append(
+                    {
+                        "date": dt,
+                        "text": tweet.full_text,
+                        "source_url": self.build_post_url(tweet.id),
+                        "media_url": tweet.entities["media"][0]["media_url_https"]
+                        if "media" in tweet.entities
+                        else None,
+                    }
+                )
         return pd.DataFrame(data)
 
 

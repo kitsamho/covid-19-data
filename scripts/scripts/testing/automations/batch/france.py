@@ -20,18 +20,22 @@ def main():
     # Positive rate
     pr = pd.read_csv(
         "https://www.data.gouv.fr/fr/datasets/r/381a9472-ce83-407d-9a64-1b8c23af83df",
-        usecols=["extract_date", "tx_pos"]
+        usecols=["extract_date", "tx_pos"],
     )
     pr.loc[:, "tx_pos"] = pr["tx_pos"].div(100).round(3)
     pr = pr.rename(columns={"extract_date": "Date", "tx_pos": "Positive rate"})
 
     df = pd.merge(df, pr, on="Date", how="outer").sort_values("Date")
-    df = df.dropna(subset=["Daily change in cumulative total", "Positive rate"], how="all")
+    df = df.dropna(
+        subset=["Daily change in cumulative total", "Positive rate"], how="all"
+    )
 
     df.loc[:, "Country"] = "France"
     df.loc[:, "Units"] = "people tested"
     df.loc[:, "Cumulative total"] = pd.NA
-    df.loc[:, "Source URL"] = "https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-resultats-des-tests-virologiques-covid-19/"
+    df.loc[
+        :, "Source URL"
+    ] = "https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-resultats-des-tests-virologiques-covid-19/"
     df.loc[:, "Source label"] = "National Public Health Agency"
     df.loc[:, "Notes"] = pd.NA
 

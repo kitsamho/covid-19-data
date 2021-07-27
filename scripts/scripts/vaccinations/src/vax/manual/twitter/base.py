@@ -2,13 +2,24 @@ import os
 import pandas as pd
 
 
-COLUMN_METRICS_ALL = ["total_vaccinations", "people_vaccinated", "people_fully_vaccinated"]
+COLUMN_METRICS_ALL = [
+    "total_vaccinations",
+    "people_vaccinated",
+    "people_fully_vaccinated",
+]
 
 
 class TwitterCollectorBase:
-    
-    def __init__(self, api, username: str, location: str, add_metrics_nan: bool = False, paths=None, output_path=None, 
-                 num_tweets=100):
+    def __init__(
+        self,
+        api,
+        username: str,
+        location: str,
+        add_metrics_nan: bool = False,
+        paths=None,
+        output_path=None,
+        num_tweets=100,
+    ):
         self.username = username
         self.location = location
         self.tweets = api.get_tweets(self.username, num_tweets)
@@ -23,7 +34,9 @@ class TwitterCollectorBase:
             if paths is not None:
                 return paths.tmp_vax_out_proposal(self.location)
             else:
-                raise AttributeError("Either specify attribute `paths` or method argument `output_path`")
+                raise AttributeError(
+                    "Either specify attribute `paths` or method argument `output_path`"
+                )
 
     def _get_current_data(self):
         if os.path.isfile(self.output_path):
@@ -71,7 +84,7 @@ class TwitterCollectorBase:
         if "media_url" in df:
             column_optional.append("media_url")
 
-        df = df[["date"] + column_metrics + ["source_url"]+ column_optional + ["text"]]
+        df = df[["date"] + column_metrics + ["source_url"] + column_optional + ["text"]]
         return df
 
     def build_post_url(self, tweet_id: str):

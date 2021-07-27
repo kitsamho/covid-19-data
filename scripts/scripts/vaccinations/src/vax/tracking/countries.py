@@ -15,14 +15,20 @@ def get_who_data():
     df_who = pd.read_csv(url, usecols=["ISO3", "COUNTRY", "DATA_SOURCE"])
     df_who = df_who.rename(columns={"COUNTRY": "location_WHO"})
     # Countries WHO relies on us
-    df_who = df_who.assign(reporting_to_WHO=df_who.DATA_SOURCE=="OWID")    
+    df_who = df_who.assign(reporting_to_WHO=df_who.DATA_SOURCE == "OWID")
     return df_who
 
 
-def country_updates_summary(path_vaccinations: str = None, path_locations: str = None,
-                            path_automation_state: str = None, as_dict: bool = False, sortby_counts: bool = False,
-                            sortby_updatefreq: bool = False, who: bool = False, vaccines: bool = False
-                            ):
+def country_updates_summary(
+    path_vaccinations: str = None,
+    path_locations: str = None,
+    path_automation_state: str = None,
+    as_dict: bool = False,
+    sortby_counts: bool = False,
+    sortby_updatefreq: bool = False,
+    who: bool = False,
+    vaccines: bool = False,
+):
     """Check last updated countries.
 
     It loads the content from locations.csv, vaccinations.csv and automation_state.csv to present results on the update
@@ -60,15 +66,22 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
     """
     # Get data paths
     if not path_vaccinations:
-        path_vaccinations = (
-            os.path.abspath(os.path.join(CURRENT_DIR, "../../../../../../public/data/vaccinations/vaccinations.csv"))
+        path_vaccinations = os.path.abspath(
+            os.path.join(
+                CURRENT_DIR,
+                "../../../../../../public/data/vaccinations/vaccinations.csv",
+            )
         )
     if not path_locations:
-        path_locations = (
-            os.path.abspath(os.path.join(CURRENT_DIR, "../../../../../../public/data/vaccinations/locations.csv"))
+        path_locations = os.path.abspath(
+            os.path.join(
+                CURRENT_DIR, "../../../../../../public/data/vaccinations/locations.csv"
+            )
         )
     if not path_automation_state:
-        path_automation_state = os.path.abspath(os.path.join(CURRENT_DIR, "../../../automation_state.csv"))
+        path_automation_state = os.path.abspath(
+            os.path.join(CURRENT_DIR, "../../../automation_state.csv")
+        )
     columns_output = [
         "location",
         "last_observation_date",
@@ -85,11 +98,16 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
     df_state = pd.read_csv(path_automation_state)
     df_who = get_who_data()
     # Get counts
-    df_vax = df_vax.dropna(subset=["total_vaccinations", "people_vaccinated", "people_fully_vaccinated"], how="all")
-    df_vax = pd.DataFrame({
-        "counts": df_vax.groupby("location").date.count().sort_values(),
-        "first_observation_date": df_vax.groupby("location").date.min()
-    })
+    df_vax = df_vax.dropna(
+        subset=["total_vaccinations", "people_vaccinated", "people_fully_vaccinated"],
+        how="all",
+    )
+    df_vax = pd.DataFrame(
+        {
+            "counts": df_vax.groupby("location").date.count().sort_values(),
+            "first_observation_date": df_vax.groupby("location").date.min(),
+        }
+    )
     # Merge data
     df = df_loc.merge(df_state, on="location")
     df = df.merge(df_vax, on="location")
@@ -105,8 +123,8 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
     num_updates_per_observation_day = df.counts / num_observation_days
 
     df = df.assign(
-        num_observation_days = num_observation_days,
-        update_frequency=num_updates_per_observation_day
+        num_observation_days=num_observation_days,
+        update_frequency=num_updates_per_observation_day,
     )
     # Sort data
     if sortby_updatefreq:
@@ -115,27 +133,60 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
         sort_column = "counts"
     else:
         sort_column = "last_observation_date"
-    df = df.sort_values(
-        by=sort_column
-    )[columns_output]
+    df = df.sort_values(by=sort_column)[columns_output]
 
     def _web_type(x):
         govs = [
-            ".gov/", "gov.", ".gob.", ".moh.", ".gub.", ".go.", ".gouv.", "govern", ".govt", 
-            ".coronavirus2020.kz/", "thl.fi", 
-            ".gv.", "corona.nun.gl", "exploregov.ky", "covid19response.lc/", "corona.fo/", "103.247.238.92/webportal/",
-            "data.public.lu/", "vaccinocovid.iss.sm/", "koronavirus.hr", "koronavirusinfo.az", "covid.is",
-            "government.", "covid19ireland-geohive.hub.arcgis", "sacoronavirus.co.za", "covidodgovor.me",
-            "experience.arcgis.com/experience/59226cacd2b441c7a939dca13f832112/", "guineasalud.org/estadisticas/",
-            "bakuna.cw/", "laatjevaccineren.sr/", "coronavirus.bg/bg/statistika", "admin.ch", 
-            "folkhalsomyndigheten.se/", "covid19.ssi.dk/", "fhi.no/", "impfdashboard.de/", "covid-19.nczisk.sk",
-            "opendata.digilugu.ee", ".mzcr.cz/", "ghanahealthservice.org/", "ccss.sa.cr/", "epistat.wiv-isp.be",
-            "covidmaroc.ma", "experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca",
-            "gtmvigilanciacovid.shinyapps", "belta.by"
+            ".gov/",
+            "gov.",
+            ".gob.",
+            ".moh.",
+            ".gub.",
+            ".go.",
+            ".gouv.",
+            "govern",
+            ".govt",
+            ".coronavirus2020.kz/",
+            "thl.fi",
+            ".gv.",
+            "corona.nun.gl",
+            "exploregov.ky",
+            "covid19response.lc/",
+            "corona.fo/",
+            "103.247.238.92/webportal/",
+            "data.public.lu/",
+            "vaccinocovid.iss.sm/",
+            "koronavirus.hr",
+            "koronavirusinfo.az",
+            "covid.is",
+            "government.",
+            "covid19ireland-geohive.hub.arcgis",
+            "sacoronavirus.co.za",
+            "covidodgovor.me",
+            "experience.arcgis.com/experience/59226cacd2b441c7a939dca13f832112/",
+            "guineasalud.org/estadisticas/",
+            "bakuna.cw/",
+            "laatjevaccineren.sr/",
+            "coronavirus.bg/bg/statistika",
+            "admin.ch",
+            "folkhalsomyndigheten.se/",
+            "covid19.ssi.dk/",
+            "fhi.no/",
+            "impfdashboard.de/",
+            "covid-19.nczisk.sk",
+            "opendata.digilugu.ee",
+            ".mzcr.cz/",
+            "ghanahealthservice.org/",
+            "ccss.sa.cr/",
+            "epistat.wiv-isp.be",
+            "covidmaroc.ma",
+            "experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca",
+            "gtmvigilanciacovid.shinyapps",
+            "belta.by",
         ]
-        if ("facebook." in x.lower()):
+        if "facebook." in x.lower():
             return "Facebook"
-        elif ("twitter." in x.lower()):
+        elif "twitter." in x.lower():
             return "Twitter"
         elif "github." in x.lower():
             return "GitHub"
@@ -149,11 +200,16 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
             return "ECDC"
         else:
             return "Others"
+
     df = df.assign(**{"web_type": df.source_website.apply(_web_type)})
 
     if vaccines:
         df_vax = vaccines_comparison_with_who()
-        df = df.merge(df_vax[["location", "missing_in_who", "missing_in_owid"]], on="location", how="left")
+        df = df.merge(
+            df_vax[["location", "missing_in_who", "missing_in_owid"]],
+            on="location",
+            how="left",
+        )
     # Return data
     if as_dict:
         return df.to_dict(orient="records")
@@ -161,7 +217,11 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
 
 
 def countries_missing(
-        path_population: str = None, path_locations: str = None, ascending: bool = False, as_dict: bool = False):
+    path_population: str = None,
+    path_locations: str = None,
+    ascending: bool = False,
+    as_dict: bool = False,
+):
     """Get countries currently not present in our dataset.
 
     Args:
@@ -175,17 +235,21 @@ def countries_missing(
                                     DataFrame.
     """
     if not path_population:
-        path_population = (
-            os.path.abspath(os.path.join(CURRENT_DIR, "../../../../../input/un/population_2020.csv"))
+        path_population = os.path.abspath(
+            os.path.join(CURRENT_DIR, "../../../../../input/un/population_2020.csv")
         )
     if not path_locations:
-        path_locations = (
-            os.path.abspath(os.path.join(CURRENT_DIR, "../../../../../../public/data/vaccinations/locations.csv"))
+        path_locations = os.path.abspath(
+            os.path.join(
+                CURRENT_DIR, "../../../../../../public/data/vaccinations/locations.csv"
+            )
         )
     df_loc = pd.read_csv(path_locations, usecols=["location"])
     df_pop = pd.read_csv(path_population)
     df_pop = df_pop[df_pop.iso_code.apply(lambda x: isinstance(x, str) and len(x) == 3)]
-    df_mis = df_pop.loc[~df_pop['entity'].isin(df_loc['location']), ["entity", "population"]]
+    df_mis = df_pop.loc[
+        ~df_pop["entity"].isin(df_loc["location"]), ["entity", "population"]
+    ]
     # Sort
     if not ascending:
         df_mis = df_mis.sort_values(by="population", ascending=False)

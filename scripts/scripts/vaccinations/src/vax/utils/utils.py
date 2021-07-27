@@ -12,7 +12,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 
-VAX_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+VAX_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 
 
 def read_xlsx_from_url(url: str, as_series: bool = False, **kwargs) -> pd.DataFrame:
@@ -30,7 +30,7 @@ def read_xlsx_from_url(url: str, as_series: bool = False, **kwargs) -> pd.DataFr
     headers = {"User-Agent": "Mozilla/5.0 (X11; Linux i686)"}
     response = requests.get(url, headers=headers)
     with tempfile.NamedTemporaryFile() as tmp:
-        with open(tmp.name, 'wb') as f:
+        with open(tmp.name, "wb") as f:
             f.write(response.content)
         df = pd.read_excel(tmp.name, **kwargs)
     if as_series:
@@ -40,7 +40,7 @@ def read_xlsx_from_url(url: str, as_series: bool = False, **kwargs) -> pd.DataFr
 
 def download_file_from_url(url, save_path, chunk_size=128):
     r = requests.get(url, stream=True)
-    with open(save_path, 'wb') as fd:
+    with open(save_path, "wb") as fd:
         for chunk in r.iter_content(chunk_size=chunk_size):
             fd.write(chunk)
 
@@ -62,8 +62,13 @@ def get_headers() -> dict:
     }
 
 
-def get_soup(source: str, headers: dict = None, verify: bool = True, from_encoding: str = None,
-             timeout=20) -> BeautifulSoup:
+def get_soup(
+    source: str,
+    headers: dict = None,
+    verify: bool = True,
+    from_encoding: str = None,
+    timeout=20,
+) -> BeautifulSoup:
     """Get soup from website.
 
     Args:
@@ -71,7 +76,7 @@ def get_soup(source: str, headers: dict = None, verify: bool = True, from_encodi
         headers (dict, optional): Headers to be used for request. Defaults to general one.
         verify (bool, optional): Verify source URL. Defaults to True.
         from_encoding (str, optional): Encoding to use. Defaults to None.
-        timeout (int, optional): If no response is received after `timeout` seconds, exception is raied. 
+        timeout (int, optional): If no response is received after `timeout` seconds, exception is raied.
                                  Defaults to 20.
     Returns:
         BeautifulSoup: Website soup.
@@ -85,21 +90,20 @@ def get_soup(source: str, headers: dict = None, verify: bool = True, from_encodi
     if not response.ok:
         raise HTTPError("Web {} not found! {response.content}")
     content = response.content
-    return BeautifulSoup(
-        content,
-        "html.parser",
-        from_encoding=from_encoding
-    )
+    return BeautifulSoup(content, "html.parser", from_encoding=from_encoding)
 
 
 def sel_options(headless: bool = True):
     op = Options()
     op.add_argument("--disable-notifications")
-    op.add_experimental_option("prefs",{
-        "download.prompt_for_download": False,
-        "download.directory_upgrade": True,
-        "safebrowsing.enabled": True 
-    })
+    op.add_experimental_option(
+        "prefs",
+        {
+            "download.prompt_for_download": False,
+            "download.directory_upgrade": True,
+            "safebrowsing.enabled": True,
+        },
+    )
     if headless:
         op.add_argument("--headless")
     return op
@@ -112,10 +116,13 @@ def get_driver(headless: bool = True):
 def set_download_settings(driver, folder_name: str = None):
     if folder_name is None:
         folder_name = "/tmp"
-    driver.command_executor._commands["send_command"] = ("POST", "/session/$sessionId/chromium/send_command")
+    driver.command_executor._commands["send_command"] = (
+        "POST",
+        "/session/$sessionId/chromium/send_command",
+    )
     params = {
         "cmd": "Page.setDownloadBehavior",
-        "params": {"behavior": "allow", "downloadPath": folder_name}
+        "params": {"behavior": "allow", "downloadPath": folder_name},
     }
     _ = driver.execute("send_command", params)
 
@@ -126,15 +133,17 @@ def get_latest_file(path, extension):
 
 
 def scroll_till_element(driver, element):
-    desired_y = (element.size['height'] / 2) + element.location['y']
-    current_y = (driver.execute_script('return window.innerHeight') / 2) + driver.execute_script('return window.pageYOffset')
+    desired_y = (element.size["height"] / 2) + element.location["y"]
+    current_y = (
+        driver.execute_script("return window.innerHeight") / 2
+    ) + driver.execute_script("return window.pageYOffset")
     scroll_y_by = desired_y - current_y
     driver.execute_script("window.scrollBy(0, arguments[0]);", scroll_y_by)
 
 
 def url_request_broken(url):
-    url_base, url_params = url.split('query?')
-    x = filter(lambda x: x[0] != 'where', [p.split('=') for p in url_params.split('&')])
+    url_base, url_params = url.split("query?")
+    x = filter(lambda x: x[0] != "where", [p.split("=") for p in url_params.split("&")])
     params = dict(x)
     return f"{url_base}/query", params
 
@@ -147,7 +156,7 @@ def clean_count(count):
 
 def clean_string(text_raw):
     """Clean column name."""
-    text_new = unicodedata.normalize('NFKC', text_raw).strip()
+    text_new = unicodedata.normalize("NFKC", text_raw).strip()
     return text_new
 
 
@@ -175,6 +184,6 @@ def make_monotonic(df: pd.DataFrame) -> pd.DataFrame:
     metrics = ("total_vaccinations", "people_vaccinated", "people_fully_vaccinated")
     for metric in metrics:
         while not df[metric].ffill().fillna(0).is_monotonic:
-            diff = (df[metric].ffill().shift(-1) - df[metric].ffill())
+            diff = df[metric].ffill().shift(-1) - df[metric].ffill()
             df = df[(diff >= 0) | (diff.isna())]
     return df

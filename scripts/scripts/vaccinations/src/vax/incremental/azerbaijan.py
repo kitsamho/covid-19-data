@@ -31,13 +31,17 @@ def parse_data(source_pdf: str):
     with tempfile.NamedTemporaryFile() as tf:
         with open(tf.name, mode="wb") as f:
             f.write(requests.get(source_pdf).content)
-        total_vaccinations, people_vaccinated, people_fully_vaccinated = parse_vaccinations(tf.name)
+        (
+            total_vaccinations,
+            people_vaccinated,
+            people_fully_vaccinated,
+        ) = parse_vaccinations(tf.name)
         date = parse_date(tf.name)
     return {
         "total_vaccinations": total_vaccinations,
         "people_vaccinated": people_vaccinated,
         "people_fully_vaccinated": people_fully_vaccinated,
-        "date": date
+        "date": date,
     }
 
 
@@ -51,6 +55,7 @@ def parse_date(filename):
     date_str = re.search(r"\n(?P<count>\d{1,2}.\d{1,2}.\d{4})\n", text).group(1)
     return clean_date(date_str, "%d.%m.%Y")
 
+
 def parse_vaccinations(filename):
     # Read pdf (for metrics)
     with open(filename, mode="rb") as f:
@@ -63,7 +68,9 @@ def parse_vaccinations(filename):
     idx_dose_1 = strs.index("1-ci mərhələ üzrə ")
     idx_dose_2 = strs.index("2-ci mərhələ üzrə ")
     # Get metrics
-    total_vaccinations = max([int(s) for s in strs[idx_total_vax:idx_dose_1] if s.isnumeric()])
+    total_vaccinations = max(
+        [int(s) for s in strs[idx_total_vax:idx_dose_1] if s.isnumeric()]
+    )
     dose_1 = max([int(s) for s in strs[idx_dose_1:idx_dose_2] if s.isnumeric()])
     dose_2 = max([int(s) for s in strs[idx_dose_2:] if s.isnumeric()])
     # Sanity check
@@ -87,12 +94,7 @@ def enrich_source(ds: pd.Series, source: str) -> pd.Series:
 
 
 def pipeline(df: pd.DataFrame, source: str) -> pd.DataFrame:
-    return (
-        df
-        .pipe(enrich_location)
-        .pipe(enrich_vaccine)
-        .pipe(enrich_source, source)
-    )
+    return df.pipe(enrich_location).pipe(enrich_vaccine).pipe(enrich_source, source)
 
 
 def main(paths):
@@ -106,7 +108,7 @@ def main(paths):
         people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url=data["source_url"],
-        vaccine=data["vaccine"]
+        vaccine=data["vaccine"],
     )
 
 

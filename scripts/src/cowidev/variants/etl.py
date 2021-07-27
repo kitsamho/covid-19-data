@@ -48,6 +48,7 @@ class VariantsETL:
         self.columns_out = [
             "location", "date", "variant", "num_sequences", "perc_sequences", "num_sequences_total"
         ]
+        self.num_sequences_total_threshold = 30
 
     @property
     def variants_mapping(self):
@@ -74,13 +75,16 @@ class VariantsETL:
     def transform(self, data: dict) -> pd.DataFrame:
         df = (
             self.json_to_df(data)
+            .pipe(self.pipe_filter_by_num_sequences)
             .pipe(self.pipe_edit_columns)
             .pipe(self.pipe_date)
             .pipe(self.pipe_check_variants)
             .pipe(self.pipe_filter_locations)
             .pipe(self.pipe_variant_others)
             .pipe(self.pipe_variant_non_who)
+            .pipe(self.pipe_dtypes)
             .pipe(self.pipe_percent)
+            .pipe(self.pipe_correct_excess_percentage)
             .pipe(self.pipe_out)
         )
         return df
@@ -101,6 +105,9 @@ class VariantsETL:
         )
         return df
 
+    def pipe_filter_by_num_sequences(self, df: pd.DataFrame) -> pd.DataFrame:
+        return df[df.total_sequences >= self.num_sequences_total_threshold]
+
     def pipe_edit_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         # Modify/add columns
         df = df.assign(
@@ -115,7 +122,7 @@ class VariantsETL:
         dt = pd.to_datetime(df.date, format="%Y-%m-%d")
         dt = dt + timedelta(days=14)
         last_update = self._parse_last_update_date
-        dt = dt.apply(lambda x: min(x, last_update).strftime("%Y-%m-%d"))
+        dt = dt.apply(lambda x: min(x.date(), last_update).strftime("%Y-%m-%d"))
         return df.assign(
             date=dt,
         )
@@ -165,13 +172,47 @@ class VariantsETL:
         df = pd.concat([df, x], ignore_index=True)
         return df
 
+    def pipe_dtypes(self, df: pd.DataFrame) -> pd.DataFrame:
+        df = df.astype({"num_sequences_total": "Int64", "num_sequences": "Int64"})
+        return df
+
     def pipe_percent(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.assign(
-            perc_sequences=(100 * df["num_sequences"] / df["num_sequences_total"]).round(2)
+            # perc_sequences=(100 * df["num_sequences"] / df["num_sequences_total"]).round(2),
+            perc_sequences=((100*df["num_sequences"] / df["num_sequences_total"]).round(2))
         )
 
+    def pipe_correct_excess_percentage(self, df: pd.DataFrame) -> pd.DataFrame:
+        # 1) `non_who`
+        # Get excess
+        x = df[df.variant.isin(self.variants_who+["non_who"])]
+        x = x.groupby(["location", "date"], as_index=False).agg({"perc_sequences": sum})
+        x = x[abs(x["perc_sequences"]-100) != 0]
+        x["excess"] = x.perc_sequences-100
+        # Merge excess quantity with input df
+        df = df.merge(x[["location", "date", "excess"]], on=["location", "date"], how="outer")
+        df = df.assign(excess=df.excess.fillna(0))
+        # Correct
+        mask = df.variant.isin(["non_who"])
+        df.loc[mask, "perc_sequences"] = (df.loc[mask, "perc_sequences"] - df.loc[mask, "excess"]).round(4)
+        df = df.drop(columns="excess")
+        # 2) `others`
+        # Get excess
+        x = df[-df.variant.isin(["non_who"])]
+        x = x.groupby(["location", "date"], as_index=False).agg({"perc_sequences": sum})
+        x = x[abs(x["perc_sequences"]-100) != 0]
+        x["excess"] = x.perc_sequences-100
+        # Merge excess quantity with input df
+        df = df.merge(x[["location", "date", "excess"]], on=["location", "date"], how="outer")
+        df = df.assign(excess=df.excess.fillna(0))
+        # Correct
+        mask = df.variant.isin(["others"])
+        df.loc[mask, "perc_sequences"] = (df.loc[mask, "perc_sequences"] - df.loc[mask, "excess"]).round(4)
+        df = df.drop(columns="excess")
+        return df
+
     def pipe_out(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df[self.columns_out].sort_values(["location", "date"])
+        return df[self.columns_out].sort_values(["location", "date"])  #  + ["perc_sequences_raw"]
 
     def run(self, output_path: str):
         data = self.extract()

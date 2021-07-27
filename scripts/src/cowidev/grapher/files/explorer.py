@@ -1,7 +1,7 @@
 import json
-from datetime import datetime
 
 import pandas as pd
+import numpy as np
 
 
 class Exploriser:
@@ -27,10 +27,7 @@ class Exploriser:
         return df
 
     def pipe_nan_to_none(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.where(
-            pd.notnull(df),
-            None
-        )
+        return df.replace({np.nan: None})
 
     def pipe_to_dict(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.to_dict(orient="list")

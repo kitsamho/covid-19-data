@@ -8,9 +8,15 @@ import vax.utils.utils as utils
 
 
 class NewZealand:
-
-    def __init__(self, source_url: str, location: str, columns_rename: dict = None, columns_by_age_group_rename: dict = None, columns_cumsum: list = None,
-                 columns_cumsum_by_age: list = None):
+    def __init__(
+        self,
+        source_url: str,
+        location: str,
+        columns_rename: dict = None,
+        columns_by_age_group_rename: dict = None,
+        columns_cumsum: list = None,
+        columns_cumsum_by_age: list = None,
+    ):
         """Constructor.
 
         Args:
@@ -35,8 +41,8 @@ class NewZealand:
         link = self._parse_file_link(soup)
         df = utils.read_xlsx_from_url(link, sheet_name="Date")
         print(link)
-        #df_by_age = utils.read_xlsx_from_url(link, sheet_name="Ethnicity Age Gender by dose")
-        return df#, df_by_age
+        # df_by_age = utils.read_xlsx_from_url(link, sheet_name="Ethnicity Age Gender by dose")
+        return df  # , df_by_age
 
     def _parse_file_link(self, soup: BeautifulSoup) -> str:
         href = soup.find(id="download").find_next("a")["href"]
@@ -57,7 +63,9 @@ class NewZealand:
 
     def pipe_metrics(self, df: pd.DataFrame) -> pd.DataFrame:
         """Could be generalized."""
-        return df.assign(total_vaccinations=df.people_vaccinated + df.people_fully_vaccinated)
+        return df.assign(
+            total_vaccinations=df.people_vaccinated + df.people_fully_vaccinated
+        )
 
     def pipe_vaccine(self, df: pd.DataFrame) -> pd.DataFrame:
         """Could be generalized."""
@@ -78,8 +86,7 @@ class NewZealand:
     def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:
         """Could be generalized."""
         return (
-            df
-            .pipe(self.pipe_cumsum)
+            df.pipe(self.pipe_cumsum)
             .pipe(self.pipe_rename)
             .pipe(self.pipe_metrics)
             .pipe(self.pipe_date)
@@ -96,22 +103,25 @@ class NewZealand:
 
     def pipe_aggregate_by_age(self, df: pd.DataFrame) -> pd.DataFrame:
         """Generalized."""
-        df = df.groupby('Ten year age group')['# doses administered'].sum().reset_index()
+        df = (
+            df.groupby("Ten year age group")["# doses administered"].sum().reset_index()
+        )
         return df
 
     def pipe_postprocess(self, df: pd.DataFrame, date_str: str) -> pd.DataFrame:
-        df[["age_group_min", "age_group_max"]] = (
-            df.age_group.str.split(r" to |\+\/Unknown", expand=True)
+        df[["age_group_min", "age_group_max"]] = df.age_group.str.split(
+            r" to |\+\/Unknown", expand=True
         )
-        df['date'] = date_str
-        df = df[["date", "age_group_min", "age_group_max", "total_vaccinations", "location"]]
+        df["date"] = date_str
+        df = df[
+            ["date", "age_group_min", "age_group_max", "total_vaccinations", "location"]
+        ]
         return df
 
     def pipeline_by_age(self, df: pd.DataFrame, date_str: str) -> pd.DataFrame:
         """Could be generalized."""
         return (
-            df
-            .pipe(self.pipe_aggregate_by_age)
+            df.pipe(self.pipe_aggregate_by_age)
             .pipe(self.pipe_rename_by_age)
             .pipe(self.pipe_location)
             .pipe(self.pipe_postprocess, date_str)
@@ -146,7 +156,7 @@ def main(paths):
         columns_by_age_group_rename={
             "# doses administered": "total_vaccinations",
             "Ten year age group": "age_group",
-        }
+        },
     ).to_csv(paths)
 
 

@@ -9,12 +9,12 @@ from vax.utils.pipeline import enrich_total_vaccinations
 
 def read(source: str) -> pd.DataFrame:
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.16; rv:85.0) Gecko/20100101 Firefox/85.0',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-        'Connection': 'keep-alive',
-        'Upgrade-Insecure-Requests': '1',
-        'Pragma': 'no-cache',
-        'Cache-Control': 'no-cache',
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.16; rv:85.0) Gecko/20100101 Firefox/85.0",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "Connection": "keep-alive",
+        "Upgrade-Insecure-Requests": "1",
+        "Pragma": "no-cache",
+        "Cache-Control": "no-cache",
     }
     data = json.loads(requests.get(source, headers=headers).content)
     return pd.DataFrame.from_records(data)
@@ -25,7 +25,7 @@ def rename_columns(df: pd.DataFrame) -> pd.DataFrame:
         columns={
             "Day_Date": "date",
             "vaccinated_cum": "people_vaccinated",
-            "vaccinated_seconde_dose_cum": "people_fully_vaccinated"
+            "vaccinated_seconde_dose_cum": "people_fully_vaccinated",
         }
     )
 
@@ -39,13 +39,13 @@ def filter_date(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def select_distinct(df: pd.DataFrame) -> pd.DataFrame:
-    return df.groupby(["people_vaccinated", "people_fully_vaccinated"], as_index=False).min()
+    return df.groupby(
+        ["people_vaccinated", "people_fully_vaccinated"], as_index=False
+    ).min()
 
 
 def enrich_source(df: pd.DataFrame) -> pd.DataFrame:
-    return df.assign(
-        source_url="https://datadashboard.health.gov.il/COVID-19/general"
-    )
+    return df.assign(source_url="https://datadashboard.health.gov.il/COVID-19/general")
 
 
 def enrich_location(df: pd.DataFrame) -> pd.DataFrame:
@@ -59,9 +59,8 @@ def enrich_vaccine(df: pd.DataFrame) -> pd.DataFrame:
         if date >= "2021-01-07":
             return "Moderna, Pfizer/BioNTech"
         return "Pfizer/BioNTech"
-    return df.assign(
-        vaccine=df.date.apply(_enrich_vaccine)
-    )
+
+    return df.assign(vaccine=df.date.apply(_enrich_vaccine))
 
 
 def format_nulls_as_nans(df: pd.DataFrame) -> pd.DataFrame:
@@ -71,12 +70,17 @@ def format_nulls_as_nans(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def select_output_columns(df: pd.DataFrame) -> pd.DataFrame:
-    df = (
-        df[[
-            "date", "total_vaccinations", "people_vaccinated",
-            "people_fully_vaccinated", "location", "source_url", "vaccine"
-        ]]
-    )
+    df = df[
+        [
+            "date",
+            "total_vaccinations",
+            "people_vaccinated",
+            "people_fully_vaccinated",
+            "location",
+            "source_url",
+            "vaccine",
+        ]
+    ]
     return df
 
 
@@ -99,18 +103,11 @@ def enrich(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def post_process(df: pd.DataFrame) -> pd.DataFrame:
-    return (
-        df.pipe(format_nulls_as_nans)
-        .pipe(select_output_columns)
-    )
+    return df.pipe(format_nulls_as_nans).pipe(select_output_columns)
 
 
 def pipeline(df: pd.DataFrame) -> pd.DataFrame:
-    return (
-        df.pipe(pre_process)
-        .pipe(enrich)
-        .pipe(post_process)
-    )
+    return df.pipe(pre_process).pipe(enrich).pipe(post_process)
 
 
 def main(paths):

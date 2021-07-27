@@ -26,12 +26,14 @@ def parse_data(data: dict) -> pd.Series:
     people_vaccinated = data["progress"]
     people_fully_vaccinated = data["completed"]
 
-    return pd.Series(data={
-        "date": date,
-        "people_vaccinated": people_vaccinated,
-        "people_fully_vaccinated": people_fully_vaccinated,
-        "vaccine": ", ".join(_get_vaccine_names(data, translate=True)),
-    })
+    return pd.Series(
+        data={
+            "date": date,
+            "people_vaccinated": people_vaccinated,
+            "people_fully_vaccinated": people_fully_vaccinated,
+            "vaccine": ", ".join(_get_vaccine_names(data, translate=True)),
+        }
+    )
 
 
 def _get_vaccine_names(data: dict, translate: bool = False) -> list:
@@ -63,12 +65,7 @@ def enrich_source(ds: pd.Series) -> pd.Series:
 
 
 def pipeline(ds: pd.Series) -> pd.Series:
-    return (
-        ds
-        .pipe(add_totals)
-        .pipe(enrich_location)
-        .pipe(enrich_source)
-    )
+    return ds.pipe(add_totals).pipe(enrich_location).pipe(enrich_source)
 
 
 def main(paths):
@@ -82,7 +79,7 @@ def main(paths):
         people_fully_vaccinated=int(data["people_fully_vaccinated"]),
         date=str(data["date"]),
         source_url=str(data["source_url"]),
-        vaccine=str(data["vaccine"])
+        vaccine=str(data["vaccine"]),
     )
 
 

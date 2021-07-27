@@ -1,4 +1,11 @@
 Country,Date,Cumulative total,Source URL,Source label,Testing type,Units,Notes
+Rwanda,2021-07-23,1939765,https://gis.rbc.gov.rw/server/rest/services/Hosted/service_b580a3db9319449e82045881f1667b01/FeatureServer/0/query,Rwanda Ministry of Health,PCR only,samples tested,
+Rwanda,2021-07-17,1762774,https://gis.rbc.gov.rw/server/rest/services/Hosted/service_b580a3db9319449e82045881f1667b01/FeatureServer/0/query,Rwanda Ministry of Health,PCR only,samples tested,
+Rwanda,2021-07-16,1754647,https://gis.rbc.gov.rw/server/rest/services/Hosted/service_b580a3db9319449e82045881f1667b01/FeatureServer/0/query,Rwanda Ministry of Health,PCR only,samples tested,
+Rwanda,2021-07-15,1744198,https://gis.rbc.gov.rw/server/rest/services/Hosted/service_b580a3db9319449e82045881f1667b01/FeatureServer/0/query,Rwanda Ministry of Health,PCR only,samples tested,
+Rwanda,2021-07-14,1738874,https://gis.rbc.gov.rw/server/rest/services/Hosted/service_b580a3db9319449e82045881f1667b01/FeatureServer/0/query,Rwanda Ministry of Health,PCR only,samples tested,
+Rwanda,2021-07-13,1730439,https://gis.rbc.gov.rw/server/rest/services/Hosted/service_b580a3db9319449e82045881f1667b01/FeatureServer/0/query,Rwanda Ministry of Health,PCR only,samples tested,
+Rwanda,2021-07-12,1723762,https://gis.rbc.gov.rw/server/rest/services/Hosted/service_b580a3db9319449e82045881f1667b01/FeatureServer/0/query,Rwanda Ministry of Health,PCR only,samples tested,
 Rwanda,2021-07-11,1716306,https://gis.rbc.gov.rw/server/rest/services/Hosted/service_b580a3db9319449e82045881f1667b01/FeatureServer/0/query,Rwanda Ministry of Health,PCR only,samples tested,
 Rwanda,2021-07-10,1708011,https://gis.rbc.gov.rw/server/rest/services/Hosted/service_b580a3db9319449e82045881f1667b01/FeatureServer/0/query,Rwanda Ministry of Health,PCR only,samples tested,
 Rwanda,2021-07-09,1700200,https://gis.rbc.gov.rw/server/rest/services/Hosted/service_b580a3db9319449e82045881f1667b01/FeatureServer/0/query,Rwanda Ministry of Health,PCR only,samples tested,

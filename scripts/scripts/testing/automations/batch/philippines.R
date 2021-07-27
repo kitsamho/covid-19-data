@@ -12,9 +12,10 @@ url <- pdf_text("tmp/tmp.pdf") %>%
     str_extract_all("https?://bit.ly.*") %>%
     unlist() %>%
     head(1)
-url <- httr::GET(url)$url
+url <- httr::GET(url)$url %>%
+  str_replace("\\?.*", "")
 
-files <- drive_ls(url)
+files <- drive_ls(as_id(url))
 setDT(files)
 
 # NEW

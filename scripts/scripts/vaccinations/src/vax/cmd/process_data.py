@@ -8,15 +8,18 @@ from vax.cmd.utils import get_logger, print_eoe
 logger = get_logger()
 
 
-def main_process_data(paths, gsheets_api, google_spreadsheet_vax_id: str, skip_complete: list = None,
-                      skip_monotonic: dict = {}, skip_anomaly: dict = {}):
+def main_process_data(
+    paths,
+    gsheets_api,
+    google_spreadsheet_vax_id: str,
+    skip_complete: list = None,
+    skip_monotonic: dict = {},
+    skip_anomaly: dict = {},
+):
     print("-- Processing data... --")
     # Get data from sheets
     logger.info("Getting data from Google Spreadsheet...")
-    gsheet = VaccinationGSheet(
-        gsheets_api,
-        google_spreadsheet_vax_id
-    )
+    gsheet = VaccinationGSheet(gsheets_api, google_spreadsheet_vax_id)
     df_manual_list = gsheet.df_list()
 
     # Get automated-country data

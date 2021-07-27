@@ -86,6 +86,7 @@ Japan,True
 Jersey,True
 Jordan,True
 Kazakhstan,True
+Laos,True
 Latvia,True
 Lebanon,True
 Lesotho,True
@@ -167,6 +168,7 @@ Turkey,True
 Turkmenistan,True
 Turks and Caicos Islands,True
 Tuvalu,True
+Uganda,True
 Ukraine,True
 United Arab Emirates,True
 United Kingdom,True
@@ -177,6 +179,7 @@ Venezuela,True
 Wales,True
 Wallis and Futuna,True
 Yemen,True
+Zambia,True
 Algeria,False
 Barbados,False
 Belize,False
@@ -192,11 +195,11 @@ Falkland Islands,False
 Gibraltar,False
 Guinea,False
 Guyana,False
+Haiti,False
 Kenya,False
 Kosovo,False
 Kuwait,False
 Kyrgyzstan,False
-Laos,False
 Malawi,False
 Maldives,False
 Mexico,False
@@ -212,8 +215,6 @@ Saint Vincent and the Grenadines,False
 Seychelles,False
 South Africa,False
 Tunisia,False
-Uganda,False
 Uzbekistan,False
 Vietnam,False
-Zambia,False
 Zimbabwe,False

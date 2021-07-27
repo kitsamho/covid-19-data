@@ -6,7 +6,6 @@ from vax.utils.dates import localdatenow, clean_date
 
 
 class India:
-
     def __init__(self) -> None:
         self.location = "India"
         self.source_url = "https://www.mygov.in/sites/default/files/covid/vaccine/vaccine_counts_today.json"
@@ -21,12 +20,14 @@ class India:
         total_vaccinations = data["india_total_doses"]
         date = data["day"]
 
-        return pd.Series({
-            "date": date,
-            "people_vaccinated": people_vaccinated,
-            "people_fully_vaccinated": people_fully_vaccinated,
-            "total_vaccinations": total_vaccinations,
-        })
+        return pd.Series(
+            {
+                "date": date,
+                "people_vaccinated": people_vaccinated,
+                "people_fully_vaccinated": people_fully_vaccinated,
+                "total_vaccinations": total_vaccinations,
+            }
+        )
 
     def pipe_location(self, ds: pd.Series) -> pd.Series:
         return enrich_data(ds, "location", self.location)
@@ -39,10 +40,7 @@ class India:
 
     def pipeline(self, ds: pd.Series) -> pd.Series:
         return (
-            ds
-            .pipe(self.pipe_location)
-            .pipe(self.pipe_vaccine)
-            .pipe(self.pipe_source)
+            ds.pipe(self.pipe_location).pipe(self.pipe_vaccine).pipe(self.pipe_source)
         )
 
     def export(self, paths):
@@ -55,7 +53,7 @@ class India:
             people_fully_vaccinated=data["people_fully_vaccinated"],
             date=data["date"],
             source_url=data["source_url"],
-            vaccine=data["vaccine"]
+            vaccine=data["vaccine"],
         )
 
 

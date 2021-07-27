@@ -7,6 +7,7 @@ import pandas as pd
 from vax.utils.incremental import enrich_data, increment, clean_count
 from vax.utils.dates import localdate
 
+
 def read(source: str) -> pd.Series:
     soup = BeautifulSoup(requests.get(source).content, "html.parser")
     data = parse_data(soup)
@@ -14,12 +15,10 @@ def read(source: str) -> pd.Series:
 
 
 def parse_data(soup: BeautifulSoup) -> pd.Series:
-    a = 1 + 2
-    b = 1
+    regex_1 = r"([\d,]+) C(ovid|OVID)-19 vaccinations has been given in total in the Cayman Islands"
     regex_1 = (
-        r"([\d,]+) C(ovid|OVID)-19 vaccinations has been given in total in the Cayman Islands"
+        r"([\d,]+) C(ovid|OVID)-19 vaccinations given in total in the Cayman Islands"
     )
-    regex_1 = r"([\d,]+) C(ovid|OVID)-19 vaccinations (?:had|have) been given in total in the Cayman Islands"
     total_vaccinations = clean_count(re.search(regex_1, soup.text).group(1))
 
     # regex_2 = (
@@ -29,20 +28,21 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
     # people_fully_vaccinated = total_vaccinations - people_vaccinated
     regex_2 = (
         r"Of these,? ([\d,]+) \((?:[\d,]+)% of (?:an estimated )?([\d,]+)\) (?:have )?had at least one dose of a "
-        r"C(?:ovid|OVID)-19 vaccine and (?:approximately)? ([\d,]+)% have completed the two-dose course\."
+        r"C(?:ovid|OVID)-19 vaccine and ([\d,]+) \(([\d,]+)%\) (have )?completed the two-dose course"
     )
 
     matches = re.search(regex_2, soup.text)
     people_vaccinated = clean_count(matches.group(1))
     population = clean_count(matches.group(2))
-    people_fully_vaccinated_ratio = clean_count(matches.group(3))/100
-    people_fully_vaccinated = people_fully_vaccinated_ratio * population
+    people_fully_vaccinated = clean_count(matches.group(3))
 
-    return pd.Series({
-        "total_vaccinations": total_vaccinations,
-        "people_vaccinated": people_vaccinated,
-        "people_fully_vaccinated": people_fully_vaccinated,
-    })
+    return pd.Series(
+        {
+            "total_vaccinations": total_vaccinations,
+            "people_vaccinated": people_vaccinated,
+            "people_fully_vaccinated": people_fully_vaccinated,
+        }
+    )
 
 
 def set_date(ds: pd.Series) -> pd.Series:
@@ -59,12 +59,7 @@ def enrich_vaccine(ds: pd.Series) -> pd.Series:
 
 
 def pipeline(ds: pd.Series) -> pd.Series:
-    return (
-        ds
-        .pipe(set_date)
-        .pipe(enrich_location)
-        .pipe(enrich_vaccine)
-    )
+    return ds.pipe(set_date).pipe(enrich_location).pipe(enrich_vaccine)
 
 
 def main(paths):
@@ -78,7 +73,7 @@ def main(paths):
         people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url=data["source_url"],
-        vaccine=data["vaccine"]
+        vaccine=data["vaccine"],
     )
 
 

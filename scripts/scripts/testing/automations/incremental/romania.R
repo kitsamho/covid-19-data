@@ -18,7 +18,7 @@ url <- str_replace(url, "http\\://https", "https")
 download.file(url = url, destfile = "tmp/tmp.pdf", quiet = TRUE)
 
 count <- pdf_text("tmp/tmp.pdf") %>%
-    str_extract("Până la această dată, la nivel național, au fost prelucrate.*") %>%
+    str_extract("Până la această dată, la nivel național, au fost prelucrate?.*") %>%
     na.omit() %>%
     str_replace_all("[^\\d]", "") %>%
     as.integer()

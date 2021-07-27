@@ -6,7 +6,6 @@ from vax.utils.dates import clean_date_series
 
 
 class Greece:
-
     def __init__(self, source_url: str, source_url_ref: str, location: str):
         """Constructor.
 
@@ -31,15 +30,22 @@ class Greece:
             "Σύνολο ατόμων που έχουν εμβολιαστεί ": "people_vaccinated",
         }
         dfs = [
-            pd.DataFrame.from_records(d["data"]).rename(columns={
-                "x": "date",
-                "y": metrics_mapping[d["label"]],
-            })
-        for d in data]
-        return reduce(lambda left, right: pd.merge(left, right, on=['date'], how='inner'), dfs)
+            pd.DataFrame.from_records(d["data"]).rename(
+                columns={
+                    "x": "date",
+                    "y": metrics_mapping[d["label"]],
+                }
+            )
+            for d in data
+        ]
+        return reduce(
+            lambda left, right: pd.merge(left, right, on=["date"], how="inner"), dfs
+        )
 
     def pipe_replace_nulls_with_nans(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.assign(people_fully_vaccinated=df.people_fully_vaccinated.replace(0, pd.NA))
+        return df.assign(
+            people_fully_vaccinated=df.people_fully_vaccinated.replace(0, pd.NA)
+        )
 
     def pipe_date(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.assign(date=clean_date_series(df.date, "%Y-%m-%dT%H:%M:%S"))
@@ -56,27 +62,29 @@ class Greece:
                 return "Pfizer/BioNTech"
             elif "2021-01-13" <= date < "2021-02-10":
                 return "Moderna, Pfizer/BioNTech"
-            elif "2021-02-10" <= date < "2021-04-28": 
+            elif "2021-02-10" <= date < "2021-04-28":
                 return "Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
             elif "2021-04-28" <= date:
                 return "Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
+
         return df.assign(vaccine=df.date.apply(_enrich_vaccine_name))
 
     def pipe_select_output_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df[[
-            "date",
-            "location",
-            "vaccine",
-            "source_url",
-            "total_vaccinations",
-            "people_vaccinated",
-            "people_fully_vaccinated",
-        ]]
+        return df[
+            [
+                "date",
+                "location",
+                "vaccine",
+                "source_url",
+                "total_vaccinations",
+                "people_vaccinated",
+                "people_fully_vaccinated",
+            ]
+        ]
 
     def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
-            df
-            .pipe(self.pipe_replace_nulls_with_nans)
+            df.pipe(self.pipe_replace_nulls_with_nans)
             .pipe(self.pipe_date)
             .pipe(self.pipe_metadata)
             .pipe(self.pipe_vaccine)
@@ -86,10 +94,7 @@ class Greece:
     def to_csv(self, paths):
         """Generalized."""
         df = self.read().pipe(self.pipeline)
-        df.to_csv(
-            paths.tmp_vax_out(self.location),
-            index=False
-        )
+        df.to_csv(paths.tmp_vax_out(self.location), index=False)
 
 
 def main(paths):
