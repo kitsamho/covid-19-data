@@ -22,7 +22,7 @@ def write(df):
     fig_table = go.Figure(data=[go.Table(header=dict(values=[df.columns[0], df.columns[1], \
                                                              df.columns[2]]),
                                          cells=dict(values=[col_1, col_2, col_3], align='left'))])
-    st.plotly_chart(plotly_streamlit_layout(fig_table, height=800, width=700))
+    st.plotly_chart(plotly_streamlit_layout(fig_table, height=800, width=1200))
 
     st.write("**Note** I can't be held accountable for the quality of the data in this dataset.")
 
