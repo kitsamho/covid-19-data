@@ -1,10 +1,10 @@
 import streamlit as st
 st.set_page_config(layout="wide")
-from PIL import Image
 import os
-from streamlitpages import about, cross_section_analysis, time_series_analysis
+from covid_streamlit_pages import about, cross_section_analysis, time_series_analysis
 from helperfunctions.helper import *
 pd.set_option('display.float_format', lambda x: '%.0f' % x)
+st.sidebar.image('covid_streamlit_app_assets/logo.jpeg')
 
 # these are the OWID columns we want to transform using either fillna or interpolation
 transform_cols = ['people_vaccinated_per_hundred',
@@ -98,59 +98,83 @@ def format_owid_data(df, transform_cols):
 # format DataFrame
 df_final = format_owid_data(df, transform_cols)
 
-# this initialises the app and sets up the template with tabs
-def streamlit_init():
-
-    st.markdown(
-        '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">',
-        unsafe_allow_html=True)
-    query_params = st.experimental_get_query_params()
-    tabs = ["About", "Covid-19 Cross Section", 'Covid-19 Time Series']
-
-    im = Image.open('./covid_streamlit_app_assets/logo.jpeg')
-    st.image(im.resize((int(im.size[0] / 1), int(im.size[1] / 1)), 0))
-
-    if "tab" in query_params:
-        active_tab = query_params["tab"][0]
-    else:
-        active_tab = "About"
-
-    if active_tab not in tabs:
-        st.experimental_set_query_params(tab="About")
-        active_tab = "Home"
-
-    li_items = "".join(
-        f"""
-        <li class="nav-item">
-            <a class="nav-link{' active' if t == active_tab else ''}" href="/?tab={t}">{t}</a>
-        </li>
-        """
-        for t in tabs
-    )
-    tabs_html = f"""
-        <ul class="nav nav-tabs">
-        {li_items}
-        </ul>
-    """
-
-    st.markdown(tabs_html, unsafe_allow_html=True)
-    st.markdown("<br>", unsafe_allow_html=True)
-    return active_tab
-
-
-active_tab = streamlit_init()
-
-if active_tab == "About":
-    about.write(df_code_book)
-
-elif active_tab == "Covid-19 Cross Section":
-    cross_section_analysis.write(df_final)
-
-elif active_tab == "Covid-19 Time Series":
-    time_series_analysis.write(df_final)
+navigation_buttons = {
+                        "About": about,
+                        "Cross Section": cross_section_analysis,
+                        "Time Series": time_series_analysis
+}
+st.sidebar.title('Navigation')
+selection = st.sidebar.radio("Go to", list(navigation_buttons.keys()))
+if selection == 'About':
+    df = df_code_book
+else:
+    df = df_final
+page = navigation_buttons[selection]
+page.write(df)
 
 
 
+
+
+
+
+
+
+
+
+# # this initialises the app and sets up the template with tabs
+# def streamlit_init():
+#
+#     st.markdown(
+#         '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">',
+#         unsafe_allow_html=True)
+#     query_params = st.experimental_get_query_params()
+#     tabs = ["About", "Covid-19 Cross Section", 'Covid-19 Time Series']
+#
+#     im = Image.open('./covid_streamlit_app_assets/logo.jpeg')
+#     st.image(im.resize((int(im.size[0] / 1), int(im.size[1] / 1)), 0))
+#
+#     if "tab" in query_params:
+#         active_tab = query_params["tab"][0]
+#     else:
+#         active_tab = "About"
+#
+#     if active_tab not in tabs:
+#         st.experimental_set_query_params(tab="About")
+#         active_tab = "Home"
+#
+#     li_items = "".join(
+#         f"""
+#         <li class="nav-item">
+#             <a class="nav-link{' active' if t == active_tab else ''}" href="/?tab={t}">{t}</a>
+#         </li>
+#         """
+#         for t in tabs
+#     )
+#     tabs_html = f"""
+#         <ul class="nav nav-tabs">
+#         {li_items}
+#         </ul>
+#     """
+#
+#     st.markdown(tabs_html, unsafe_allow_html=True)
+#     st.markdown("<br>", unsafe_allow_html=True)
+#     return active_tab
+#
+#
+# active_tab = streamlit_init()
+#
+# if active_tab == "About":
+#     about.write(df_code_book)
+#
+# elif active_tab == "Covid-19 Cross Section":
+#     cross_section_analysis.write(df_final)
+#
+# elif active_tab == "Covid-19 Time Series":
+#     time_series_analysis.write(df_final)
+#
+#
+#
 
 
 

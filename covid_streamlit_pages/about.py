@@ -1,7 +1,7 @@
 import streamlit as st
 from helperfunctions.helper import *
 
-def write(df_code_book):
+def write(df):
     st.header('Overview')
     st.markdown('This streamlit app uses a range of Covid-19 data sources that have been kindy curated by "Our World in Data" (OWID). \
     My intention with this app was was to design a user friendly interface for people to do their own exploratory analysis using\
@@ -14,25 +14,21 @@ def write(df_code_book):
     st.markdown('To keep the app *light*, I did not include every single feature available in the data set but did \
     include the following:')
 
-
-
-    # st.dataframe(df_code_book, width=3000, height=768)
-
     import plotly.graph_objects as go
-    col_1 = df_code_book[df_code_book.columns[0]].values
-    col_2 = df_code_book[df_code_book.columns[1]].values
-    col_3 = df_code_book[df_code_book.columns[2]].values
+    col_1 = df[df.columns[0]].values
+    col_2 = df[df.columns[1]].values
+    col_3 = df[df.columns[2]].values
 
-    fig_table = go.Figure(data=[go.Table(header=dict(values=[df_code_book.columns[0], df_code_book.columns[1], \
-                                                             df_code_book.columns[2]]),
-                                         cells=dict(values=[col_1, col_2,col_3], align='left'))])
-    st.plotly_chart(plotly_streamlit_layout(fig_table,height=800,width=1800))
+    fig_table = go.Figure(data=[go.Table(header=dict(values=[df.columns[0], df.columns[1], \
+                                                             df.columns[2]]),
+                                         cells=dict(values=[col_1, col_2, col_3], align='left'))])
+    st.plotly_chart(plotly_streamlit_layout(fig_table, height=800, width=700))
 
     st.write("**Note** I can't be held accountable for the quality of the data in this dataset.")
 
     st.subheader('Libraries & Tools')
-    st.write("This app was built in streamlit and all visualisations generated using Plotly Express or Plotly Graph Objects.\
-    The code for the app is freely available on the app's repo on Github.")
+    st.write("This app was built in Streamlit and all visualisations generated using Plotly Express or Plotly Graph \
+    Objects. The code for the app is freely available on the app's repo on Github.")
 
 
     st.header('Github Links')

@@ -5,7 +5,7 @@ import os
 pd.set_option('display.float_format', lambda x: '%.0f' % x)
 
 
-def write(df_final):
+def write(df):
 
     a = st.beta_expander('About (click to expand)')
 
@@ -44,17 +44,17 @@ def write(df_final):
 
     # some custom ranges for different metrics - these are used to make the plot readable
     if x_metric == 'Population':
-        range_x = [30000, df_final[metric_dic[x_metric]].max() * 1.4]
+        range_x = [30000, df[metric_dic[x_metric]].max() * 1.4]
 
     else:
-        range_x = [(df_final[metric_dic[x_metric]].min() + 1) * 1.4, df_final[metric_dic[x_metric]].max() * 1.4]
+        range_x = [(df[metric_dic[x_metric]].min() + 1) * 1.4, df[metric_dic[x_metric]].max() * 1.4]
 
     if y_metric == 'People Vaccinated per Hundred':
         range_y = [-10, 100]
         log_y = False
 
     else:
-        range_y = [(df_final[metric_dic[y_metric]].min() + 1) * 1.4, df_final[metric_dic[y_metric]].max() * 1.4]
+        range_y = [(df[metric_dic[y_metric]].min() + 1) * 1.4, df[metric_dic[y_metric]].max() * 1.4]
         log_y = True
 
     # main function that generates the animated plot
@@ -79,7 +79,7 @@ def write(df_final):
 
         return fig
 
-    fig_animate = plot_scatter_animate(df_final, x=metric_dic[x_metric], y=metric_dic[y_metric], marker_size=\
+    fig_animate = plot_scatter_animate(df, x=metric_dic[x_metric], y=metric_dic[y_metric], marker_size=\
                                        metric_dic[size_by], average_kind=average_kind)
 
     fig_animate = plotly_streamlit_layout(fig_animate, height=700, width=1600)

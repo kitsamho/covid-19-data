@@ -4,7 +4,7 @@ from sklearn.preprocessing import normalize
 from helperfunctions.helper import *
 pd.set_option('display.float_format', lambda x: '%.0f' % x)
 
-def write(df_final):
+def write(df):
 
     a = st.beta_expander('About (click to expand)')
 
@@ -16,9 +16,9 @@ def write(df_final):
     a.write('The heat map is a summary of the correlations between all features')
 
     # DataFrame set up
-    df_country_unique = df_final[df_final.columns[1:3]].drop_duplicates(subset=['location'], keep='first').set_index(
+    df_country_unique = df[df.columns[1:3]].drop_duplicates(subset=['location'], keep='first').set_index(
         'location')
-    df_analysis = pd.concat([df_country_unique, df_final.groupby('location')[df_final.columns[3:]].max()], axis=1)
+    df_analysis = pd.concat([df_country_unique, df.groupby('location')[df.columns[3:]].max()], axis=1)
     df_analysis = df_analysis.reset_index()
     df_analysis.rename(columns={'index': 'location'}, inplace=True)
 
