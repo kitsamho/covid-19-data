@@ -155,7 +155,7 @@ def write(df):
     fig_cross_plot = plot_scatter(df_plot, x=x, y=y, size=size_by, rel_sizing=rel_sizing ,marker_size=marker_size)
 
     # add plot to streamlit
-    st.plotly_chart(plotly_streamlit_layout(fig_cross_plot, height=800, width=900))
+    st.plotly_chart(plotly_streamlit_layout(fig_cross_plot, height=800, width=1200))
 
     # Show Spearman's correlation co-efficient of variables chosen
     df_corr = df_plot[[x ,y]].corr()

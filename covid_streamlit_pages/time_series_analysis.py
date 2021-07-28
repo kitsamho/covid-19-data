@@ -82,7 +82,7 @@ def write(df):
     fig_animate = plot_scatter_animate(df, x=metric_dic[x_metric], y=metric_dic[y_metric], marker_size=\
                                        metric_dic[size_by], average_kind=average_kind)
 
-    fig_animate = plotly_streamlit_layout(fig_animate, height=700, width=900)
+    fig_animate = plotly_streamlit_layout(fig_animate, height=700, width=1200)
 
     st.plotly_chart(fig_animate, x_title=metric_dic[x_metric], y_title=metric_dic[y_metric])
     return
