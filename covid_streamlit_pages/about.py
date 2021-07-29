@@ -34,7 +34,7 @@ def write(df):
     st.header('Github Links')
     st.write('OWID Repository : https://github.com/owid/covid-19-data')
     st.write('Forked Repository : https://github.com/kitsamho/covid-19-data')
-    st.write('Streamlit .py file : https://github.com/kitsamho/covid-19-data')
+    st.write('Streamlit.py file : https://github.com/kitsamho/covid-19-data/blob/master/covid_streamlit_app.py')
 
 
 
