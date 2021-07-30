@@ -8,12 +8,14 @@ def write(df):
 
     a = st.beta_expander('About (click to expand)')
 
-    a.write("The crossplot analysis allows you to plot two features against one another with the marker sizes representing \
-        what we might consider as dependant features e.g. total deaths, total deaths per million, total vaccinations.")
-    a.write("DataFrame masking allows you to explore the data by continent or include all countries.")
-    a.write("Each feature's central tendency is represented by the dashed line on each axis so you can see where \
-        countries are positioned in terms of the distribution for each feature. These update when you change features.")
-    a.write('The heat map is a summary of the correlations between all features')
+    a.write("A crossplot allows users to plot two features against one another with markers, marker colour and marker sizes \
+    representing third and fourth features.")
+    a.write("DataFrame masking allows users to explore the data by continent or include all countries.")
+    a.write("Each feature's central tendency is represented by a dashed line on each axis so users can see where \
+        countries are positioned in terms of the distribution for any given feature.")
+
+    a.write("This is a Plotly chart so users can click on the legend to mask values if needed.")
+    a.write('The heat map is a summary of correlations between features.')
 
     # DataFrame set up
     df_country_unique = df[df.columns[1:3]].drop_duplicates(subset=['location'], keep='first').set_index(

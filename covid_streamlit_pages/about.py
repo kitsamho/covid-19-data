@@ -3,13 +3,12 @@ from helperfunctions.helper import *
 
 def write(df):
     st.header('Overview')
-    st.markdown('This streamlit app uses a range of Covid-19 data sources that have been kindy curated by "Our World in Data" (OWID). \
-    My intention with this app was was to design a user friendly interface for people to do their own exploratory analysis using\
+    st.markdown('This Streamlit app uses a range of Covid-19 data sources that have been kindly curated by "Our World in Data" (OWID). \
+    My intention with this app was was to design a user friendly, interface for people to do their own exploratory analysis using\
     the Covid-19 OWID data.')
 
     st.subheader('Data')
-    st.write('For a detailed breakdown of the data sources used by OWID, they have some great documentation on their\
-     repo which can be found here: https://github.com/owid/covid-19-data/blob/master/public/data/README.md')
+
 
     st.markdown('To keep the app *light*, I did not include every single feature available in the data set but did \
     include the following:')
@@ -19,15 +18,20 @@ def write(df):
     col_2 = df[df.columns[1]].values
     col_3 = df[df.columns[2]].values
 
+    st.write("*Note I can't be held accountable for the quality of the data in this dataset*")
+
+    st.write('For a detailed breakdown of the data sources used by OWID and other features not included here, \
+    they have some great documentation on their repo which can be found here: https://github.com/owid/covid-19-data/blob/master/public/data/README.md')
+
     fig_table = go.Figure(data=[go.Table(header=dict(values=[df.columns[0], df.columns[1], \
                                                              df.columns[2]]),
                                          cells=dict(values=[col_1, col_2, col_3], align='left'))])
     st.plotly_chart(plotly_streamlit_layout(fig_table, height=800, width=1200))
 
-    st.write("**Note** I can't be held accountable for the quality of the data in this dataset.")
+
 
     st.subheader('Libraries & Tools')
-    st.write("This app was built in Streamlit and all visualisations generated using Plotly Express or Plotly Graph \
+    st.write("This app was built in Streamlit and all visualisations were generated using Plotly Express or Plotly Graph \
     Objects. The code for the app is freely available on the app's repo on Github.")
 
 
@@ -41,6 +45,6 @@ def write(df):
     st.header('About Me | Contact Details')
     st.write('My name is Sam Ho. I am a Data scientist at Shutterstock AI')
 
-    st.write('I would love to know what you thought of this app. If you have any comments or suggestions for improvement\
-             (pretty sure there will be some bugs) please hit me up on LinkedIn: https://www.linkedin.com/in/kitsamho/')
+    st.write('I would love to know what you thought of this app! If you have any comments or suggestions for improvement\
+             (I am pretty sure there will be some bugs) please hit me up on LinkedIn: https://www.linkedin.com/in/kitsamho/')
     return

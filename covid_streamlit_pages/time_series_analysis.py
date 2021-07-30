@@ -9,11 +9,15 @@ def write(df):
 
     a = st.beta_expander('About (click to expand)')
 
-    a.write("This is an animated plot where each step is a week. If you want to explore the animation using other features \
-            wait until the initial animation has ended or skip through to the end before changing features otherwise you may \
-            see some odd behaviour in the animation. Plotly can be a little fickle like that.")
+    a.write("This is similar to the previous plot however a sixth dimension of time is included.")
+    a.write("Each step constitutes a week in time.")
+    a.write("This is a Plotly chart so users can click on the legend to mask values if needed.")
 
-    a.write("This is a Plotly chart so you can click on the legend to mask values if needed.")
+
+    a.markdown("*Note - If you want to explore the animation using other features \
+            wait until the initial animation has ended or skip through to the end before changing features otherwise you may \
+            see some odd behaviour in the animation. Plotly can be a little fickle like that*")
+
 
     # set up some columns for the interactive widgets - use a mid point to create some buffer between widgets
     c1, c2 = st.beta_columns((2, 3))
