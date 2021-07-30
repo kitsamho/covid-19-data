@@ -14,19 +14,19 @@ def write(df):
     include the following:')
 
     import plotly.graph_objects as go
-    col_1 = df[df.columns[0]].values
-    col_2 = df[df.columns[1]].values
-    col_3 = df[df.columns[2]].values
+    # col_1 = df[df.columns[0]].values
+    # col_2 = df[df.columns[1]].values
+    # col_3 = df[df.columns[2]].values
 
     st.write("*Note I can't be held accountable for the quality of the data in this dataset*")
 
     st.write('For a detailed breakdown of the data sources used by OWID and other features not included here, \
     they have some great documentation on their repo which can be found here: https://github.com/owid/covid-19-data/blob/master/public/data/README.md')
-
-    fig_table = go.Figure(data=[go.Table(header=dict(values=[df.columns[0], df.columns[1], \
-                                                             df.columns[2]]),
-                                         cells=dict(values=[col_1, col_2, col_3], align='left',fill_color='white'))])
-    st.plotly_chart(fig_table, height=800, width=1200,use_container_width=True)
+    st.dataframe(df)
+    # fig_table = go.Figure(data=[go.Table(header=dict(values=[df.columns[0], df.columns[1], \
+    #                                                          df.columns[2]]),
+    #                                      cells=dict(values=[col_1, col_2, col_3], align='left',fill_color='white'))])
+    # st.plotly_chart(fig_table, height=800, width=1200,use_container_width=True)
 
     # fill_color = [[rowOddColor, rowEvenColor, rowOddColor, rowEvenColor, rowOddColor] * 5],
 
