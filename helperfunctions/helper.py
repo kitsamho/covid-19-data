@@ -5,8 +5,7 @@ import plotly.graph_objects as go
 
 # this is a plotly figure formatting function that can be used on a range of Plotly figure objects
 def plotly_streamlit_layout(fig, barmode=None, barnorm=None, height=None,width=None):
-    fig.update_layout(paper_bgcolor='white',
-                      plot_bgcolor='white',
+    fig.update_layout(
                       barmode=barmode,
                       barnorm=barnorm,
                       height = height,

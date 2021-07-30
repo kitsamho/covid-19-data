@@ -141,7 +141,7 @@ def write(df):
 
         # some formatting of plot - background colours and show legend
         fig_scatter.update_layout(legend={'itemsizing': 'constant'})
-        fig_scatter.update_layout(plot_bgcolor='white',
+        fig_scatter.update_layout(
                                   width=1000,
                                   height=1000,
                                   showlegend=True)
