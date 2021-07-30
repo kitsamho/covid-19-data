@@ -25,10 +25,10 @@ def write(df):
 
     fig_table = go.Figure(data=[go.Table(header=dict(values=[df.columns[0], df.columns[1], \
                                                              df.columns[2]]),
-                                         cells=dict(values=[col_1, col_2, col_3], align='left'))])
-    st.plotly_chart(plotly_streamlit_layout(fig_table, height=800, width=1200))
+                                         cells=dict(values=[col_1, col_2, col_3], align='left',fill_color='white'))])
+    st.plotly_chart(fig_table, height=800, width=1200,use_container_width=True)
 
-
+    # fill_color = [[rowOddColor, rowEvenColor, rowOddColor, rowEvenColor, rowOddColor] * 5],
 
     st.subheader('Libraries & Tools')
     st.write("This app was built in Streamlit and all visualisations were generated using Plotly Express or Plotly Graph \
