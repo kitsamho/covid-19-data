@@ -1,120 +1,120 @@
 location,date,vaccine,total_vaccinations
 Slovakia,2021-01-01,Pfizer/BioNTech,0
-Slovakia,2021-01-08,Pfizer/BioNTech,29638
+Slovakia,2021-01-08,Pfizer/BioNTech,29642
 Slovakia,2021-01-15,Moderna,0
-Slovakia,2021-01-15,Pfizer/BioNTech,62681
+Slovakia,2021-01-15,Pfizer/BioNTech,62685
 Slovakia,2021-01-22,Moderna,0
-Slovakia,2021-01-22,Pfizer/BioNTech,100097
+Slovakia,2021-01-22,Pfizer/BioNTech,100101
 Slovakia,2021-01-29,Moderna,69
-Slovakia,2021-01-29,Pfizer/BioNTech,146585
+Slovakia,2021-01-29,Pfizer/BioNTech,146592
 Slovakia,2021-02-05,Moderna,1654
 Slovakia,2021-02-05,Oxford/AstraZeneca,0
-Slovakia,2021-02-05,Pfizer/BioNTech,212452
+Slovakia,2021-02-05,Pfizer/BioNTech,212492
 Slovakia,2021-02-12,Moderna,6466
-Slovakia,2021-02-12,Oxford/AstraZeneca,12774
-Slovakia,2021-02-12,Pfizer/BioNTech,276209
+Slovakia,2021-02-12,Oxford/AstraZeneca,12775
+Slovakia,2021-02-12,Pfizer/BioNTech,276248
 Slovakia,2021-02-19,Moderna,18248
-Slovakia,2021-02-19,Oxford/AstraZeneca,27054
-Slovakia,2021-02-19,Pfizer/BioNTech,322048
+Slovakia,2021-02-19,Oxford/AstraZeneca,27055
+Slovakia,2021-02-19,Pfizer/BioNTech,322088
 Slovakia,2021-02-26,Moderna,22511
-Slovakia,2021-02-26,Oxford/AstraZeneca,47853
-Slovakia,2021-02-26,Pfizer/BioNTech,373340
+Slovakia,2021-02-26,Oxford/AstraZeneca,47854
+Slovakia,2021-02-26,Pfizer/BioNTech,373383
 Slovakia,2021-03-05,Moderna,24606
-Slovakia,2021-03-05,Oxford/AstraZeneca,89593
-Slovakia,2021-03-05,Pfizer/BioNTech,426183
+Slovakia,2021-03-05,Oxford/AstraZeneca,89592
+Slovakia,2021-03-05,Pfizer/BioNTech,426230
 Slovakia,2021-03-05,Sputnik V,0
 Slovakia,2021-03-12,Moderna,29525
-Slovakia,2021-03-12,Oxford/AstraZeneca,132429
-Slovakia,2021-03-12,Pfizer/BioNTech,483264
+Slovakia,2021-03-12,Oxford/AstraZeneca,132422
+Slovakia,2021-03-12,Pfizer/BioNTech,483311
 Slovakia,2021-03-12,Sputnik V,0
 Slovakia,2021-03-19,Moderna,41489
-Slovakia,2021-03-19,Oxford/AstraZeneca,178900
-Slovakia,2021-03-19,Pfizer/BioNTech,556542
+Slovakia,2021-03-19,Oxford/AstraZeneca,178894
+Slovakia,2021-03-19,Pfizer/BioNTech,556588
 Slovakia,2021-03-19,Sputnik V,0
 Slovakia,2021-03-26,Moderna,55888
-Slovakia,2021-03-26,Oxford/AstraZeneca,216125
-Slovakia,2021-03-26,Pfizer/BioNTech,635342
+Slovakia,2021-03-26,Oxford/AstraZeneca,216114
+Slovakia,2021-03-26,Pfizer/BioNTech,635388
 Slovakia,2021-03-26,Sputnik V,0
 Slovakia,2021-04-02,Moderna,66944
-Slovakia,2021-04-02,Oxford/AstraZeneca,244225
-Slovakia,2021-04-02,Pfizer/BioNTech,701207
+Slovakia,2021-04-02,Oxford/AstraZeneca,244218
+Slovakia,2021-04-02,Pfizer/BioNTech,701243
 Slovakia,2021-04-02,Sputnik V,0
 Slovakia,2021-04-09,Moderna,79147
-Slovakia,2021-04-09,Oxford/AstraZeneca,293900
-Slovakia,2021-04-09,Pfizer/BioNTech,773684
+Slovakia,2021-04-09,Oxford/AstraZeneca,293895
+Slovakia,2021-04-09,Pfizer/BioNTech,773717
 Slovakia,2021-04-09,Sputnik V,0
 Slovakia,2021-04-16,Johnson&Johnson,0
 Slovakia,2021-04-16,Moderna,97941
-Slovakia,2021-04-16,Oxford/AstraZeneca,345147
-Slovakia,2021-04-16,Pfizer/BioNTech,857040
+Slovakia,2021-04-16,Oxford/AstraZeneca,345134
+Slovakia,2021-04-16,Pfizer/BioNTech,857164
 Slovakia,2021-04-16,Sputnik V,0
 Slovakia,2021-04-23,Johnson&Johnson,0
 Slovakia,2021-04-23,Moderna,119590
-Slovakia,2021-04-23,Oxford/AstraZeneca,388996
-Slovakia,2021-04-23,Pfizer/BioNTech,941698
+Slovakia,2021-04-23,Oxford/AstraZeneca,388978
+Slovakia,2021-04-23,Pfizer/BioNTech,941822
 Slovakia,2021-04-23,Sputnik V,0
 Slovakia,2021-04-30,Johnson&Johnson,0
 Slovakia,2021-04-30,Moderna,141427
-Slovakia,2021-04-30,Oxford/AstraZeneca,423119
-Slovakia,2021-04-30,Pfizer/BioNTech,1052391
+Slovakia,2021-04-30,Oxford/AstraZeneca,423081
+Slovakia,2021-04-30,Pfizer/BioNTech,1052515
 Slovakia,2021-04-30,Sputnik V,0
 Slovakia,2021-05-07,Johnson&Johnson,0
 Slovakia,2021-05-07,Moderna,168953
-Slovakia,2021-05-07,Oxford/AstraZeneca,456899
-Slovakia,2021-05-07,Pfizer/BioNTech,1188068
+Slovakia,2021-05-07,Oxford/AstraZeneca,456819
+Slovakia,2021-05-07,Pfizer/BioNTech,1188192
 Slovakia,2021-05-07,Sputnik V,0
 Slovakia,2021-05-14,Johnson&Johnson,0
-Slovakia,2021-05-14,Moderna,198666
-Slovakia,2021-05-14,Oxford/AstraZeneca,496512
-Slovakia,2021-05-14,Pfizer/BioNTech,1350453
+Slovakia,2021-05-14,Moderna,198667
+Slovakia,2021-05-14,Oxford/AstraZeneca,496425
+Slovakia,2021-05-14,Pfizer/BioNTech,1350576
 Slovakia,2021-05-14,Sputnik V,0
 Slovakia,2021-05-21,Johnson&Johnson,0
-Slovakia,2021-05-21,Moderna,230753
-Slovakia,2021-05-21,Oxford/AstraZeneca,542889
-Slovakia,2021-05-21,Pfizer/BioNTech,1514939
+Slovakia,2021-05-21,Moderna,230756
+Slovakia,2021-05-21,Oxford/AstraZeneca,542802
+Slovakia,2021-05-21,Pfizer/BioNTech,1515062
 Slovakia,2021-05-21,Sputnik V,0
 Slovakia,2021-05-28,Johnson&Johnson,0
-Slovakia,2021-05-28,Moderna,258346
-Slovakia,2021-05-28,Oxford/AstraZeneca,583185
-Slovakia,2021-05-28,Pfizer/BioNTech,1688886
+Slovakia,2021-05-28,Moderna,258350
+Slovakia,2021-05-28,Oxford/AstraZeneca,583107
+Slovakia,2021-05-28,Pfizer/BioNTech,1689009
 Slovakia,2021-05-28,Sputnik V,2
 Slovakia,2021-06-04,Johnson&Johnson,0
-Slovakia,2021-06-04,Moderna,285611
-Slovakia,2021-06-04,Oxford/AstraZeneca,623762
-Slovakia,2021-06-04,Pfizer/BioNTech,1854922
+Slovakia,2021-06-04,Moderna,285615
+Slovakia,2021-06-04,Oxford/AstraZeneca,623684
+Slovakia,2021-06-04,Pfizer/BioNTech,1855047
 Slovakia,2021-06-04,Sputnik V,2
 Slovakia,2021-06-11,Johnson&Johnson,0
-Slovakia,2021-06-11,Moderna,311411
-Slovakia,2021-06-11,Oxford/AstraZeneca,654763
-Slovakia,2021-06-11,Pfizer/BioNTech,2029224
+Slovakia,2021-06-11,Moderna,311414
+Slovakia,2021-06-11,Oxford/AstraZeneca,654872
+Slovakia,2021-06-11,Pfizer/BioNTech,2029347
 Slovakia,2021-06-11,Sputnik V,4117
 Slovakia,2021-06-18,Johnson&Johnson,100
-Slovakia,2021-06-18,Moderna,337426
-Slovakia,2021-06-18,Oxford/AstraZeneca,700376
-Slovakia,2021-06-18,Pfizer/BioNTech,2194732
-Slovakia,2021-06-18,Sputnik V,7838
+Slovakia,2021-06-18,Moderna,337427
+Slovakia,2021-06-18,Oxford/AstraZeneca,700711
+Slovakia,2021-06-18,Pfizer/BioNTech,2194854
+Slovakia,2021-06-18,Sputnik V,7837
 Slovakia,2021-06-25,Johnson&Johnson,211
-Slovakia,2021-06-25,Moderna,360624
-Slovakia,2021-06-25,Oxford/AstraZeneca,748337
-Slovakia,2021-06-25,Pfizer/BioNTech,2351367
-Slovakia,2021-06-25,Sputnik V,11466
+Slovakia,2021-06-25,Moderna,360602
+Slovakia,2021-06-25,Oxford/AstraZeneca,748674
+Slovakia,2021-06-25,Pfizer/BioNTech,2351403
+Slovakia,2021-06-25,Sputnik V,11467
 Slovakia,2021-07-02,Johnson&Johnson,5299
-Slovakia,2021-07-02,Moderna,381887
-Slovakia,2021-07-02,Oxford/AstraZeneca,781954
-Slovakia,2021-07-02,Pfizer/BioNTech,2492025
-Slovakia,2021-07-02,Sputnik V,17471
+Slovakia,2021-07-02,Moderna,381859
+Slovakia,2021-07-02,Oxford/AstraZeneca,782290
+Slovakia,2021-07-02,Pfizer/BioNTech,2492038
+Slovakia,2021-07-02,Sputnik V,17467
 Slovakia,2021-07-09,Johnson&Johnson,13787
-Slovakia,2021-07-09,Moderna,398590
-Slovakia,2021-07-09,Oxford/AstraZeneca,810930
-Slovakia,2021-07-09,Pfizer/BioNTech,2596338
-Slovakia,2021-07-09,Sputnik V,23685
-Slovakia,2021-07-16,Johnson&Johnson,23918
-Slovakia,2021-07-16,Moderna,415387
-Slovakia,2021-07-16,Oxford/AstraZeneca,827007
-Slovakia,2021-07-16,Pfizer/BioNTech,2681338
-Slovakia,2021-07-16,Sputnik V,28036
-Slovakia,2021-07-23,Johnson&Johnson,25004
-Slovakia,2021-07-23,Moderna,425295
-Slovakia,2021-07-23,Oxford/AstraZeneca,827636
-Slovakia,2021-07-23,Pfizer/BioNTech,2716198
-Slovakia,2021-07-23,Sputnik V,29314
+Slovakia,2021-07-09,Moderna,398563
+Slovakia,2021-07-09,Oxford/AstraZeneca,811267
+Slovakia,2021-07-09,Pfizer/BioNTech,2596398
+Slovakia,2021-07-09,Sputnik V,23681
+Slovakia,2021-07-16,Johnson&Johnson,23967
+Slovakia,2021-07-16,Moderna,415354
+Slovakia,2021-07-16,Oxford/AstraZeneca,827343
+Slovakia,2021-07-16,Pfizer/BioNTech,2681620
+Slovakia,2021-07-16,Sputnik V,28028
+Slovakia,2021-07-23,Johnson&Johnson,25119
+Slovakia,2021-07-23,Moderna,427704
+Slovakia,2021-07-23,Oxford/AstraZeneca,831886
+Slovakia,2021-07-23,Pfizer/BioNTech,2725112
+Slovakia,2021-07-23,Sputnik V,30463

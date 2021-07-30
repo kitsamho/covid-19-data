@@ -25,3 +25,4 @@ date,people_vaccinated,people_fully_vaccinated,total_vaccinations,location,sourc
 2021-06-29,71242,61298,132540,French Polynesia,https://stats.pacificdata.org/vis?tm=covid&pg=0&df[ds]=SPC2&df[id]=DF_COVID_VACCINATION&df[ag]=SPC&df[vs]=1.0,"Johnson&Johnson, Pfizer/BioNTech"
 2021-07-13,75504,66019,141523,French Polynesia,https://stats.pacificdata.org/vis?tm=covid&pg=0&df[ds]=SPC2&df[id]=DF_COVID_VACCINATION&df[ag]=SPC&df[vs]=1.0,"Johnson&Johnson, Pfizer/BioNTech"
 2021-07-20,79201,69128,148329,French Polynesia,https://stats.pacificdata.org/vis?tm=covid&pg=0&df[ds]=SPC2&df[id]=DF_COVID_VACCINATION&df[ag]=SPC&df[vs]=1.0,"Johnson&Johnson, Pfizer/BioNTech"
+2021-07-27,83210,70827,154037,French Polynesia,https://stats.pacificdata.org/vis?tm=covid&pg=0&df[ds]=SPC2&df[id]=DF_COVID_VACCINATION&df[ag]=SPC&df[vs]=1.0,"Johnson&Johnson, Pfizer/BioNTech"

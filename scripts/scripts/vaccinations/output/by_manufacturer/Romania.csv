@@ -207,6 +207,10 @@ date,location,vaccine,total_vaccinations
 2021-07-21,Romania,Pfizer/BioNTech,7311018
 2021-07-22,Romania,Pfizer/BioNTech,7319847
 2021-07-23,Romania,Pfizer/BioNTech,7329045
+2021-07-24,Romania,Pfizer/BioNTech,7337142
+2021-07-25,Romania,Pfizer/BioNTech,7342701
+2021-07-26,Romania,Pfizer/BioNTech,7351353
+2021-07-27,Romania,Pfizer/BioNTech,7360269
 2021-02-04,Romania,Moderna,6443
 2021-02-05,Romania,Moderna,14944
 2021-02-06,Romania,Moderna,23087
@@ -370,6 +374,10 @@ date,location,vaccine,total_vaccinations
 2021-07-21,Romania,Moderna,720465
 2021-07-22,Romania,Moderna,720805
 2021-07-23,Romania,Moderna,721192
+2021-07-24,Romania,Moderna,721519
+2021-07-25,Romania,Moderna,721691
+2021-07-26,Romania,Moderna,721954
+2021-07-27,Romania,Moderna,722220
 2021-02-15,Romania,Oxford/AstraZeneca,6812
 2021-02-16,Romania,Oxford/AstraZeneca,13624
 2021-02-17,Romania,Oxford/AstraZeneca,22956
@@ -528,6 +536,10 @@ date,location,vaccine,total_vaccinations
 2021-07-21,Romania,Oxford/AstraZeneca,844199
 2021-07-22,Romania,Oxford/AstraZeneca,844333
 2021-07-23,Romania,Oxford/AstraZeneca,844459
+2021-07-24,Romania,Oxford/AstraZeneca,844551
+2021-07-25,Romania,Oxford/AstraZeneca,844619
+2021-07-26,Romania,Oxford/AstraZeneca,844756
+2021-07-27,Romania,Oxford/AstraZeneca,844881
 2021-05-04,Romania,Johnson&Johnson,45
 2021-05-05,Romania,Johnson&Johnson,267
 2021-05-06,Romania,Johnson&Johnson,1159
@@ -608,3 +620,7 @@ date,location,vaccine,total_vaccinations
 2021-07-21,Romania,Johnson&Johnson,397559
 2021-07-22,Romania,Johnson&Johnson,404253
 2021-07-23,Romania,Johnson&Johnson,411044
+2021-07-24,Romania,Johnson&Johnson,414640
+2021-07-25,Romania,Johnson&Johnson,416828
+2021-07-26,Romania,Johnson&Johnson,422148
+2021-07-27,Romania,Johnson&Johnson,428745

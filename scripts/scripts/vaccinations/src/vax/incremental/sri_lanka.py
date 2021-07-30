@@ -20,9 +20,9 @@ vaccines_mapping = {
 }
 
 regex_mapping = {
-    "Covishield Vaccine": r"(Covishield Vaccine) +1st\sDose (\d+) 2nd Dose (\d+)",
-    "Sinopharm Vaccine": r"(Sinopharm Vaccine) +1st\sDose (\d+) 2nd Dose (\d+)",
-    "Sputnik V": r"(Sputnik V) +1st\sDose (\d+) 2nd Dose (\d+)",
+    "Covishield Vaccine": r"(Covishield Vaccine) +1st\s(?:D|d)ose (\d+) 2nd (?:D|d)ose (\d+)",
+    "Sinopharm Vaccine": r"(Sinopharm Vaccine) +1st\s(?:D|d)ose (\d+) 2nd (?:D|d)ose (\d+)",
+    "Sputnik V": r"(Sputnik V) +1st\s(?:D|d)ose (\d+) 2nd (?:D|d)ose (\d+)",
     "Pfizer": r"(Pfizer) +(\d+)",
     "Moderna": r"(Moderna) +(\d+)",
 }

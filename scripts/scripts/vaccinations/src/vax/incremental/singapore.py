@@ -55,7 +55,7 @@ class Singapore:
         return enrich_data(ds, "location", "Singapore")
 
     def pipe_vaccine(self, ds: pd.Series) -> pd.Series:
-        return enrich_data(ds, "vaccine", "Moderna, Pfizer/BioNTech, Sinovac")
+        return enrich_data(ds, "vaccine", "Moderna, Pfizer/BioNTech")
 
     def pipe_source(self, ds: pd.Series) -> pd.Series:
         return enrich_data(ds, "source_url", self.source_url)

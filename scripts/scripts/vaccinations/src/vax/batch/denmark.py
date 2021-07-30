@@ -2,6 +2,7 @@ import zipfile
 import io
 import os
 import tempfile
+from datetime import datetime
 
 import requests
 import pandas as pd
@@ -12,6 +13,7 @@ from vax.utils.dates import clean_date_series
 
 
 SEPARATOR = ";"
+SEPARATOR_ALT = ","
 
 
 class Denmark:
@@ -36,6 +38,10 @@ class Denmark:
             "Hovedstaden",
             "Sjælland",
         }
+
+    @property
+    def num_days_since_launch_single_dose(self):
+        return (datetime.now() - datetime.strptime(self.date_limit_one_dose, "%Y-%m-%d")).days
 
     def read(self) -> str:
         url = self._parse_link_zip()
@@ -70,12 +76,20 @@ class Denmark:
         return df.sort_values("Vaccinedato")
 
     def _load_df_metric(self, path, filename: str, metric_name: str):
-        df = pd.read_csv(
-            os.path.join(path, "Vaccine_DB", filename),
-            encoding="iso-8859-1",
-            usecols=["Vaccinedato", "geo", metric_name],
-            sep=SEPARATOR,
-        )
+        try:
+            df = pd.read_csv(
+                os.path.join(path, "Vaccine_DB", filename),
+                encoding="iso-8859-1",
+                usecols=["Vaccinedato", "geo", metric_name],
+                sep=SEPARATOR,
+            )
+        except ValueError:
+            df = pd.read_csv(
+                os.path.join(path, "Vaccine_DB", filename),
+                encoding="iso-8859-1",
+                usecols=["Vaccinedato", "geo", metric_name],
+                sep=SEPARATOR_ALT,
+            )
         return df[df.geo == "Nationalt"].drop(columns=["geo"])
 
     def _parse_total_vaccinations(self, path):
@@ -84,6 +98,12 @@ class Denmark:
             encoding="iso-8859-1",
             sep=SEPARATOR,
         )
+        if len(df.columns) == 1:
+            df = pd.read_csv(
+                os.path.join(path, "Vaccine_DB", "Vaccinationstyper_regioner.csv"),
+                encoding="iso-8859-1",
+                sep=SEPARATOR_ALT,
+            )
         # Check 1/2
         self._check_df_vax_1(df)
         # Rename columns
@@ -102,6 +122,7 @@ class Denmark:
         return total_vaccinations
 
     def _check_df_vax_1(self, df):
+        # print(list(df.columns))
         vaccines_wrong = set(df.Vaccinenavn).difference(self.vaccines_mapping)
         if vaccines_wrong:
             raise ValueError(f"Unknown vaccine(s) {vaccines_wrong}")
@@ -137,12 +158,12 @@ class Denmark:
             mask, "people_fully_vaccinated"
         ].fillna(0)
         # Uncomment to backfill total_vaccinations
-        # df = df.pipe(self.pipe_total_vax_bfill, n_days=38)
+        df = df.pipe(self.pipe_total_vax_bfill, n_days=self.num_days_since_launch_single_dose)
         return df
 
     def pipe_vaccine(self, df: pd.DataFrame) -> pd.DataFrame:
         def _enrich_vaccine(date: str) -> str:
-            if date >= "2021-05-27":
+            if date >= self.date_limit_one_dose:
                 return "Johnson&Johnson, Moderna, Pfizer/BioNTech"
             if date >= "2021-04-14":
                 return "Moderna, Pfizer/BioNTech"
@@ -195,6 +216,7 @@ class Denmark:
 
     def _backfill_total_vaccinations(self, df: pd.DataFrame, links: list):
         for link in links:
+            # print(link)
             total_vaccinations_latest, date = self._get_total_vax(link)
             df.loc[df["date"] == date, "total_vaccinations"] = total_vaccinations_latest
         return df
