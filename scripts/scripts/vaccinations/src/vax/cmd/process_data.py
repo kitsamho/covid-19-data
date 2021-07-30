@@ -31,6 +31,7 @@ def main_process_data(
     # Concatenate
     vax = df_manual_list + df_auto_list
 
+    # vax = [v for v in vax if v.location.iloc[0] == "Pakistan"]  # DEBUG
     # Process locations
     def _process_location(df):
         monotonic_check_skip = skip_monotonic.get(df.loc[0, "location"], [])

@@ -19,11 +19,16 @@ CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 INPUT_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "..", "input"))
 GRAPHER_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "..", "grapher"))
 DATA_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "..", "..", "public", "data"))
+DATA_VAX_COUNTRIES_DIR = os.path.abspath(os.path.join(DATA_DIR, "vaccinations", "country_data"))
 TIMESTAMP_DIR = os.path.abspath(os.path.join(DATA_DIR, "internal", "timestamp"))
 ANNOTATIONS_PATH = os.path.abspath(
     os.path.join(CURRENT_DIR, "annotations_internal.yaml")
 )
 
+COUNTRIES_WITH_PARTLY_VAX_METRIC = ["Pakistan"]
+country_vax_data_partly = [
+    os.path.join(DATA_VAX_COUNTRIES_DIR, f"{country}.csv") for country in COUNTRIES_WITH_PARTLY_VAX_METRIC
+]
 
 def get_jhu():
     """
@@ -478,6 +483,8 @@ internal_files_columns = {
         "people_fully_vaccinated_per_hundred",
         "new_vaccinations_smoothed_per_million",
         "population",
+        "people_partly_vaccinated",
+        "people_partly_vaccinated_per_hundred",
     ],
     "hospital-admissions": [
         "location",
@@ -598,8 +605,9 @@ def create_internal(df):
     df["cfr"] = (df["total_deaths"] * 100 / df["total_cases"]).round(3)
 
     # Insert short-term CFR
+    cfr_day_shift = 10  # We compute number of deaths divided by number of cases `cfr_day_shift` days before.
     shifted_cases = (
-        df.sort_values("date").groupby("location")["new_cases_smoothed"].shift(9)
+        df.sort_values("date").groupby("location")["new_cases_smoothed"].shift(cfr_day_shift)
     )
     df["cfr_short_term"] = (
         df["new_deaths_smoothed"]
@@ -615,7 +623,23 @@ def create_internal(df):
         | (df.date.astype(str) < "2020-09-01"),
         "cfr_short_term",
     ] = pd.NA
+    
+    # Add partly vaccinated
+    df_a = df[df.location.isin(COUNTRIES_WITH_PARTLY_VAX_METRIC)]
+    for filename in country_vax_data_partly:
+        if not os.path.isfile(filename):
+            raise ValueError(f"Invalid file path! {filename}")
+        x = pd.read_csv(filename, usecols=["location", "date", "people_partly_vaccinated"])
+        df_a = df_a.merge(x, on=["location", "date"], how="outer")
+    df_b = df[~df.location.isin(COUNTRIES_WITH_PARTLY_VAX_METRIC)]
+    dfg = df_b.groupby("location")
+    df_b.loc[:, "people_partly_vaccinated"] = (
+        dfg.people_vaccinated.ffill() - dfg.people_fully_vaccinated.ffill().fillna(0)).apply(lambda x: max(x, 0)
+    )
+    df = pd.concat([df_a, df_b], ignore_index=True).sort_values(["location", "date"])
+    df.loc[:, "people_partly_vaccinated_per_hundred"] = df["people_partly_vaccinated"]/df["population"] * 100
 
+    # Export
     for name, columns in internal_files_columns.items():
         output_path = os.path.join(dir_path, f"megafile--{name}.json")
         value_columns = list(set(columns) - set(non_value_columns))

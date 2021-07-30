@@ -6,34 +6,31 @@ from vax.utils.dates import localdate
 
 
 class Bolivia:
-    def __init__(self, source_url: str, location: str):
-        self.source_url = source_url
-        self.location = location
+    def __init__(self):
+        self.source_url = "https://www.unidoscontraelcovid.gob.bo/"
+        self.location = "Bolivia"
 
     def read(self):
-        people_vaccinated, people_fully_vaccinated = self.parse_metrics()
-        return pd.Series(
-            {
-                "people_vaccinated": people_vaccinated,
-                "people_fully_vaccinated": people_fully_vaccinated,
-                "date": self.get_date(),
-            }
-        )
-
-    def parse_metrics(self) -> tuple:
         soup = get_soup(self.source_url)
-        elems = soup.find(class_="vacunometro-cifras").find_all("td")
-        if len(elems) != 2:
-            raise ValueError(
-                "Something changed in source layout. More than two elemnts with class='vacunados' were found."
-            )
-        values = [clean_count(elem.text) for elem in elems]
-        dose_1 = max(values)
-        dose_2 = min(values)
-        return dose_1, dose_2
+        return self._parse_data(soup)
 
-    def get_date(self):
-        return localdate("America/La_Paz")
+    def _parse_data(self, soup):
+        elem = soup.find(class_="vacunometro-cifras").parent
+        ds = pd.read_html(str(elem), header=1)[0].squeeze()
+        # Format check
+        if ds.shape != (2,):
+            raise ValueError("New cell added!")
+
+        if ds.index.difference(["PRIMERA DOSIS", "SEGUNDA DOSIS"]).any():
+            raise ValueError("Unknown cell detected or new cell added!")
+        # Index renaming
+        ds = ds.rename({
+            "PRIMERA DOSIS": "people_vaccinated",
+            "SEGUNDA DOSIS": "people_fully_vaccinated",
+        })
+        ds = ds.apply(clean_count)
+        ds = enrich_data(ds, "date", localdate("America/La_Paz"))
+        return ds
 
     def pipe_location(self, ds: pd.Series) -> pd.Series:
         return enrich_data(ds, "location", self.location)
@@ -60,7 +57,7 @@ class Bolivia:
             .pipe(self.pipe_vaccinations)
         )
 
-    def to_csv(self, paths):
+    def export(self, paths):
         """Generalized."""
         data = self.read().pipe(self.pipeline)
         increment(
@@ -76,10 +73,7 @@ class Bolivia:
 
 
 def main(paths):
-    Bolivia(
-        source_url="https://www.boliviasegura.gob.bo/index.php/category/estadistica/",
-        location="Bolivia",
-    ).to_csv(paths)
+    Bolivia().export(paths)
 
 
 if __name__ == "__main__":

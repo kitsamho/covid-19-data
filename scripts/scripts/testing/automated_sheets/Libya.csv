@@ -1,4 +1,5 @@
 Country,Date,Daily change in cumulative total,Source URL,Source label,Testing type,Units,Notes,Cumulative total
+Libya,2021-07-25,11041,https://ncdc.org.ly/Ar,Libya National Centre for Disease Control,PCR only,samples tested,,
 Libya,2021-07-22,5017,https://ncdc.org.ly/Ar,Libya National Centre for Disease Control,PCR only,samples tested,,
 Libya,2021-07-19,3974,https://ncdc.org.ly/Ar,Libya National Centre for Disease Control,PCR only,samples tested,,
 Libya,2021-07-17,9927,https://ncdc.org.ly/Ar,Libya National Centre for Disease Control,PCR only,samples tested,,
