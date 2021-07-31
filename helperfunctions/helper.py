@@ -20,8 +20,8 @@ def plotly_streamlit_layout(fig, barmode=None, barnorm=None, height=None,width=N
 
 # this is a plotly figure formatting function (text) that can be used on a range of Plotly figure objects
 def plotly_streamlit_texts(fig, x_title, y_title):
-    fig.update_layout(yaxis=dict(title=y_title, titlefont_size=10, tickfont_size=10),
-                      xaxis=dict(title=x_title, titlefont_size=10, tickfont_size=10))
+    fig.update_layout(yaxis=dict(title=y_title, titlefont_size=10, tickfont_size=10, showgrid=False),
+                      xaxis=dict(title=x_title, titlefont_size=10, tickfont_size=10, showgrid=False))
 
     return fig
 
