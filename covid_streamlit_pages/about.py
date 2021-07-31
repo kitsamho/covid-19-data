@@ -22,7 +22,7 @@ def write(df):
 
     st.write('For a detailed breakdown of the data sources used by OWID and other features not included here, \
     they have some great documentation on their repo which can be found here: https://github.com/owid/covid-19-data/blob/master/public/data/README.md')
-    st.dataframe(df.T)
+    st.dataframe(df)
     # fig_table = go.Figure(data=[go.Table(header=dict(values=[df.columns[0], df.columns[1], \
     #                                                          df.columns[2]]),
     #                                      cells=dict(values=[col_1, col_2, col_3], align='left',fill_color='white'))])
