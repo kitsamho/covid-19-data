@@ -88,7 +88,7 @@ def write(df):
 
     fig_animate = plotly_streamlit_layout(fig_animate, height=700, width=1200)
 
-    st.plotly_chart(fig_animate, x_title=metric_dic[x_metric], y_title=metric_dic[y_metric])
+    st.plotly_chart(fig_animate, use_container_width=True)
     return
 
 
