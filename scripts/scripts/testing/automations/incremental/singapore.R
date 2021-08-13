@@ -1,8 +1,8 @@
-url <- "https://www.moh.gov.sg/covid-19"
+url <- "https://www.moh.gov.sg/covid-19/statistics"
 
 page <- read_html(url)
 
-date <- page %>% html_nodes("h3") %>%
+date <- page %>% html_nodes("h4") %>%
     html_text() %>%
     str_subset("Tested") %>%
     str_extract("as .. [^)]+") %>%
@@ -10,25 +10,8 @@ date <- page %>% html_nodes("h3") %>%
     na.omit() %>%
     dmy()
 
-# count <- page %>%
-#     html_nodes("#ContentPlaceHolder_contentPlaceholder_C095_Col01 td") %>%
-#     html_text() %>%
-#     str_replace_all("[^\\d]", "") %>%
-#     as.integer()
-#
-# add_snapshot(
-#     count = count,
-#     date = date,
-#     sheet_name = "Singapore - People tested",
-#     country = "Singapore",
-#     units = "people tested",
-#     testing_type = "PCR only",
-#     source_url = url,
-#     source_label = "Ministry of Health"
-# )
-
 count <- page %>%
-    html_nodes("#ContentPlaceHolder_contentPlaceholder_C124_Col00 td") %>%
+    html_nodes("#ContentPlaceHolder_contentPlaceholder_C029_Col00 td") %>%
     html_text() %>%
     tail(1) %>%
     str_replace_all("[^\\d]", "") %>%

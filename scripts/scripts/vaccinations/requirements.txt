@@ -19,3 +19,4 @@ tweepy~=3.10.0
 uk-covid19~=1.2.0
 xlrd==2.0.1
 facebook-scraper==0.2.45
+tabulate==0.8.9

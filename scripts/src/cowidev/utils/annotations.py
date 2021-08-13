@@ -23,6 +23,7 @@ class AnnotatorInternal:
 
     Keys in config should match those in `internal_files_columns`.
     """
+
     def __init__(self, config: dict):
         self.config = config
 
@@ -47,12 +48,14 @@ class AnnotatorInternal:
         conf = self.config[stream]
         for c in conf:
             if not ("location" in c and "annotation_text" in c):
-                raise ValueError(f"Missing field in {stream} (`location` and `annotation_text` are required).")
+                raise ValueError(
+                    f"Missing field in {stream} (`location` and `annotation_text` are required)."
+                )
             if isinstance(c["location"], str):
                 mask = df.location == c["location"]
             elif isinstance(c["location"], list):
                 mask = df.location.isin(c["location"])
             if "date" in c:
-                mask = mask & (df.date>=c["date"])
+                mask = mask & (df.date >= c["date"])
             df.loc[mask, "annotations"] = c["annotation_text"]
         return df

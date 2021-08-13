@@ -8,8 +8,12 @@ from ._parser import _parse_args
 
 project_dir = get_project_dir()
 FILE_DS = os.path.join(project_dir, "scripts", "input", "bsg", "latest.csv")
-FILE_GRAPHER = os.path.join(project_dir, "scripts", "grapher", "COVID Government Response (OxBSG).csv")
-FILE_COUNTRY_STD = os.path.join(project_dir, "scripts", "input", "bsg", "bsg_country_standardised.csv")
+FILE_GRAPHER = os.path.join(
+    project_dir, "scripts", "grapher", "COVID Government Response (OxBSG).csv"
+)
+FILE_COUNTRY_STD = os.path.join(
+    project_dir, "scripts", "input", "bsg", "bsg_country_standardised.csv"
+)
 
 
 def run_step(step: str):
@@ -17,7 +21,7 @@ def run_step(step: str):
         run_etl(FILE_DS)
     elif step == "grapher-file":
         run_grapheriser(FILE_DS, FILE_COUNTRY_STD, FILE_GRAPHER)
-    elif step == "grapher-db": 
+    elif step == "grapher-db":
         run_db_updater(FILE_GRAPHER)
 
 

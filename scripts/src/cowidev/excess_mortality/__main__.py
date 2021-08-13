@@ -6,8 +6,12 @@ from .grapher import run_explorerizer
 from ._parser import _parse_args
 
 
-FILE_DS = os.path.join(get_project_dir(), "public", "data", "excess_mortality", "excess_mortality.csv")
-FILE_EXPLORER = os.path.join(get_project_dir(), "public", "data", "internal", "megafile--excess-mortality.json")
+FILE_DS = os.path.join(
+    get_project_dir(), "public", "data", "excess_mortality", "excess_mortality.csv"
+)
+FILE_EXPLORER = os.path.join(
+    get_project_dir(), "public", "data", "internal", "megafile--excess-mortality.json"
+)
 
 
 def run_step(step: str):

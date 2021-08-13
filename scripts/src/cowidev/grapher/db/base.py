@@ -8,10 +8,18 @@ from cowidev.grapher.db.utils.slack_client import send_error
 
 
 class GrapherBaseUpdater:
-
-    def __init__(self, dataset_name: str, source_name: str, zero_day: str,
-                 input_csv_path: str = None, slack_notifications: bool = False, namespace: str = "owid",
-                 year_is_day: bool = True, unit: str = '', unit_short: str = None) -> None:
+    def __init__(
+        self,
+        dataset_name: str,
+        source_name: str,
+        zero_day: str,
+        input_csv_path: str = None,
+        slack_notifications: bool = False,
+        namespace: str = "owid",
+        year_is_day: bool = True,
+        unit: str = "",
+        unit_short: str = None,
+    ) -> None:
         self.dataset_name = dataset_name
         self._input_csv_path = input_csv_path
         self.source_name = source_name
@@ -29,7 +37,9 @@ class GrapherBaseUpdater:
     @property
     def input_csv_path(self):
         if self.project_dir:
-            return os.path.join(self.project_dir, "scripts", "grapher", f"{self.dataset_name}.csv")
+            return os.path.join(
+                self.project_dir, "scripts", "grapher", f"{self.dataset_name}.csv"
+            )
         if self._input_csv_path is not None:
             return self._input_csv_path
         raise ValueError(
@@ -40,7 +50,7 @@ class GrapherBaseUpdater:
     def time_str(self):
         return (
             (datetime.now() - timedelta(minutes=10))
-            .astimezone(pytz.timezone('Europe/London'))
+            .astimezone(pytz.timezone("Europe/London"))
             .strftime("%-d %B %Y, %H:%M")
         )
 
@@ -51,8 +61,8 @@ class GrapherBaseUpdater:
                 namespace=self.namespace,
                 csv_path=self.input_csv_path,
                 default_variable_display={
-                    'yearIsDay': self.year_is_day,
-                    'zeroDay': self.zero_day
+                    "yearIsDay": self.year_is_day,
+                    "zeroDay": self.zero_day,
                 },
                 source_name=self.source_name,
                 slack_notifications=self.slack_notifications,
@@ -63,6 +73,6 @@ class GrapherBaseUpdater:
             tb = traceback.format_exc()
             send_error(
                 channel="corona-data-updates",
-                title=f'Updating Grapher dataset: {self.dataset_name}',
+                title=f"Updating Grapher dataset: {self.dataset_name}",
                 trace=tb,
             )

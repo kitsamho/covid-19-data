@@ -1,122 +1,115 @@
-from uk_covid19 import Cov19API
-from typing import Union
 import pandas as pd
-
-# MAX_DATE_FILL_PILLAR_ONE_TWO: the max date where it is ok to fill NA
-#   values of cumVirusTests/newVirusTests with
-#   cumPillarOneTwoTestsByPublishDate/newPillarOneTwoTestsByPublishDate.
-#   Prior to (and including this date),
-#   cumPillarOneTwoTestsByPublishDate/newPillarOneTwoTestsByPublishDate
-#   was equal to cumVirusTests/newVirusTests every day, so we presume it
-#   is safe to fill in NA values of cumVirusTests/newVirusTests (which
-#   allows the time series to extend a few weeks further back in time).
-MAX_DATE_FILL_PILLAR_ONE_TWO = "2020-05-03"
+import requests
+from datetime import datetime
+from uk_covid19 import Cov19API
 
 
 def main():
-    # retrieves daily time series data from the API.
-    pcr_testing = {
+
+    # England (Include PillarTwo from 2 July 2020)
+    filters = ["areaType=Nation", "areaName=England"]
+    structure = {
         "Date": "date",
-        "cumPillarOneTwoTestsByPublishDate": "cumPillarOneTwoTestsByPublishDate",
-        "newPillarOneTwoTestsByPublishDate": "newPillarOneTwoTestsByPublishDate",
-        "cumVirusTests": "cumVirusTests",
-        "newVirusTests": "newVirusTests",
+        "Country": "areaName",
+        "cumPillarOne": "cumPillarOneTestsByPublishDate",
+        "newPillarTwo": "newPillarTwoTestsByPublishDate",
     }
-    api = Cov19API(filters=["areaType=overview"], structure=pcr_testing)
-    df = api.get_dataframe()
+    api = Cov19API(filters=filters, structure=structure)
+    england = api.get_dataframe()
 
-    # fills NA values of `cumVirusTests` and `newVirusTests` prior to
-    # MAX_DATE_FILL_PILLAR_ONE_TWO using
-    # `cumPillarOneTwoTestsByPublishDate` and
-    # `newPillarOneTwoTestsByPublishDate`.
-    df["cumVirusTests2"] = df.apply(
-        lambda row: _fill_virus_tests(row, "cum", MAX_DATE_FILL_PILLAR_ONE_TWO), axis=1
+    england["cumPillarTwo"] = (
+        england[pd.to_datetime(england["Date"]) > "2020-07-01"]["newPillarTwo"][::-1]
+        .cumsum()
+        .fillna(method="ffill")
     )
-    df["newVirusTests2"] = df.apply(
-        lambda row: _fill_virus_tests(row, "new", MAX_DATE_FILL_PILLAR_ONE_TWO), axis=1
+    england["Cumulative total"] = england["cumPillarOne"] + england[
+        "cumPillarTwo"
+    ].fillna(0)
+
+    # N ireland (Include PillarTwo from 26 June 2020)
+    filters = ["areaType=Nation", "areaName=Northern Ireland"]
+    structure = {
+        "Date": "date",
+        "Country": "areaName",
+        "cumPillarOne": "cumPillarOneTestsByPublishDate",
+        "newPillarTwo": "newPillarTwoTestsByPublishDate",
+    }
+    api = Cov19API(filters=filters, structure=structure)
+    nireland = api.get_dataframe()
+
+    nireland["cumPillarTwo"] = (
+        nireland[pd.to_datetime(nireland["Date"]) > "2020-06-25"]["newPillarTwo"][::-1]
+        .cumsum()
+        .fillna(method="ffill")
     )
+    nireland["Cumulative total"] = nireland["cumPillarOne"] + nireland[
+        "cumPillarTwo"
+    ].fillna(0)
 
-    # assigns `Notes` column
-    note1 = "Constructed from the newVirusTests/cumVirusTests variables"
-    note2 = (
-        "Sum of tests processed for pillars 1 and 2 "
-        "(cumPillarOneTwoTestsByPublishDate/newPillarOneTwoTestsByPublishDate"
+    # Scotland (Include PillarTwo from 15 June 2020)
+    filters = ["areaType=Nation", "areaName=Scotland"]
+    structure = {
+        "Date": "date",
+        "Country": "areaName",
+        "cumPillarOne": "cumPillarOneTestsByPublishDate",
+        "newPillarTwo": "newPillarTwoTestsByPublishDate",
+    }
+    api = Cov19API(filters=filters, structure=structure)
+    scotland = api.get_dataframe()
+
+    scotland["cumPillarTwo"] = (
+        scotland[pd.to_datetime(scotland["Date"]) > "2020-06-14"]["newPillarTwo"][::-1]
+        .cumsum()
+        .fillna(method="ffill")
     )
-    notes = []
-    for _, row in df.iterrows():
-        note = None
-        if pd.notnull(row["cumVirusTests2"]):
-            if pd.notnull(row["cumVirusTests"]):
-                note = note1
-            elif pd.notnull(row["cumPillarOneTwoTestsByPublishDate"]):
-                note = note2
-        notes.append(note)
+    scotland["Cumulative total"] = scotland["cumPillarOne"] + scotland[
+        "cumPillarTwo"
+    ].fillna(0)
 
-    assert len(notes) == df.shape[0]
-    df["Notes"] = notes
+    # Wales (Include PillarTwo from 14 July 2020)
+    filters = ["areaType=Nation", "areaName=Wales"]
+    structure = {
+        "Date": "date",
+        "Country": "areaName",
+        "cumPillarOne": "cumPillarOneTestsByPublishDate",
+        "newPillarTwo": "newPillarTwoTestsByPublishDate",
+    }
+    api = Cov19API(filters=filters, structure=structure)
+    wales = api.get_dataframe()
 
-    # renames and subsets to final columns
-    df.rename(
-        columns={
-            "cumVirusTests2": "Cumulative total",
-            "newVirusTests2": "Daily change in cumulative total",
-        },
-        inplace=True,
+    wales["cumPillarTwo"] = (
+        wales[pd.to_datetime(wales["Date"]) > "2020-07-13"]["newPillarTwo"][::-1]
+        .cumsum()
+        .fillna(method="ffill")
     )
-    df = df[["Date", "Cumulative total", "Daily change in cumulative total", "Notes"]]
+    wales["Cumulative total"] = wales["cumPillarOne"] + wales["cumPillarTwo"].fillna(0)
 
-    # assigns constants
-    df.loc[:, "Country"] = "United Kingdom"
-    df.loc[:, "Units"] = "tests performed"
-    df.loc[
-        :, "Source label"
-    ] = "Department of Health and Social Care and Public Health England"
-    df.loc[:, "Source URL"] = "https://coronavirus.data.gov.uk/developers-guide"
+    countries = [england, nireland, scotland, wales]
+    uk = pd.concat(countries).sort_values("Date")
+    uk = uk.groupby("Date", as_index=False).agg({"Cumulative total": "sum"})
 
-    df.to_csv("automated_sheets/United Kingdom - tests.csv", index=False)
+    uk["Country"] = "United Kingdom"
+    uk["Source URL"] = "https://coronavirus.data.gov.uk/details/testing"
+    uk["Source label"] = "Public Health England"
+    uk["Units"] = "tests performed"
+    uk[
+        "Notes"
+    ] = "PillarOne: England, N. Ireland, Scotland, Wales; PillarTwo: England, N. Ireland, Scotland, Wales"
 
+    uk.loc[
+        uk.Date < "2020-06-15", "Notes"
+    ] = "PillarOne: England, N. Ireland, Scotland, Wales; PillarTwo: None"
+    uk.loc[
+        uk.Date < "2020-06-26", "Notes"
+    ] = "PillarOne: England, N. Ireland, Scotland, Wales; PillarTwo: Scotland"
+    uk.loc[
+        uk.Date < "2020-07-02", "Notes"
+    ] = "PillarOne: England, N. Ireland, Scotland, Wales; PillarTwo: N. Ireland, Scotland"
+    uk.loc[
+        uk.Date < "2020-07-14", "Notes"
+    ] = "PillarOne: England, N. Ireland, Scotland, Wales; PillarTwo: England, N. Ireland, Scotland"
 
-def _fill_virus_tests(
-    row: Union[pd.Series, dict], new_or_cum: str, max_date: str
-) -> Union[int, float]:
-    """fills NA values of newVirusTests prior to `max_date` using
-    newPillarOneTwoTestsByPublishDate OR fills umVirusTests prior to
-    `max_date` using cumPillarOneTwoTestsByPublishDate.
-
-    Arguments:
-
-        row: Union[pd.Series, dict]. Pandas series or dict representing a
-            single day of data. Example:
-
-            {
-                'Date': '2020-12-17',
-                'cumPillarOneTwoTestsByPublishDate': 43485398,
-                'cumVirusTests': 4677136
-                }
-
-        new_or_cum: str. If "new", fills NA values of newVirusTests prior to
-            `max_date` using newPillarOneTwoTestsByPublishDate. If "cum",
-            fills NA values of cumVirusTests prior to `max_date` using
-            cumPillarOneTwoTestsByPublishDate.
-
-        max_date: str. Date in YYYY-MM-DD format. Only fills
-            newVirusTests/cumVirusTests for days on or prior to this date.
-
-    Returns:
-
-        val: Union[int, float]. The filled value of
-            newVirusTests/cumVirusTests.
-    """
-    assert new_or_cum in ["new", "cum"], "`new_or_cum` must be one of 'new' or 'cum'"
-    val = row[f"{new_or_cum}VirusTests"]
-    condition = (
-        row["Date"] <= max_date
-        and pd.isnull(row[f"{new_or_cum}VirusTests"])
-        and pd.notnull(row[f"{new_or_cum}PillarOneTwoTestsByPublishDate"])
-    )
-    if condition:
-        val = row[f"{new_or_cum}PillarOneTwoTestsByPublishDate"]
-    return val
+    uk.to_csv("automated_sheets/United Kingdom.csv", index=False)
 
 
 if __name__ == "__main__":

@@ -14,10 +14,7 @@ def run_grapheriser(input_path: str, input_path_country_std: str, output_path: s
     mobility = pd.read_csv(input_path, low_memory=False)
 
     # Convert date column to days since zero_day
-    mobility["date"] = pd.to_datetime(
-        mobility["date"],
-        format="%Y/%m/%d"
-    ).map(
+    mobility["date"] = pd.to_datetime(mobility["date"], format="%Y/%m/%d").map(
         lambda date: (date - zero_day).days
     )
 
@@ -31,19 +28,21 @@ def run_grapheriser(input_path: str, input_path_country_std: str, output_path: s
         "sub_region_2",
         "metro_area",
         "iso_3166_2_code",
-        "census_fips_code"
+        "census_fips_code",
     ]
     country_mobility = mobility[mobility[filter_cols].isna().all(1)]
 
     # Delete columns
-    country_mobility = country_mobility.drop(columns=[
-        "country_region",
-        "sub_region_1",
-        "sub_region_2",
-        "metro_area",
-        "census_fips_code",
-        "iso_3166_2_code"
-    ])
+    country_mobility = country_mobility.drop(
+        columns=[
+            "country_region",
+            "sub_region_1",
+            "sub_region_2",
+            "metro_area",
+            "census_fips_code",
+            "iso_3166_2_code",
+        ]
+    )
 
     # Assign new column names
     rename_dict = {
@@ -53,21 +52,26 @@ def run_grapheriser(input_path: str, input_path_country_std: str, output_path: s
         "parks_percent_change_from_baseline": "parks",
         "transit_stations_percent_change_from_baseline": "transit_stations",
         "workplaces_percent_change_from_baseline": "workplaces",
-        "residential_percent_change_from_baseline": "residential"
+        "residential_percent_change_from_baseline": "residential",
     }
 
     # Rename columns
     country_mobility = country_mobility.rename(columns=rename_dict)
 
     # Replace time series with 7-day rolling averages
-    country_mobility = country_mobility.sort_values(by=["Country", "Year"]).reset_index(drop=True)
+    country_mobility = country_mobility.sort_values(by=["Country", "Year"]).reset_index(
+        drop=True
+    )
     smoothed_cols = [
-        "retail_and_recreation", "grocery_and_pharmacy", "parks",
-        "transit_stations", "workplaces", "residential"
+        "retail_and_recreation",
+        "grocery_and_pharmacy",
+        "parks",
+        "transit_stations",
+        "workplaces",
+        "residential",
     ]
     country_mobility[smoothed_cols] = (
-        country_mobility
-        .groupby("Country", as_index=False)
+        country_mobility.groupby("Country", as_index=False)
         .rolling(window=7, min_periods=3, center=False)
         .mean()
         .round(3)

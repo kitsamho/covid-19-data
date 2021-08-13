@@ -11,13 +11,13 @@ from cowidev.grapher.db.utils.slack_client import send_error
 
 
 updaters = [
-  GrapherTestUpdater,
-  GrapherVariantsUpdater,
-  GrapherVaxAgeUpdater,
-  GrapherVaxManufacturerUpdater,
-  GrapherVaxUpdater,
-  GrapherYougovCompUpdater,
-  GrapherYougovUpdater,
+    GrapherTestUpdater,
+    GrapherVariantsUpdater,
+    GrapherVaxAgeUpdater,
+    GrapherVaxManufacturerUpdater,
+    GrapherVaxUpdater,
+    GrapherYougovCompUpdater,
+    GrapherYougovUpdater,
 ]
 updaters = [u() for u in updaters]
 
@@ -30,6 +30,6 @@ def main():
             tb = traceback.format_exc()
             send_error(
                 channel="corona-data-updates",
-                title=f'Updating Grapher dataset: {updater.dataset_name}',
+                title=f"Updating Grapher dataset: {updater.dataset_name}",
                 trace=tb,
             )

@@ -15,20 +15,37 @@ import yaml
 import numpy as np
 import pandas as pd
 
+
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 INPUT_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "..", "input"))
 GRAPHER_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "..", "grapher"))
 DATA_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "..", "..", "public", "data"))
-DATA_VAX_COUNTRIES_DIR = os.path.abspath(os.path.join(DATA_DIR, "vaccinations", "country_data"))
+DATA_VAX_COUNTRIES_DIR = os.path.abspath(
+    os.path.join(DATA_DIR, "vaccinations", "country_data")
+)
 TIMESTAMP_DIR = os.path.abspath(os.path.join(DATA_DIR, "internal", "timestamp"))
 ANNOTATIONS_PATH = os.path.abspath(
     os.path.join(CURRENT_DIR, "annotations_internal.yaml")
 )
-
-COUNTRIES_WITH_PARTLY_VAX_METRIC = ["Pakistan"]
+COUNTRIES_WITH_PARTLY_VAX_METRIC = []
 country_vax_data_partly = [
-    os.path.join(DATA_VAX_COUNTRIES_DIR, f"{country}.csv") for country in COUNTRIES_WITH_PARTLY_VAX_METRIC
+    os.path.join(DATA_VAX_COUNTRIES_DIR, f"{country}.csv")
+    for country in COUNTRIES_WITH_PARTLY_VAX_METRIC
 ]
+# FOR README generation
+VACCINATIONS_CSV = os.path.join(DATA_DIR, "vaccinations", "vaccinations.csv")
+TESTING_CSV = os.path.join(DATA_DIR, "testing", "covid-testing-all-observations.csv")
+CASES_CSV = os.path.join(DATA_DIR, "jhu", "total_cases.csv")
+DEATHS_CSV = os.path.join(DATA_DIR, "jhu", "total_deaths.csv")
+HOSP_CSV = os.path.join(GRAPHER_DIR, "COVID-2019 - Hospital & ICU.csv")
+REPR_CSV = (
+    "https://github.com/crondonm/TrackingR/raw/main/Estimates-Database/database.csv"
+)
+POL_CSV = os.path.join(INPUT_DIR, "bsg", "latest.csv")
+CODEBOOK_CSV = os.path.join(DATA_DIR, "owid-covid-codebook.csv")
+README_TMP = os.path.join(CURRENT_DIR, "README.md.template")
+README_FILE = os.path.join(DATA_DIR, "README.md")
+
 
 def get_jhu():
     """
@@ -166,6 +183,8 @@ def get_vax():
             "people_vaccinated_per_hundred",
             "people_fully_vaccinated",
             "people_fully_vaccinated_per_hundred",
+            "total_boosters",
+            "total_boosters_per_hundred",
         ],
     )
     vax = vax.rename(
@@ -175,13 +194,13 @@ def get_vax():
             "daily_vaccinations_per_million": "new_vaccinations_smoothed_per_million",
         }
     )
-    vax["total_vaccinations_per_hundred"] = vax["total_vaccinations_per_hundred"].round(
-        3
-    )
-    vax["people_vaccinated_per_hundred"] = vax["people_vaccinated_per_hundred"].round(3)
-    vax["people_fully_vaccinated_per_hundred"] = vax[
-        "people_fully_vaccinated_per_hundred"
-    ].round(3)
+    rounded_cols = [
+        "total_vaccinations_per_hundred",
+        "people_vaccinated_per_hundred",
+        "people_fully_vaccinated_per_hundred",
+        "total_boosters_per_hundred",
+    ]
+    vax[rounded_cols] = vax[rounded_cols].round(3)
     return vax
 
 
@@ -436,93 +455,124 @@ def create_latest(df):
 
 
 internal_files_columns = {
-    "cases-tests": [
-        "location",
-        "date",
-        "total_cases",
-        "new_cases",
-        "new_cases_smoothed",
-        "total_cases_per_million",
-        "new_cases_per_million",
-        "new_cases_smoothed_per_million",
-        "reproduction_rate",
-        "new_tests",
-        "total_tests",
-        "total_tests_per_thousand",
-        "new_tests_per_thousand",
-        "new_tests_smoothed",
-        "new_tests_smoothed_per_thousand",
-        "positive_rate",
-        "tests_per_case",
-        "tests_units",
-        "stringency_index",
-    ],
-    "deaths": [
-        "continent",
-        "location",
-        "date",
-        "total_deaths",
-        "new_deaths",
-        "new_deaths_smoothed",
-        "total_deaths_per_million",
-        "new_deaths_per_million",
-        "new_deaths_smoothed_per_million",
-        "cfr",
-        "cfr_short_term",
-    ],
-    "vaccinations": [
-        "location",
-        "date",
-        "total_vaccinations",
-        "people_vaccinated",
-        "people_fully_vaccinated",
-        "new_vaccinations",
-        "new_vaccinations_smoothed",
-        "total_vaccinations_per_hundred",
-        "people_vaccinated_per_hundred",
-        "people_fully_vaccinated_per_hundred",
-        "new_vaccinations_smoothed_per_million",
-        "population",
-        "people_partly_vaccinated",
-        "people_partly_vaccinated_per_hundred",
-    ],
-    "hospital-admissions": [
-        "location",
-        "date",
-        "icu_patients",
-        "icu_patients_per_million",
-        "hosp_patients",
-        "hosp_patients_per_million",
-        "weekly_icu_admissions",
-        "weekly_icu_admissions_per_million",
-        "weekly_hosp_admissions",
-        "weekly_hosp_admissions_per_million",
-    ],
-    "excess-mortality": [
-        "location",
-        "date",
-        "excess_mortality",
-    ],
-    "auxiliary": [
-        "iso_code",
-        "continent",
-        "location",
-        "date",
-        "population_density",
-        "median_age",
-        "aged_65_older",
-        "aged_70_older",
-        "gdp_per_capita",
-        "extreme_poverty",
-        "cardiovasc_death_rate",
-        "diabetes_prevalence",
-        "female_smokers",
-        "male_smokers",
-        "handwashing_facilities",
-        "hospital_beds_per_thousand",
-        "life_expectancy",
-        "human_development_index",
-    ],
+    "cases-tests": {
+        "columns": [
+            "location",
+            "date",
+            "total_cases",
+            "new_cases",
+            "new_cases_smoothed",
+            "total_cases_per_million",
+            "new_cases_per_million",
+            "new_cases_smoothed_per_million",
+            "reproduction_rate",
+            "new_tests",
+            "total_tests",
+            "total_tests_per_thousand",
+            "new_tests_per_thousand",
+            "new_tests_smoothed",
+            "new_tests_smoothed_per_thousand",
+            "positive_rate",
+            "tests_per_case",
+            "tests_units",
+            "stringency_index",
+        ],
+        "dropna": "all",
+    },
+    "deaths": {
+        "columns": [
+            "continent",
+            "location",
+            "date",
+            "total_deaths",
+            "new_deaths",
+            "new_deaths_smoothed",
+            "total_deaths_per_million",
+            "new_deaths_per_million",
+            "new_deaths_smoothed_per_million",
+            "cfr",
+            "cfr_short_term",
+        ],
+        "dropna": "all",
+    },
+    "vaccinations": {
+        "columns": [
+            "location",
+            "date",
+            "total_vaccinations",
+            "people_vaccinated",
+            "people_fully_vaccinated",
+            "total_boosters",
+            "new_vaccinations",
+            "new_vaccinations_smoothed",
+            "total_vaccinations_per_hundred",
+            "people_vaccinated_per_hundred",
+            "people_fully_vaccinated_per_hundred",
+            "total_boosters_per_hundred",
+            "new_vaccinations_smoothed_per_million",
+            "population",
+            "people_partly_vaccinated",
+            "people_partly_vaccinated_per_hundred",
+        ],
+        "dropna": "all",
+    },
+    "vaccinations-bydose": {
+        "columns": [
+            "location",
+            "date",
+            "people_fully_vaccinated",
+            "people_fully_vaccinated_per_hundred",
+            "people_partly_vaccinated",
+            "people_partly_vaccinated_per_hundred",
+        ],
+        "dropna": "any",
+    },
+    "hospital-admissions": {
+        "columns": [
+            "location",
+            "date",
+            "icu_patients",
+            "icu_patients_per_million",
+            "hosp_patients",
+            "hosp_patients_per_million",
+            "weekly_icu_admissions",
+            "weekly_icu_admissions_per_million",
+            "weekly_hosp_admissions",
+            "weekly_hosp_admissions_per_million",
+        ],
+        "dropna": "all",
+    },
+    "excess-mortality": {
+        "columns": [
+            "location",
+            "date",
+            "excess_mortality",
+        ],
+        "dropna": "all",
+    },
+    "auxiliary": {
+        "columns": [
+            "iso_code",
+            "continent",
+            "location",
+            "date",
+            "population_density",
+            "median_age",
+            "aged_65_older",
+            "aged_70_older",
+            "gdp_per_capita",
+            "extreme_poverty",
+            "cardiovasc_death_rate",
+            "diabetes_prevalence",
+            "female_smokers",
+            "male_smokers",
+            "handwashing_facilities",
+            "hospital_beds_per_thousand",
+            "life_expectancy",
+            "human_development_index",
+        ],
+        "dropna": "all",
+    },
 }
 
 
@@ -549,7 +599,7 @@ class AnnotatorInternal:
     """
 
     def __init__(self, config: dict):
-        self.config = config
+        self._config = config
 
     @classmethod
     def from_yaml(cls, path):
@@ -558,8 +608,93 @@ class AnnotatorInternal:
         return cls(dix)
 
     @property
+    def config(self):
+        for stream in self._config.keys():
+            self._config[stream] = sorted(self._config[stream], key=lambda x: x["date"])
+        return self._config
+
+    @property
     def streams(self):
-        return list(self.config.keys())
+        return list(self._config.keys())
+
+    def config_nested_to_flat(self, config):
+        """Convert class attribute config to a flattened dataframe.
+
+        Each row in the dataframe contains [stream, annotation_text, location, date]. Essentially, what gets flattened
+        is the `location` field, which originally contains a list of locations.
+
+        Args:
+            config (dict): Dictionary with original class config.
+
+        Returns:
+            pd.DataFrame: Table with config in a flatten version.
+        """
+        data_flat = []
+        for stream, config_ in config.items():
+            for d in config_:
+                for loc in d["location"]:
+                    data_flat.append(
+                        {
+                            "stream": stream,
+                            "annotation_text": d["annotation_text"],
+                            "date": d["date"],
+                            "location": loc,
+                        }
+                    )
+        return pd.DataFrame(data_flat)
+
+    def config_flat_to_nested(self, df_config):
+        """Converts flattened config dataframe to class instance format.
+
+        Args:
+            df_config (pd.DataFrame): Flattened config.
+
+        Returns:
+            dict: Dictionary with original data.
+        """
+        config_nested = {}
+        streams = df_config.stream.unique()
+        for stream in streams:
+            df_ = df_config[df_config.stream == stream]
+            rec = (
+                df_.groupby(["annotation_text", "date"])
+                .location.apply(list)
+                .reset_index()
+                .to_dict(orient="records")
+            )
+            config_nested[stream] = rec
+        return config_nested
+
+    def _remove_config_duplicates(self):
+        df_config = self.config_nested_to_flat(self._config)
+        df_config = df_config.drop_duplicates()
+        return self.config_flat_to_nested(df_config)
+
+    def insert_annotation(self, stream: str, annotation: dict):
+        # Checks
+        if (
+            "annotation_text" not in annotation
+            or "location" not in annotation
+            or "date" not in annotation
+        ):
+            raise ValueError(
+                "annotation dictionary must contain fields `annotation_text`, `location` and `date`"
+            )
+        if not (
+            isinstance(annotation["annotation_text"], str)
+            and isinstance(annotation["location"], list)
+            and isinstance(annotation["annotation_text"], str)
+        ):
+            raise ValueError(
+                f"Check `annotation` field types. `annotation_text` (str), `location` (list) and `date` (str)"
+            )
+        # Add annotation
+        self._config[stream].append(annotation)
+        # Remove duplicates
+        self._config = self._remove_config_duplicates()
+
+    def to_yaml(self):
+        pass
 
     def add_annotations(self, df: pd.DataFrame, stream: str) -> pd.DataFrame:
         if stream in self.streams:
@@ -585,8 +720,27 @@ class AnnotatorInternal:
         return df
 
 
-def create_internal(df):
+def add_annotations_countries_100_percentage(df, annotator):
+    threshold_perc = 100
+    locations_exc = (
+        df[df.people_vaccinated_per_hundred > threshold_perc]
+        .groupby("location")
+        .date.min()
+        .to_dict()
+    )
+    for loc, dt in locations_exc.items():
+        annotator.insert_annotation(
+            "vaccinations",
+            {
+                "annotation_text": "Exceeds 100% due to vaccination of non-residents",
+                "location": [loc],
+                "date": dt,
+            },
+        )
+    return annotator
 
+
+def create_internal(df):
     dir_path = os.path.join(DATA_DIR, "internal")
     # Ensure internal/ dir is created
     os.makedirs(dir_path, exist_ok=True)
@@ -600,6 +754,9 @@ def create_internal(df):
 
     # Copy df
     df = df.copy()
+
+    # Add new annotations for countries having >100% per-capita metric values (runtime, not stored in ANNOTATIONS_PATH)
+    annotator = add_annotations_countries_100_percentage(df, annotator)
     # Insert CFR column to avoid calculating it on the client, and enable
     # splitting up into cases & deaths columns.
     df["cfr"] = (df["total_deaths"] * 100 / df["total_cases"]).round(3)
@@ -607,7 +764,9 @@ def create_internal(df):
     # Insert short-term CFR
     cfr_day_shift = 10  # We compute number of deaths divided by number of cases `cfr_day_shift` days before.
     shifted_cases = (
-        df.sort_values("date").groupby("location")["new_cases_smoothed"].shift(cfr_day_shift)
+        df.sort_values("date")
+        .groupby("location")["new_cases_smoothed"]
+        .shift(cfr_day_shift)
     )
     df["cfr_short_term"] = (
         df["new_deaths_smoothed"]
@@ -617,33 +776,42 @@ def create_internal(df):
         .mul(100)
         .round(4)
     )
+
     df.loc[
         (df.cfr_short_term < 0)
         | (df.cfr_short_term > 10)
         | (df.date.astype(str) < "2020-09-01"),
         "cfr_short_term",
     ] = pd.NA
-    
+
     # Add partly vaccinated
     df_a = df[df.location.isin(COUNTRIES_WITH_PARTLY_VAX_METRIC)]
     for filename in country_vax_data_partly:
         if not os.path.isfile(filename):
             raise ValueError(f"Invalid file path! {filename}")
-        x = pd.read_csv(filename, usecols=["location", "date", "people_partly_vaccinated"])
+        try:
+            x = pd.read_csv(
+                filename, usecols=["location", "date", "people_partly_vaccinated"]
+            )
+        except ValueError as e:
+            raise ValueError(f"{filename}: {e}")
         df_a = df_a.merge(x, on=["location", "date"], how="outer")
     df_b = df[~df.location.isin(COUNTRIES_WITH_PARTLY_VAX_METRIC)]
-    dfg = df_b.groupby("location")
     df_b.loc[:, "people_partly_vaccinated"] = (
-        dfg.people_vaccinated.ffill() - dfg.people_fully_vaccinated.ffill().fillna(0)).apply(lambda x: max(x, 0)
+        df_b.people_vaccinated - df_b.people_fully_vaccinated
     )
     df = pd.concat([df_a, df_b], ignore_index=True).sort_values(["location", "date"])
-    df.loc[:, "people_partly_vaccinated_per_hundred"] = df["people_partly_vaccinated"]/df["population"] * 100
+    df.loc[:, "people_partly_vaccinated_per_hundred"] = (
+        df["people_partly_vaccinated"] / df["population"] * 100
+    )
 
     # Export
-    for name, columns in internal_files_columns.items():
+    for name, config in internal_files_columns.items():
         output_path = os.path.join(dir_path, f"megafile--{name}.json")
-        value_columns = list(set(columns) - set(non_value_columns))
-        df_output = df[columns].dropna(subset=value_columns, how="all")
+        value_columns = list(set(config["columns"]) - set(non_value_columns))
+        df_output = df[config["columns"]].dropna(
+            subset=value_columns, how=config["dropna"]
+        )
         df_output = annotator.add_annotations(df_output, name)
         df_to_columnar_json(df_output, output_path)
 
@@ -705,6 +873,9 @@ def generate_megafile():
         .sort_values(["location", "date"])
     )
 
+    # Remove today's datapoint
+    all_covid = all_covid[all_covid["date"] < str(date.today())]
+
     # Add ISO codes
     print("Adding ISO codes…")
     iso_codes = pd.read_csv(os.path.join(INPUT_DIR, "iso/iso3166_1_alpha_3_codes.csv"))
@@ -764,6 +935,7 @@ def generate_megafile():
     create_latest(all_covid)
 
     print("Writing to CSV…")
+
     all_covid.to_csv(os.path.join(DATA_DIR, "owid-covid-data.csv"), index=False)
 
     print("Writing to XLSX…")
@@ -779,6 +951,7 @@ def generate_megafile():
     )
 
     print("Creating internal files…")
+
     create_internal(all_covid)
 
     # Store the last updated time
@@ -789,6 +962,11 @@ def generate_megafile():
     timestamp_filename = os.path.join(
         TIMESTAMP_DIR, "owid-covid-data-last-updated-timestamp-root.txt"
     )
+
+    print("Generating public/data/README.md")
+    generate_readme()
+
+    # Export timestamp
     export_timestamp(timestamp_filename)
 
     print("All done!")
@@ -797,6 +975,128 @@ def generate_megafile():
 def export_timestamp(timestamp_filename):
     with open(timestamp_filename, "w") as timestamp_file:
         timestamp_file.write(datetime.utcnow().replace(microsecond=0).isoformat())
+
+
+## README ####################################################
+def get_excluded_locations():
+    df = pd.read_csv(VACCINATIONS_CSV)
+    codes = [code for code in df["iso_code"].unique() if "OWID_" in code]
+    EXCLUDE_LOCATIONS = set(
+        df[df.iso_code.isin(codes)].location.unique().tolist()
+        + ["2020 Summer Olympics athletes & staff"]
+    )
+    EXCLUDE_LOCATIONS.remove("Kosovo")
+    EXCLUDE_ISOS = df[df.location.isin(EXCLUDE_LOCATIONS)].iso_code.unique()
+    return EXCLUDE_LOCATIONS, EXCLUDE_ISOS
+
+
+EXCLUDE_LOCATIONS, EXCLUDE_ISOS = get_excluded_locations()
+
+
+def get_num_countries_by_iso(iso_code_colname, csv_filepath=None, df=None):
+    if df is None:
+        df = pd.read_csv(csv_filepath)
+    codes = [
+        code
+        for code in df[iso_code_colname].dropna().unique()
+        if code not in EXCLUDE_ISOS
+    ]
+    return len(codes)
+
+
+def get_num_countries_by_location(csv_filepath, location_colname, low_memory=True):
+    df = pd.read_csv(csv_filepath, low_memory=low_memory)
+    locations = [
+        loc
+        for loc in df[location_colname].dropna().unique()
+        if loc not in EXCLUDE_LOCATIONS
+    ]
+    return len(locations)
+
+
+def get_num_countries_jhu(csv_filepath):
+    df = pd.read_csv(csv_filepath)
+    columns = df.columns
+    return len(columns[~columns.isin(EXCLUDE_LOCATIONS)]) - 1
+
+
+def load_macro_df():
+    macro_variables = {
+        "population": "un/population_2020.csv",
+        "population_density": "wb/population_density.csv",
+        "median_age": "un/median_age.csv",
+        "aged_65_older": "wb/aged_65_older.csv",
+        "aged_70_older": "un/aged_70_older.csv",
+        "gdp_per_capita": "wb/gdp_per_capita.csv",
+        "extreme_poverty": "wb/extreme_poverty.csv",
+        "cardiovasc_death_rate": "gbd/cardiovasc_death_rate.csv",
+        "diabetes_prevalence": "wb/diabetes_prevalence.csv",
+        "female_smokers": "wb/female_smokers.csv",
+        "male_smokers": "wb/male_smokers.csv",
+        "handwashing_facilities": "un/handwashing_facilities.csv",
+        "hospital_beds_per_thousand": "owid/hospital_beds.csv",
+        "life_expectancy": "owid/life_expectancy.csv",
+        "human_development_index": "un/human_development_index.csv",
+    }
+    dfs = []
+    for var, file in macro_variables.items():
+        dfs.append(
+            pd.read_csv(os.path.join(INPUT_DIR, file), usecols=["iso_code", var])
+        )
+    df = pd.concat(dfs)
+    return df
+
+
+def get_variable_section():
+    template = """### {title}\n{table}"""
+    df = pd.read_csv(CODEBOOK_CSV).rename(columns={"description": "Description"})
+    df = df.assign(Variable=df.column.apply(lambda x: f"`{x}`"))
+    variable_description = []
+    categories = list(filter(lambda x: x != "Others", sorted(df.category.unique()))) + [
+        "Others"
+    ]
+    for cat in categories:
+        df_ = df[df.category == cat]
+        table = df_[["Variable", "Description"]].to_markdown(index=False)
+        variable_description.append(template.format(title=cat, table=table))
+    return variable_description
+
+
+def get_placeholder():
+    placeholders = {
+        "num_countries_vaccinations": get_num_countries_by_iso(
+            csv_filepath=VACCINATIONS_CSV, iso_code_colname="iso_code"
+        ),
+        "num_countries_testing": get_num_countries_by_iso(
+            csv_filepath=TESTING_CSV, iso_code_colname="ISO code"
+        ),
+        "num_countries_cases": get_num_countries_jhu(csv_filepath=CASES_CSV),
+        "num_countries_deaths": get_num_countries_jhu(csv_filepath=DEATHS_CSV),
+        "num_countries_hospital": get_num_countries_by_location(
+            csv_filepath=HOSP_CSV, location_colname="Country"
+        ),
+        "num_countries_reproduction": get_num_countries_by_location(
+            csv_filepath=REPR_CSV, location_colname="Country/Region"
+        ),
+        "num_countries_policy": get_num_countries_by_location(
+            csv_filepath=POL_CSV,
+            location_colname="CountryName",
+            low_memory=False,
+        ),
+        "num_countries_others": get_num_countries_by_iso(
+            df=load_macro_df(), iso_code_colname="iso_code"
+        ),
+        "variable_description": "\n".join(get_variable_section()),
+    }
+    return placeholders
+
+
+def generate_readme():
+    placeholders = get_placeholder()
+    with open(README_TMP, "r") as fr:
+        s = fr.read().format(**placeholders)
+        with open(README_FILE, "w") as fw:
+            fw.write(s)
 
 
 if __name__ == "__main__":

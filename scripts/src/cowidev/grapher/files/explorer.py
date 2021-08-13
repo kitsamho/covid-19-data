@@ -6,7 +6,11 @@ import numpy as np
 
 class Exploriser:
     def __init__(
-        self, location: str = "location", date: str = "date", pivot_column: str = None, pivot_values: str = None
+        self,
+        location: str = "location",
+        date: str = "date",
+        pivot_column: str = None,
+        pivot_values: str = None,
     ) -> None:
         self.location = location
         self.date = date
@@ -15,15 +19,11 @@ class Exploriser:
 
     def pipe_pivot(self, df: pd.DataFrame) -> pd.DataFrame:
         if self.pivot_column is not None and self.pivot_values is not None:
-            return (
-                df
-                .pivot(
-                    index=[self.location, self.date],
-                    columns=self.pivot_column,
-                    values=self.pivot_values,
-                )
-                .reset_index()
-            )
+            return df.pivot(
+                index=[self.location, self.date],
+                columns=self.pivot_column,
+                values=self.pivot_values,
+            ).reset_index()
         return df
 
     def pipe_nan_to_none(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -35,10 +35,7 @@ class Exploriser:
     def pipeline(self, input_path: str) -> dict:
         df = pd.read_csv(input_path)
         df = (
-            df
-            .pipe(self.pipe_pivot)
-            .pipe(self.pipe_nan_to_none)
-            .pipe(self.pipe_to_dict)
+            df.pipe(self.pipe_pivot).pipe(self.pipe_nan_to_none).pipe(self.pipe_to_dict)
         )
         return df
 
@@ -50,7 +47,7 @@ class Exploriser:
             separators=(",", ":"),
             # The json library by default encodes NaNs in JSON, but this is invalid JSON.
             # By having this False, an error will be thrown if a NaN exists in the data.
-            allow_nan=False
+            allow_nan=False,
         )
 
     def run(self, input_path: str, output_path: str):

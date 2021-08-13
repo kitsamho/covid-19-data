@@ -2,9 +2,10 @@ import pandas as pd
 
 
 class GMobilityETL:
-
     def __init__(self) -> None:
-        self.source_url = "https://www.gstatic.com/covid19/mobility/Global_Mobility_Report.csv"
+        self.source_url = (
+            "https://www.gstatic.com/covid19/mobility/Global_Mobility_Report.csv"
+        )
 
     def extract(self):
         return pd.read_csv(
@@ -22,7 +23,7 @@ class GMobilityETL:
                 "parks_percent_change_from_baseline",
                 "transit_stations_percent_change_from_baseline",
                 "workplaces_percent_change_from_baseline",
-                "residential_percent_change_from_baseline"
+                "residential_percent_change_from_baseline",
             ],
             low_memory=False,
         )

@@ -6,9 +6,15 @@ from .grapher import run_grapheriser, run_explorerizer, run_db_updater
 from ._parser import _parse_args
 
 
-FILE_DS = os.path.join(get_project_dir(), "public", "data", "variants", "covid-variants.csv")
-FILE_GRAPHER = os.path.join(get_project_dir(), "scripts", "grapher", "COVID-19 - Variants.csv")
-FILE_EXPLORER = os.path.join(get_project_dir(), "public", "data", "internal", "megafile--variants.json")
+FILE_DS = os.path.join(
+    get_project_dir(), "public", "data", "variants", "covid-variants.csv"
+)
+FILE_GRAPHER = os.path.join(
+    get_project_dir(), "scripts", "grapher", "COVID-19 - Variants.csv"
+)
+FILE_EXPLORER = os.path.join(
+    get_project_dir(), "public", "data", "internal", "megafile--variants.json"
+)
 
 
 def run_step(step: str):

@@ -33,7 +33,7 @@ def main():
 
     # Manual fix for error in data
     df.loc[
-        (df["Date"] == pd.to_datetime("2020-03-16"))
+        (pd.to_datetime(df["Date"]) == pd.to_datetime("2020-03-16"))
         & (df["Daily change in cumulative total"] == 39),
         "Date",
     ] = "2020-03-17"

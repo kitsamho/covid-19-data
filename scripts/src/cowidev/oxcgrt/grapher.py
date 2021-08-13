@@ -10,7 +10,7 @@ zero_day = datetime.strptime(ZERO_DAY, "%Y-%m-%d")
 
 
 def run_grapheriser(input_path: str, input_path_country_std: str, output_path: str):
-    usecols=[
+    usecols = [
         "CountryName",
         "Date",
         "C1_School closing",
@@ -33,14 +33,11 @@ def run_grapheriser(input_path: str, input_path_country_std: str, output_path: s
         "H6_Facial Coverings",
         "H7_Vaccination policy",
         "StringencyIndex",
-        "ContainmentHealthIndex"
+        "ContainmentHealthIndex",
     ]
-    cgrt = pd.read_csv(
-        input_path,
-        low_memory=False
-    )
+    cgrt = pd.read_csv(input_path, low_memory=False)
     country_mapping = pd.read_csv(input_path_country_std)
-    
+
     if "RegionCode" in cgrt.columns:
         cgrt = cgrt[cgrt.RegionCode.isnull()]
 
@@ -79,7 +76,7 @@ def run_grapheriser(input_path: str, input_path_country_std: str, output_path: s
         "E2_Debt/contract relief": "debt_relief",
         "E4_International support": "international_support",
         "H7_Vaccination policy": "vaccination_policy",
-        "H2_Testing policy": "testing_policy"
+        "H2_Testing policy": "testing_policy",
     }
 
     cgrt = cgrt.rename(columns=rename_dict).sort_values(["Country", "Year"])
