@@ -77,6 +77,10 @@ parse_country <- function(sheet_name) {
         )
     }
 
+    if ("Testing type" %in% names(collated)) {
+        stop(sprintf("The `Testing type` column is deprecated. Remove it from the %s data.", sheet_name))
+    }
+    
     stopifnot(length(table(collated$Units)) == 1)
     stopifnot(collated$Units[1] %in% c("people tested", "samples tested", "tests performed", "units unclear"))
 
@@ -116,6 +120,16 @@ parse_country <- function(sheet_name) {
             mutate(`Daily change in cumulative total` = if_else(is.na(`Daily change in cumulative total`), 0,
                                                                 `Daily change in cumulative total`)) %>%
             mutate(`Cumulative total` = cumsum(`Daily change in cumulative total`))
+    }
+    
+    # Check if cumulative total is monotonically increasing
+    mononotic_check <- collated %>%
+        arrange(Date) %>%
+        mutate(increase = `Cumulative total` - lag(`Cumulative total`)) %>%
+        filter(increase < 0)
+    if (nrow(mononotic_check) > 0) {
+        cat(as.character(mononotic_check$Date), sep = "\n")
+        stop("The series doesn't increase monotonically. Check the above dates.")
     }
 
     # Calculate rates per capita

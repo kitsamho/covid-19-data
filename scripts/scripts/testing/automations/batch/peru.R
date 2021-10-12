@@ -1,4 +1,4 @@
-url <- "https://datos.ins.gob.pe/dataset/c00ea8f5-89e0-4c55-bd78-a4472605c168/resource/0eec1a5e-a3ce-4c06-80f6-123f8c3b5461/download/pm31julio2021.zip"
+url <- "https://datos.ins.gob.pe/dataset/a219dc7b-bd79-4ba8-b4ce-65120ea3d461/resource/0d13f025-b675-4bfa-beab-928a67748407/download/pm25septiembre2021.zip"
 
 process_file <- function(url) {
     filename <- str_extract(url, "[^/]+\\.zip$")
@@ -8,7 +8,7 @@ process_file <- function(url) {
     }
     csv_filename <- unzip(local_path, list = TRUE)$Name[1]
     unzip(local_path, exdir = "tmp")
-    df <- fread(sprintf("tmp/%s", csv_filename), showProgress = FALSE, select = c("FECHATOMAMUESTRA", "RESULTADO"))
+    df <- fread(sprintf("tmp/%s", csv_filename), showProgress = FALSE, select = c("FECHA_MUESTRA", "RESULTADO"))
     setnames(df, c("Date", "Result"))
     df[, Date := as.character(Date)]
     return(df)
@@ -16,6 +16,7 @@ process_file <- function(url) {
 
 data <- process_file(url)
 
+data[, Date := ymd(Date)]
 data <- data[Date <= today() & Date >= "2020-01-01" & !is.na(Date)]
 
 df <- data[, .(
@@ -29,9 +30,8 @@ df[, Positive := NULL]
 
 df[, Country := "Peru"]
 df[, Units := "tests performed"]
-df[, `Source URL` := "https://datos.ins.gob.pe/dataset?q=%22pruebas+moleculares%22&organization=covid-19"]
+df[, `Source URL` := "https://datos.ins.gob.pe/dataset/dataset-de-pruebas-moleculares-del-instituto-nacional-de-salud-ins"]
 df[, `Source label` := "National Institute of Health"]
-df[, `Testing type` := "PCR only"]
 df[, Notes := NA]
 
 fwrite(df, "automated_sheets/Peru.csv")

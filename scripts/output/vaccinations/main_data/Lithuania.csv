@@ -1,229 +1,289 @@
-date,people_fully_vaccinated,people_vaccinated,total_vaccinations,vaccine,location,source_url
-2020-12-27,,2454.0,2454.0,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2020-12-28,,5211.0,5211.0,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2020-12-29,,8185.0,8185.0,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2020-12-30,,9717.0,9717.0,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2020-12-31,,9742.0,9742.0,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-01,,9742.0,9742.0,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-02,,9742.0,9742.0,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-03,,9742.0,9742.0,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-04,,9744.0,9744.0,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-05,,10368.0,10368.0,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-06,,13873.0,13873.0,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-07,,18057.0,18057.0,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-08,,23249.0,23249.0,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-09,,23553.0,23553.0,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-10,,23556.0,23556.0,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-11,,25762.0,25762.0,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-12,,27855.0,27855.0,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-13,,34123.0,34123.0,"Moderna, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-14,,42809.0,42809.0,"Moderna, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-15,,50144.0,50144.0,"Moderna, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-16,,51249.0,51249.0,"Moderna, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-17,1091.0,51291.0,52382.0,"Moderna, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-18,2771.0,54147.0,56918.0,"Moderna, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-19,6688.0,56526.0,63214.0,"Moderna, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-20,8524.0,58169.0,66693.0,"Moderna, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-21,9162.0,59080.0,68242.0,"Moderna, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-22,9232.0,59404.0,68636.0,"Moderna, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-23,9232.0,59412.0,68644.0,"Moderna, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-24,9232.0,59412.0,68644.0,"Moderna, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-25,9235.0,59514.0,68749.0,"Moderna, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-26,9896.0,62007.0,71903.0,"Moderna, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-27,12973.0,65852.0,78825.0,"Moderna, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-28,16697.0,69239.0,85936.0,"Moderna, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-29,21787.0,72229.0,94016.0,"Moderna, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-30,22235.0,72425.0,94660.0,"Moderna, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-01-31,22235.0,72433.0,94668.0,"Moderna, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-01,24059.0,73485.0,97544.0,"Moderna, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-02,26304.0,75141.0,101445.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-03,31495.0,76758.0,108253.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-04,39869.0,78244.0,118113.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-05,46251.0,79184.0,125435.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-06,46914.0,79253.0,126167.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-07,47009.0,79255.0,126264.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-08,49462.0,79471.0,128933.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-09,51258.0,80547.0,131805.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-10,52905.0,85068.0,137973.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-11,54211.0,92843.0,147054.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-12,55202.0,99168.0,154370.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-13,55202.0,99615.0,154817.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-14,55203.0,99615.0,154818.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-15,55899.0,103571.0,159470.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-16,56114.0,103882.0,159996.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-17,60053.0,108230.0,168283.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-18,64900.0,114738.0,179638.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-19,68228.0,121905.0,190133.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-20,68290.0,122849.0,191139.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-21,68290.0,122849.0,191139.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-22,69871.0,126745.0,196616.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-23,70975.0,134300.0,205275.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-24,71902.0,145106.0,217008.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-25,72851.0,156028.0,228879.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-26,73899.0,165028.0,238927.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-27,73930.0,165790.0,239720.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-02-28,73930.0,166239.0,240169.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-01,74078.0,173662.0,247740.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-02,74694.0,182400.0,257094.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-03,76957.0,192150.0,269107.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-04,82166.0,202424.0,284590.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-05,86853.0,211768.0,298621.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-06,86996.0,212251.0,299247.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-07,86997.0,212252.0,299249.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-08,87960.0,220217.0,308177.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-09,89332.0,230753.0,320085.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-10,91898.0,243837.0,335735.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-11,92578.0,244294.0,336872.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-12,99884.0,254934.0,354818.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-13,100598.0,255967.0,356565.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-14,100598.0,255992.0,356590.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-15,101723.0,262921.0,364644.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-16,106382.0,268477.0,374859.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-17,114270.0,271131.0,385401.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-18,119896.0,273904.0,393800.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-19,126028.0,277057.0,403085.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-20,126280.0,277538.0,403818.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-21,126300.0,277551.0,403851.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-22,127661.0,284434.0,412095.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-23,133339.0,291663.0,425002.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-24,138815.0,303817.0,442632.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-25,145683.0,313915.0,459598.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-26,152333.0,323712.0,476045.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-27,152445.0,326754.0,479199.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-28,152529.0,326855.0,479384.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-29,154574.0,332675.0,487249.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-30,160735.0,339401.0,500136.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-03-31,168066.0,352814.0,520880.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-01,170760.0,368447.0,539207.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-02,177678.0,381332.0,559010.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-03,178287.0,389392.0,567679.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-04,178289.0,391799.0,570088.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-05,178335.0,395468.0,573803.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-06,181307.0,407192.0,588499.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-07,182382.0,418870.0,601252.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-08,187445.0,440746.0,628191.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-09,191032.0,470642.0,661674.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-10,191212.0,486089.0,677301.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-11,191253.0,487771.0,679024.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-12,191733.0,496056.0,687789.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-13,194673.0,511950.0,706623.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-14,201288.0,532133.0,733421.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-15,206420.0,550189.0,756609.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-16,211237.0,565817.0,777054.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-17,211434.0,568128.0,779562.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-18,211435.0,568211.0,779646.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-19,212418.0,573075.0,785493.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-20,216971.0,583789.0,800760.0,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-21,229762.0,597671.0,827433.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-22,240173.0,613420.0,853593.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-23,248220.0,630030.0,878250.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-24,248804.0,633997.0,882801.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-25,248808.0,634261.0,883069.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-26,250062.0,639185.0,889247.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-27,251295.0,651041.0,902336.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-28,252820.0,664900.0,917720.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-29,272565.0,677872.0,950437.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-04-30,298942.0,689218.0,988160.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-01,308007.0,695942.0,1003949.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-02,308726.0,695970.0,1004696.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-03,312707.0,705394.0,1018101.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-04,329867.0,716551.0,1046418.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-05,351978.0,729189.0,1081167.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-06,372489.0,744266.0,1116755.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-07,387245.0,763429.0,1150674.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-08,388940.0,777550.0,1166490.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-09,388994.0,784631.0,1173625.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-10,394012.0,800276.0,1194288.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-11,404716.0,816079.0,1220795.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-12,417898.0,834623.0,1252521.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-13,431527.0,851228.0,1282755.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-14,446538.0,867810.0,1314348.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-15,449582.0,870911.0,1320493.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-16,449789.0,871205.0,1320994.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-17,454772.0,882018.0,1336790.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-18,468662.0,892770.0,1361432.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-19,485529.0,909158.0,1394687.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-20,502483.0,924917.0,1427400.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-21,517810.0,935526.0,1453336.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-22,524488.0,937942.0,1462430.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-23,524837.0,939428.0,1464265.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-24,533967.0,944871.0,1478838.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-25,544800.0,959819.0,1504619.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-26,557763.0,976167.0,1533930.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-27,572989.0,991392.0,1564381.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-28,588465.0,1008467.0,1596932.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-29,594532.0,1013947.0,1608479.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-30,594561.0,1014510.0,1609071.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-05-31,607882.0,1019700.0,1627582.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-01,622756.0,1037659.0,1660415.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-02,644382.0,1056775.0,1701157.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-03,661330.0,1077517.0,1738847.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-04,684074.0,1097390.0,1781464.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-05,690060.0,1109732.0,1799792.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-06,690259.0,1115153.0,1805412.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-07,706525.0,1122035.0,1828560.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-08,722438.0,1134021.0,1856459.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-09,740500.0,1145595.0,1886095.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-10,758420.0,1154582.0,1913002.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-11,772374.0,1165447.0,1937821.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-12,775222.0,1169490.0,1944712.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-13,779290.0,1172630.0,1951920.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-14,795476.0,1176740.0,1972216.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-15,813597.0,1184864.0,1998461.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-16,836646.0,1191795.0,2028441.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-17,857007.0,1201648.0,2058655.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-18,877119.0,1207623.0,2084742.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-19,882939.0,1208879.0,2091818.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-20,883901.0,1209235.0,2093136.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-21,896380.0,1213886.0,2110266.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-22,918153.0,1217946.0,2136099.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-23,942360.0,1221321.0,2163681.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-24,951123.0,1222934.0,2174057.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-25,976242.0,1227174.0,2203416.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-26,983747.0,1228110.0,2211857.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-27,989401.0,1228748.0,2218149.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-28,1006577.0,1231892.0,2238469.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-29,1028471.0,1236278.0,2264749.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-06-30,1048064.0,1241847.0,2289911.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-01,1061284.0,1247275.0,2308559.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-02,1077341.0,1252094.0,2329435.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-03,1081504.0,1254076.0,2335580.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-04,1081872.0,1254361.0,2336233.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-05,1092092.0,1257991.0,2350083.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-06,1095621.0,1259434.0,2355055.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-07,1108151.0,1264798.0,2372949.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-08,1121479.0,1270475.0,2391954.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-09,1132189.0,1275682.0,2407871.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-10,1135774.0,1277679.0,2413453.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-11,1135968.0,1277894.0,2413862.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-12,1145270.0,1280954.0,2426224.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-13,1152338.0,1285231.0,2437569.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-14,1157993.0,1289541.0,2447534.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-15,1164968.0,1296211.0,2461179.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-16,1173481.0,1302559.0,2476040.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-17,1175317.0,1304422.0,2479739.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-18,1176091.0,1305335.0,2481426.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-19,1183195.0,1309920.0,2493115.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-20,1189343.0,1317041.0,2506384.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-21,1195051.0,1325105.0,2520156.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-22,1201655.0,1336933.0,2538588.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-23,1207625.0,1348659.0,2556284.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-24,1209005.0,1351778.0,2560783.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-25,1209774.0,1353071.0,2562845.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-26,1217149.0,1363104.0,2580253.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-27,1222311.0,1374007.0,2596318.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-28,1227787.0,1385597.0,2613384.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-29,1233698.0,1401127.0,2634825.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-30,1240377.0,1411444.0,2651821.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-07-31,1244242.0,1414755.0,2658997.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-08-01,1246650.0,1415537.0,2662187.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-08-02,1256268.0,1422851.0,2679119.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-08-03,1260972.0,1431781.0,2692753.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-08-04,1268332.0,1443724.0,2712056.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-08-05,1282912.0,1464805.0,2747717.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-08-06,1296023.0,1483320.0,2779343.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-08-07,1300849.0,1489092.0,2789941.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-08-08,1301749.0,1490229.0,2791978.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-08-09,1312582.0,1503300.0,2815882.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-08-10,1322588.0,1514601.0,2837189.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
-2021-08-11,1333620.0,1525539.0,2859159.0,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+date,people_vaccinated,people_fully_vaccinated,total_boosters,total_vaccinations,vaccine,location,source_url
+2020-12-27,2417,0,0,2417,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2020-12-28,5214,0,0,5214,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2020-12-29,8194,0,0,8194,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2020-12-30,9725,0,0,9725,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2020-12-31,9755,0,0,9755,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-01,9755,0,0,9755,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-02,9755,0,0,9755,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-03,9755,0,0,9755,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-04,9756,0,0,9756,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-05,10378,0,0,10378,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-06,13885,0,0,13885,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-07,18070,0,0,18070,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-08,23268,0,0,23268,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-09,23572,0,0,23572,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-10,23574,0,0,23574,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-11,25785,0,0,25785,Pfizer/BioNTech,Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-12,27883,0,0,27883,"Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-13,34067,0,0,34067,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-14,42737,0,0,42737,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-15,50104,0,0,50104,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-16,51212,0,0,51212,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-17,51255,1094,0,52349,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-18,54091,2778,0,56869,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-19,56435,6706,0,63141,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-20,58054,8552,0,66606,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-21,59048,9190,0,68238,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-22,59373,9260,0,68633,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-23,59375,9260,0,68635,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-24,59375,9260,0,68635,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-25,59481,9263,0,68744,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-26,61981,9924,0,71905,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-27,65820,13007,0,78827,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-28,69205,16752,0,85957,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-29,72202,21861,0,94063,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-30,72396,22310,0,94706,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-01-31,72404,22310,0,94714,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-01,73453,24168,0,97621,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-02,75107,26444,0,101551,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-03,76782,31615,0,108397,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-04,78276,40027,0,118303,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-05,79223,46473,0,125696,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-06,79293,47138,0,126431,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-07,79294,47234,0,126528,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-08,79513,49700,0,129213,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-09,80592,51502,0,132094,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-10,85111,53174,0,138285,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-11,92895,54491,0,147386,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-12,99238,55487,0,154725,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-13,99688,55487,0,155175,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-14,99688,55488,0,155176,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-15,103644,56185,0,159829,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-16,103957,56408,0,160365,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-17,108311,60362,0,168673,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-18,114824,65217,0,180041,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-19,122017,68550,0,190567,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-20,122967,68612,0,191579,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-21,122969,68612,0,191581,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-22,126863,70194,1,197059,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-23,134436,71305,2,205745,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-24,145270,72235,2,217509,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-25,156204,73184,3,229394,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-26,165220,74233,5,239463,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-27,166001,74264,5,240275,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-02-28,166453,74264,5,240727,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-01,173886,74416,5,248312,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-02,182639,75035,5,257684,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-03,192405,77313,5,269728,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-04,202693,82548,5,285251,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-05,212045,87254,7,299313,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-06,212530,87397,7,299941,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-07,212533,87398,7,299945,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-08,220524,88363,7,308901,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-09,231069,89740,8,320825,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-10,244187,92320,8,336523,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-11,244645,93006,8,337667,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-12,255298,100343,8,355657,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-13,256334,101057,8,357407,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-14,256362,101059,8,357437,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-15,263268,102191,9,365477,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-16,268827,106865,9,375710,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-17,271457,114812,9,386287,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-18,274226,120475,10,394721,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-19,277376,126640,10,404036,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-20,277862,126894,10,404776,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-21,277877,126915,10,404812,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-22,284773,128291,11,413086,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-23,292012,133981,12,426017,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-24,304189,139474,13,443689,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-25,314320,146391,13,460737,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-26,324135,153069,16,477236,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-27,327177,153182,16,480391,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-28,327281,153266,16,480579,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-29,333107,155321,16,488460,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-30,339858,161506,17,501398,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-03-31,353315,168904,17,522253,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-01,368978,171613,17,540625,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-02,381853,178626,18,560515,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-03,389908,179236,19,569182,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-04,392317,179238,19,571593,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-05,395994,179285,19,575317,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-06,407726,182267,21,590035,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-07,419405,183356,22,602805,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-08,441306,188453,26,629811,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-09,471226,192065,29,663349,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-10,486685,192252,29,678995,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-11,488374,192294,29,680726,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-12,496669,192779,31,689510,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-13,512579,195738,34,708385,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-14,532784,202383,35,735237,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-15,550847,207551,37,758472,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-16,566437,212447,38,778960,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-17,568752,212646,38,781474,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-18,568836,212648,38,781560,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-19,573691,213648,38,787415,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-20,584411,218219,39,802708,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-21,598296,231055,42,829433,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-22,614029,241543,44,855658,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-23,630621,249627,52,880349,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-24,634594,250218,52,884913,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-25,634863,250223,52,885187,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-26,639788,251483,53,891369,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-27,651644,252725,53,904442,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-28,665507,254260,55,919763,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-29,678451,274086,63,952494,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-04-30,689783,300573,72,990264,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-01,696488,309668,75,1006049,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-02,696517,310388,75,1006798,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-03,705931,314395,75,1020155,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-04,717088,331593,82,1048369,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-05,729671,353796,93,1082912,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-06,744716,374390,100,1118240,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-07,763802,389215,106,1151305,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-08,777922,390912,106,1166973,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-09,785005,390969,106,1174112,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-10,800639,396003,107,1193955,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-11,816417,406755,110,1220125,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-12,834949,419993,113,1251683,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-13,851553,433678,114,1281513,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-14,868120,448734,124,1312824,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-15,871230,451782,124,1318966,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-16,871522,451993,124,1319469,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-17,882297,457019,127,1334842,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-18,893069,470953,133,1358933,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-19,909398,487866,144,1391542,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-20,925218,504871,153,1423204,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-21,935799,520244,162,1448191,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-22,938204,526943,163,1457080,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-23,939694,527295,163,1458598,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-24,945106,536471,166,1472116,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-25,960034,547340,174,1497021,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-26,976361,560364,179,1525572,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-27,991563,575635,195,1554983,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-28,1008602,591195,200,1586117,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-29,1014084,597274,200,1594571,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-30,1014648,597304,200,1595165,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-05-31,1019789,610696,207,1613287,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-01,1037761,625635,213,1645495,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-02,1056883,647317,219,1685603,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-03,1077593,664308,226,1722215,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-04,1097415,687202,235,1763404,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-05,1109755,693195,236,1779350,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-06,1115176,693395,236,1784967,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-07,1122003,709732,245,1806541,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-08,1133962,725772,250,1832987,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-09,1145536,743887,254,1860766,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-10,1154503,761839,262,1885911,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-11,1165374,775841,265,1909011,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-12,1169431,778703,266,1914951,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-13,1172579,782781,266,1919151,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-14,1176684,798983,275,1938805,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-15,1184798,817133,279,1963123,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-16,1191712,840221,289,1991998,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-17,1201520,860659,299,2020999,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-18,1207486,880797,310,2046638,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-19,1208733,886628,311,2053148,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-20,1209092,887593,311,2054205,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-21,1213741,900090,316,2070269,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-22,1217789,921903,320,2095649,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-23,1221115,946167,334,2123191,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-24,1222727,954934,335,2133437,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-25,1226956,980100,345,2162417,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-26,1227895,987611,347,2170850,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-27,1228537,993268,347,2177076,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-28,1231656,1010466,353,2197028,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-29,1236018,1032392,356,2221966,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-06-30,1241545,1052028,367,2245404,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-01,1246999,1065276,369,2262676,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-02,1251794,1081382,375,2282346,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-03,1253780,1085548,375,2288047,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-04,1254065,1085917,375,2288500,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-05,1257680,1096157,380,2301560,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-06,1259133,1099696,380,2306272,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-07,1264486,1112250,390,2322520,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-08,1270152,1125591,396,2339470,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-09,1275343,1136305,403,2353909,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-10,1277346,1139902,403,2358057,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-11,1277563,1140097,403,2358350,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-12,1280623,1149417,407,2369908,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-13,1284918,1156490,408,2379834,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-14,1289228,1162150,411,2388634,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-15,1295911,1169140,417,2399481,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-16,1302262,1177665,426,2411992,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-17,1304127,1179505,426,2415127,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-18,1305044,1180283,426,2416664,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-19,1309624,1187396,432,2427557,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-20,1316751,1193567,432,2439105,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-21,1324824,1199285,439,2452153,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-22,1336717,1205896,442,2469114,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-23,1348467,1211875,446,2485081,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-24,1351600,1213259,447,2488974,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-25,1352895,1214033,447,2490430,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-26,1362985,1221428,450,2506622,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-27,1373898,1226605,455,2521737,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-28,1385526,1232092,458,2538583,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-29,1401085,1238031,465,2559627,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-30,1411483,1244721,469,2575959,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-07-31,1414781,1248599,469,2582242,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-01,1415572,1251015,469,2585093,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-02,1422906,1260660,474,2601104,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-03,1431871,1265379,482,2613927,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-04,1443875,1272761,494,2629782,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-05,1464987,1287392,504,2655163,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-06,1483494,1300498,562,2678307,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-07,1489269,1305358,564,2684828,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-08,1490413,1306268,565,2686037,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-09,1503483,1317251,576,2704063,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-10,1515027,1327574,587,2720571,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-11,1526357,1338976,672,2738743,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-12,1540592,1353488,689,2761680,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-13,1552048,1366172,790,2781376,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-14,1554747,1368621,790,2785067,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-15,1555490,1369230,791,2785932,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-16,1566001,1383298,811,2806115,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-17,1574539,1394462,849,2823217,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-18,1586688,1409536,998,2845458,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-19,1597443,1425843,1096,2869165,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-20,1606878,1438123,1220,2887928,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-21,1608972,1440065,1221,2891147,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-22,1609391,1440466,1221,2891711,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-23,1617344,1451295,1249,2907472,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-24,1623508,1460551,1290,2921217,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-25,1631242,1470904,1419,2936943,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-26,1639320,1483040,1542,2955230,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-27,1647004,1494369,1605,2971943,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-28,1648577,1495749,1606,2974372,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-29,1648922,1495980,1606,2974833,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-30,1654405,1505427,1623,2988327,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-08-31,1659461,1512575,1643,2999210,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-01,1664298,1519151,1718,3009638,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-02,1670065,1528277,1780,3023362,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-03,1674956,1536003,1835,3035487,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-04,1676466,1537261,1841,3037791,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-05,1676580,1537393,1841,3038034,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-06,1680473,1544335,1870,3048150,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-07,1684430,1550077,2195,3057579,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-08,1688226,1555226,3122,3068051,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-09,1692780,1560998,4617,3080890,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-10,1697555,1565627,6291,3093033,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-11,1698802,1566531,6389,3095046,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-12,1698932,1566540,6437,3095281,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-13,1703190,1571307,7623,3106013,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-14,1707224,1574435,9367,3115990,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-15,1710930,1577873,11021,3125916,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-16,1714907,1581465,12914,3136797,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-17,1718562,1584764,15110,3147753,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-19,1719467,1585362,15275,3149540,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-20,1722295,1588695,16506,3157714,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-21,1725286,1591546,18056,3165691,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-22,1728857,1595215,19301,3173824,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-23,1732458,1598856,20902,3183274,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-24,1735861,1602129,22596,3192424,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-25,1736622,1602789,22693,3193777,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-26,1736743,1602818,22739,3194019,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-27,1739639,1606775,23547,3201364,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-28,1742538,1609934,24886,3208582,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-29,1745244,1612797,26513,3216030,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-09-30,1748647,1616643,28330,3225088,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-10-01,1751625,1620101,30205,3233821,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-10-02,1752303,1620795,30298,3234965,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-10-03,1752559,1620967,30360,3235400,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-10-04,1754986,1624274,31711,3242605,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-10-05,1757158,1626722,33190,3249087,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-10-06,1759408,1629155,34751,3255888,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-10-07,1762085,1631569,36776,3263744,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-10-08,1765323,1634213,38825,3272111,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-10-09,1765945,1634841,38973,3273285,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-10-10,1766199,1634965,39062,3273746,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/
+2021-10-11,1768497,1637461,40294,3279760,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",Lithuania,https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/

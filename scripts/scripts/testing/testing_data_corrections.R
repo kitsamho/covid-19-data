@@ -23,6 +23,6 @@ collated[Country == "Lebanon", `Short-term tests per case` := NA]
 collated[Country == "Iceland", `Short-term positive rate` := NA]
 collated[Country == "Iceland", `Short-term tests per case` := NA]
 
-# Thailand: it is unclear how cases are confirmed (the number of confirmed cases is greater than positive tests)
-collated[Country == "Thailand", `Short-term positive rate` := NA]
-collated[Country == "Thailand", `Short-term tests per case` := NA]
+# Qatar: the test definition does not match the case definition (confirmed cases does not exclude positive results from tests included in the testing figure)
+collated[Country == "Qatar", `Short-term positive rate` := NA]
+collated[Country == "Qatar", `Short-term tests per case` := NA]

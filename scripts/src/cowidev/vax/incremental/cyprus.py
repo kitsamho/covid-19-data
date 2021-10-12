@@ -2,9 +2,9 @@ import re
 
 import pandas as pd
 
-from cowidev.vax.utils.incremental import enrich_data, increment, clean_count
-from cowidev.vax.utils.utils import get_soup
-from cowidev.vax.utils.dates import clean_date
+from cowidev.utils.clean import clean_count, clean_date
+from cowidev.utils.web.scraping import get_soup
+from cowidev.vax.utils.incremental import enrich_data, increment
 
 
 def read(source: str) -> pd.Series:
@@ -23,10 +23,14 @@ def read(source: str) -> pd.Series:
         if block.find("p").text == "ΣΥΝΟΛΟ 2ης ΔΟΣΗΣ":
             people_fully_vaccinated = clean_count(block.find_all("p")[1].text)
 
+        if block.find("p").text == "ΣΥΝΟΛΟ 3ης ΔΟΣΗΣ":
+            total_boosters = clean_count(block.find_all("p")[1].text)
+
     data = {
         "total_vaccinations": total_vaccinations,
         "people_vaccinated": people_vaccinated,
         "people_fully_vaccinated": people_fully_vaccinated,
+        "total_boosters": total_boosters,
         "date": date,
         "source_url": source,
     }
@@ -38,9 +42,7 @@ def enrich_location(ds: pd.Series) -> pd.Series:
 
 
 def enrich_vaccine(ds: pd.Series) -> pd.Series:
-    return enrich_data(
-        ds, "vaccine", "Pfizer/BioNTech, Oxford/AstraZeneca, Moderna, Johnson&Johnson"
-    )
+    return enrich_data(ds, "vaccine", "Pfizer/BioNTech, Oxford/AstraZeneca, Moderna, Johnson&Johnson")
 
 
 def pipeline(ds: pd.Series) -> pd.Series:
@@ -56,6 +58,7 @@ def main(paths):
         total_vaccinations=data["total_vaccinations"],
         people_vaccinated=data["people_vaccinated"],
         people_fully_vaccinated=data["people_fully_vaccinated"],
+        total_boosters=data["total_boosters"],
         date=data["date"],
         source_url=data["source_url"],
         vaccine=data["vaccine"],
