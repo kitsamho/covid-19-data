@@ -6,6 +6,8 @@ import pandas as pd
 from cowidev.utils.utils import get_project_dir
 from cowidev.utils.clean.dates import clean_date, DATE_FORMAT
 from cowidev.utils.web import request_json
+from cowidev.utils import paths
+from cowidev.utils.s3 import obj_to_s3
 
 
 class VariantsETL:
@@ -35,6 +37,10 @@ class VariantsETL:
             "21F (Iota)": {"rename": "Iota", "who": True},
             "21G (Lambda)": {"rename": "Lambda", "who": True},
             "21H (Mu)": {"rename": "Mu", "who": True},
+            "21I (Delta)": {"rename": "Delta", "who": True},
+            "21J (Delta)": {"rename": "Delta", "who": True},
+            "21K (Omicron)": {"rename": "Omicron", "who": True},
+            "21L (Omicron)": {"rename": "Omicron", "who": True},
             "S:677H.Robin1": {"rename": "S:677H.Robin1", "who": False},
             "S:677P.Pelican": {"rename": "S:677P.Pelican", "who": False},
         }
@@ -54,7 +60,7 @@ class VariantsETL:
             "perc_sequences",
             "num_sequences_total",
         ]
-        self.num_sequences_total_threshold = 30
+        self.num_sequences_total_threshold = 0
 
     @property
     def variants_mapping(self):
@@ -62,7 +68,7 @@ class VariantsETL:
 
     @property
     def variants_who(self):
-        return [v["rename"] for v in self.variants_details.values() if v["who"]]
+        return list(set(v["rename"] for v in self.variants_details.values() if v["who"]))
 
     def extract(self) -> dict:
         data = request_json(self.source_url)
@@ -82,9 +88,12 @@ class VariantsETL:
         df = (
             self.json_to_df(data)
             .pipe(self.pipe_filter_by_num_sequences)
-            .pipe(self.pipe_edit_columns)
-            .pipe(self.pipe_date)
+            .pipe(self.pipe_rename_columns)
+            .pipe(self.pipe_variants)
+            .pipe(self.pipe_group_by_variants)
             .pipe(self.pipe_check_variants)
+            .pipe(self.pipe_location)
+            .pipe(self.pipe_date)
             .pipe(self.pipe_filter_locations)
             .pipe(self.pipe_variant_others)
             .pipe(self.pipe_variant_non_who)
@@ -95,9 +104,57 @@ class VariantsETL:
         )
         return df
 
+    def transform_seq(self, df: pd.DataFrame) -> pd.DataFrame:
+        df = (
+            df.pipe(self.pipe_variant_dominant)
+            .pipe(self.pipe_variant_totals)
+            .pipe(self.pipe_per_capita)
+            .pipe(self.pipe_cumsum)
+        )
+        return df
+
+    def pipe_variant_dominant(self, df):
+        df = df.assign(variant=df.variant.replace({"non_who": "!non_who"}))
+        df = df.sort_values(["num_sequences", "variant"], ascending=[False, True]).drop_duplicates(
+            ["location", "date"], keep="first"
+        )
+        df = df[["location", "date", "num_sequences_total", "variant"]]
+        df = df.assign(variant=df.variant.replace({"!non_who": "Others"}))
+        df = df.rename(columns={"variant": "variant_dominant"})
+        msk = df.num_sequences_total < 30
+        df.loc[msk, "variant_dominant"] = pd.NA
+        return df
+
+    def pipe_variant_totals(self, df: pd.DataFrame) -> pd.DataFrame:
+        # total = df.groupby(["location", "date", "num_sequences_total"])
+        total = df[["location", "date", "num_sequences_total", "variant_dominant"]].drop_duplicates()
+        total = total.rename(columns={"num_sequences_total": "num_sequences"})
+        # Sort
+        total = total.sort_values(["location", "date"])
+        return total
+
+    def pipe_per_capita(self, df: pd.DataFrame) -> pd.DataFrame:
+        df_pop = pd.read_csv(os.path.join(paths.SCRIPTS.INPUT_UN, "population_latest.csv"), index_col="entity")
+        df = df.merge(df_pop["population"], left_on="location", right_index=True)
+        df = df.assign(num_sequences_per_1M=(1000000 * df.num_sequences / df.population).round(2)).drop(
+            columns=["population"]
+        )
+        return df
+
+    def pipe_cumsum(self, df: pd.DataFrame) -> pd.DataFrame:
+        df_cum = df.groupby(["location"])[["num_sequences", "num_sequences_per_1M"]].cumsum()
+        df = df.assign(
+            num_sequences_cumulative=df_cum.num_sequences,
+            num_sequences_cumulative_per_1M=df_cum.num_sequences_per_1M.round(2),
+        )
+        return df
+
     def load(self, df: pd.DataFrame, output_path: str) -> None:
         # Export data
-        df.to_csv(output_path, index=False)
+        if output_path.startswith("s3://"):
+            obj_to_s3(df, s3_path=output_path, public=False)  # df, output_path, public=True)
+        else:
+            df.to_csv(output_path, index=False)
 
     def json_to_df(self, data: dict) -> pd.DataFrame:
         df = pd.json_normalize(data, record_path=["distribution"], meta=["country"]).melt(
@@ -108,26 +165,32 @@ class VariantsETL:
         return df
 
     def pipe_filter_by_num_sequences(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df[df.total_sequences >= self.num_sequences_total_threshold]
+        msk = df.total_sequences < self.num_sequences_total_threshold
+        # Info
+        _sk_perc_rows = round(100 * (msk.sum() / len(df)), 2)
+        _sk_num_countries = df.loc[msk, "country"].nunique()
+        _sk_countries_top = df[msk]["country"].value_counts().head(10).to_dict()
+        print(
+            f"Skipping {msk.sum()} datapoints ({_sk_perc_rows}%), affecting {_sk_num_countries} countries. Some are:"
+            f" {_sk_countries_top}"
+        )
+        return df[~msk]
 
-    def pipe_edit_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+    def pipe_rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+        return df.rename(columns=self.column_rename)
+
+    def pipe_variants(self, df: pd.DataFrame) -> pd.DataFrame:
         # Modify/add columns
         df = df.assign(
             variant=df.cluster.str.replace("cluster_counts.", "", regex=True).replace(self.variants_mapping),
-            date=df.week,
-            location=df.country.replace(self.country_mapping),
-        )
-        df = df.rename(columns=self.column_rename)
+        ).drop(columns="cluster")
         return df
 
-    def pipe_date(self, df: pd.DataFrame) -> pd.DataFrame:
-        dt = pd.to_datetime(df.date, format=DATE_FORMAT)
-        dt = dt + timedelta(days=14)
-        last_update = self._parse_last_update_date
-        dt = dt.apply(lambda x: clean_date(min(x.date(), last_update), DATE_FORMAT))
-        return df.assign(
-            date=dt,
-        )
+    def pipe_group_by_variants(self, df: pd.DataFrame) -> pd.DataFrame:
+        cols_values = ["num_sequences"]
+        cols_index = [c for c in df.columns if c not in cols_values]
+        df = df.groupby(cols_index, as_index=False).sum()
+        return df
 
     def pipe_check_variants(self, df: pd.DataFrame) -> pd.DataFrame:
         variants_missing = set(df.variant).difference(self.variants_mapping.values())
@@ -135,9 +198,25 @@ class VariantsETL:
             raise ValueError(f"Unknown variants {variants_missing}. Edit class attribute self.variants_details")
         return df
 
+    def pipe_location(self, df: pd.DataFrame) -> pd.DataFrame:
+        df = df.assign(
+            location=df.country.replace(self.country_mapping),
+        )
+        return df.drop(columns=["country"])
+
+    def pipe_date(self, df: pd.DataFrame) -> pd.DataFrame:
+        dt = pd.to_datetime(df.week, format=DATE_FORMAT)
+        dt = dt + timedelta(days=14)
+        last_update = self._parse_last_update_date
+        dt = dt.apply(lambda x: clean_date(min(x.date(), last_update), DATE_FORMAT))
+        df = df.assign(
+            date=dt,
+        )
+        return df.drop(columns=["week"])
+
     def pipe_filter_locations(self, df: pd.DataFrame) -> pd.DataFrame:
         # Filter locations
-        populations_path = os.path.join(get_project_dir(), "scripts", "input", "un", "population_2020.csv")
+        populations_path = os.path.join(get_project_dir(), "scripts", "input", "un", "population_latest.csv")
         dfc = pd.read_csv(populations_path)
         df = df[df.location.isin(dfc.entity.unique())]
         return df
@@ -218,12 +297,15 @@ class VariantsETL:
     def pipe_out(self, df: pd.DataFrame) -> pd.DataFrame:
         return df[self.columns_out].sort_values(["location", "date"])  #  + ["perc_sequences_raw"]
 
-    def run(self, output_path: str):
+    def run(self, output_path: str, output_path_sequencing: str):
         data = self.extract()
         df = self.transform(data)
         self.load(df, output_path)
+        # Sequencing
+        df_seq = self.transform_seq(df)
+        self.load(df_seq, output_path_sequencing)
 
 
-def run_etl(output_path: str):
+def run_etl(output_path: str, output_path_seq: str):
     etl = VariantsETL()
-    etl.run(output_path)
+    etl.run(output_path, output_path_seq)

@@ -2,10 +2,11 @@ from datetime import datetime
 
 import pandas as pd
 
-from cowidev.vax.utils.files import export_metadata
+from cowidev.vax.utils.files import export_metadata_age, export_metadata_manufacturer
 from cowidev.utils.web import request_json, get_soup
 from cowidev.utils.clean import clean_date_series
 from cowidev.vax.utils.checks import validate_vaccines
+from cowidev.utils import paths
 
 
 class Switzerland:
@@ -39,17 +40,25 @@ class Switzerland:
         return doses_url, people_url, manufacturer_url
 
     def _parse_data(self, doses_url, people_url, manufacturer_url):
-        print(doses_url)
-        print(people_url)
-        print(manufacturer_url)
+        # print(doses_url)
+        # print(people_url)
+        # print(manufacturer_url)
         doses = pd.read_csv(
             doses_url,
             usecols=["geoRegion", "date", "sumTotal", "type"],
         )
         people = pd.read_csv(
             people_url,
-            usecols=["geoRegion", "date", "sumTotal", "type"],
+            usecols=["geoRegion", "date", "sumTotal", "type", "age_group"],
         )
+        assert set(people.type) == {
+            "COVID19AtLeastOneDosePersons",
+            "COVID19FullyVaccPersons",
+            "COVID19PartiallyVaccPersons",
+            "COVID19FirstBoosterPersons",
+            "COVID19NotVaccPersons",
+        }, "New type found! Check people.type"
+        people = people[people.age_group == "total_population"].drop(columns=["age_group"])
         manufacturer = pd.read_csv(
             manufacturer_url,
             usecols=["date", "geoRegion", "vaccine", "sumTotal"],
@@ -57,20 +66,25 @@ class Switzerland:
         return pd.concat([doses, people], ignore_index=True), manufacturer
 
     def pipe_filter_country(self, df: pd.DataFrame, country_code: str) -> pd.DataFrame:
-        return df[df.geoRegion == country_code]
+        return df[df.geoRegion == country_code].drop(columns=["geoRegion"])
+
+    def pipe_unique_rows(self, df: pd.DataFrame):
+        # Checks
+        a = df.groupby(["date", "type"]).count().reset_index()
+        if not a[a.sumTotal > 1].empty:
+            raise ValueError("Duplicated rows in either `people` or `doses` dataframes!")
+        return df
 
     def pipe_pivot(self, df: pd.DataFrame) -> pd.DataFrame:
-        return (
-            df.pivot(index=["geoRegion", "date"], columns="type", values="sumTotal").reset_index().sort_values("date")
-        )
+        return df.pivot(index=["date"], columns="type", values="sumTotal").reset_index().sort_values("date")
 
     def pipe_rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.rename(
             columns={
-                "geoRegion": "location",
                 "COVID19FullyVaccPersons": "people_fully_vaccinated",
                 "COVID19VaccDosesAdministered": "total_vaccinations",
                 "COVID19AtLeastOneDosePersons": "people_vaccinated",
+                "COVID19FirstBoosterPersons": "total_boosters",
             }
         )
 
@@ -78,8 +92,8 @@ class Switzerland:
         df.loc[df.total_vaccinations < df.people_vaccinated, "total_vaccinations"] = df.people_vaccinated
         return df
 
-    def pipe_translate_country_code(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.assign(location=df.location.replace({"CH": "Switzerland", "FL": "Liechtenstein"}))
+    def pipe_location(self, df: pd.DataFrame, location: str) -> pd.DataFrame:
+        return df.assign(location=location)
 
     def pipe_source(self, df: pd.DataFrame, country_code: str) -> pd.DataFrame:
         return df.assign(
@@ -98,10 +112,11 @@ class Switzerland:
         geo_region = _get_geo_region(location)
         return (
             df.pipe(self.pipe_filter_country, geo_region)
+            .pipe(self.pipe_unique_rows)
             .pipe(self.pipe_pivot)
             .pipe(self.pipe_rename_columns)
             .pipe(self.pipe_fix_metrics)
-            .pipe(self.pipe_translate_country_code)
+            .pipe(self.pipe_location, location)
             .pipe(self.pipe_source, geo_region)
             .pipe(self.pipe_vaccine)[
                 [
@@ -112,6 +127,7 @@ class Switzerland:
                     "total_vaccinations",
                     "people_vaccinated",
                     "people_fully_vaccinated",
+                    "total_boosters",
                 ]
             ]
         )
@@ -199,38 +215,36 @@ class Switzerland:
             .pipe(self.pipe_age_select_cols)
         )
 
-    def to_csv(self, paths):
+    def export(self):
         locations = ["Switzerland", "Liechtenstein"]
         df, df_manuf, df_age = self.read()
 
         # Main data
         for location in locations:
-            df.pipe(self.pipeline, location).to_csv(paths.tmp_vax_out(location), index=False)
+            df.pipe(self.pipeline, location).to_csv(paths.out_vax(location), index=False)
 
         # Manufacturer
         df_manuf = df_manuf.pipe(self.pipeline_manufacturer)
-        df_manuf.to_csv(paths.tmp_vax_out_man("Switzerland"), index=False)
-        export_metadata(
+        df_manuf.to_csv(paths.out_vax("Switzerland", manufacturer=True), index=False)
+        export_metadata_manufacturer(
             df_manuf,
             "Federal Office of Public Health",
             self.source_url,
-            paths.tmp_vax_metadata_man,
         )
 
         # Age
         for location in locations:
             df_age_ = df_age.pipe(self.pipeline_age, location)
-            df_age_.to_csv(paths.tmp_vax_out_by_age_group(location), index=False)
-            export_metadata(
+            df_age_.to_csv(paths.out_vax(location, age=True), index=False)
+            export_metadata_age(
                 df_age_,
                 "Federal Office of Public Health",
                 self.source_url,
-                paths.tmp_vax_metadata_age,
             )
 
 
-def main(paths):
-    Switzerland().to_csv(paths)
+def main():
+    Switzerland().export()
 
 
 def _get_geo_region(location):

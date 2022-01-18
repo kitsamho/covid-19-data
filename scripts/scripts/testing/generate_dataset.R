@@ -30,7 +30,7 @@ update_time <- floor_date(now(tzone = "Europe/London"), unit = "hours") %>%
 # Offset date for grapher dataset
 origin_date <- ymd("2020-01-21")
 
-population <- fread("../../input/un/population_2020.csv")
+population <- fread("../../input/un/population_latest.csv")
 population <- population[, .(Country = entity, Population = population)]
 world_population <- population[Country == "World", Population]
 
@@ -179,7 +179,7 @@ parse_country <- function(sheet_name) {
 
         # Tests per case = inverse of positive rate
         collated[, `Short-term tests per case` := ifelse(`Short-term positive rate` > 0, round(1 / `Short-term positive rate`, 1), NA_integer_)]
-        collated[, `Short-term positive rate` := round(`Short-term positive rate`, 3)]
+        collated[, `Short-term positive rate` := round(`Short-term positive rate`, 4)]
 
         # Cumulative versions based on JHU data
         collated[, `Cumulative positive rate` := round(total_cases / `Cumulative total`, 3)]
@@ -230,6 +230,22 @@ date_7d <- format.Date(today() - 7, "%e %B %Y") %>% str_squish()
 
 # Change URLs and Notes based on audit
 source("replace_audited_metadata.R")
+
+# Add series for Europe
+europe_list <- fread("../../input/owid/continents.csv")[V4 == "Europe", Entity]
+europe <- collated[
+    Country %in% europe_list & Date < today() - 5,
+    .(`7-day smoothed daily change` = sum(`7-day smoothed daily change`, na.rm = TRUE)),
+    Date
+]
+europe[, Units := "units and tests vary"]
+europe[, Sheet := "Europe"]
+europe[, Entity := "Europe"]
+europe[, Country := "Europe"]
+europe[, `Source URL` := "https://github.com/owid/covid-19-data/tree/master/public/data/testing"]
+europe[, `Source label` := "Our World in Data"]
+setorder(europe, Date)
+collated <- rbindlist(list(collated, europe), use.names = TRUE, fill = TRUE)
 
 # Add ISO codes
 add_iso_codes <- function(df) {
@@ -303,7 +319,7 @@ fwrite(grapher, "../../grapher/COVID testing time series data.csv")
 # Make public version
 public <- copy(collated)
 public[, c("Country", "Units") := NULL]
-public_latest <- merge(public, metadata)
+public_latest <- merge(public, metadata, all.x = TRUE)
 public_latest[, c("Sheet", "Ready for review", "Collate") := NULL]
 setorder(public_latest, Entity, -Date)
 public_latest <- public_latest[, .SD[1], Entity]

@@ -10,17 +10,19 @@ date <- page %>% html_nodes("h3") %>%
     na.omit() %>%
     dmy()
 
-count <- page %>%
-    html_nodes("#ContentPlaceHolder_contentPlaceholder_C030_Col00 td") %>%
-    html_text() %>%
+tables <- page %>% html_nodes("table")
+idx <- which(str_detect(html_text(tables), "Total Swabs Tested"))
+count <- tables[idx] %>%
+    html_nodes("td") %>%
     tail(1) %>%
+    html_text() %>%
     str_replace_all("[^\\d]", "") %>%
     as.integer()
 
 add_snapshot(
     count = count,
     date = date,
-    sheet_name = "Singapore - Swabs tested",
+    sheet_name = "Singapore",
     country = "Singapore",
     units = "samples tested",
     testing_type = "PCR only",

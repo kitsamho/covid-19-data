@@ -11,6 +11,7 @@ from cowidev.utils.clean import clean_count
 from cowidev.utils.clean.dates import clean_date, localdate
 from cowidev.utils.web.scraping import get_soup
 from cowidev.vax.utils.incremental import merge_with_current_data
+from cowidev.utils import paths
 
 
 class Thailand:
@@ -46,6 +47,7 @@ class Thailand:
             if link["date"] <= last_update:
                 break
             records.append(self._parse_metrics(link))
+            break
         return pd.DataFrame(records)
 
     def _get_month_links(self, soup):
@@ -60,7 +62,7 @@ class Thailand:
         return sorted(links, key=lambda x: x["date"], reverse=True)
 
     def _parse_date_from_link_title(self, title):
-        match = re.search(r"สรุปวัคซีน ประจำวันที่ (\d+) .* (25\d\d)", title).group(1, 2)
+        match = re.search(r".*วันที่\s+(\d+) .* (25\d\d)", title).group(1, 2)
         year = int(match[1]) - self._year_difference_conversion
         return clean_date(f"{year}-{self._current_month}-{match[0]}", "%Y-%m-%d")
 
@@ -152,8 +154,8 @@ class Thailand:
     def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.pipe(self.pipe_location).pipe(self.pipe_vaccine)
 
-    def to_csv(self, paths):
-        output_file = paths.tmp_vax_out(self.location)
+    def to_csv(self):
+        output_file = paths.out_vax(self.location)
         last_update = pd.read_csv(output_file).date.max()
         df = self.read(last_update)
         if not df.empty:
@@ -162,8 +164,8 @@ class Thailand:
             df.to_csv(output_file, index=False)
 
 
-def main(paths):
-    Thailand().to_csv(paths)
+def main():
+    Thailand().to_csv()
 
 
 if __name__ == "__main__":

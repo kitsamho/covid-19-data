@@ -39,6 +39,8 @@ El Salvador: tests performed
 Equatorial Guinea: tests performed
 Estonia: tests performed
 Ethiopia: tests performed
+Europe: units and tests vary
+Faeroe Islands: people tested
 Fiji: tests performed
 Finland: tests performed
 France: people tested
@@ -49,6 +51,7 @@ Germany: tests performed
 Ghana: samples tested
 Greece: samples tested
 Guatemala: people tested
+Haiti: tests performed
 Hong Kong: tests performed
 Hungary: tests performed
 Iceland: tests performed
@@ -87,7 +90,7 @@ Mozambique: units unclear
 Myanmar: samples tested
 Namibia: samples tested
 Nepal: tests performed
-Netherlands: people tested
+Netherlands: tests performed
 New Zealand: tests performed
 Nigeria: samples tested
 North Macedonia: tests performed
@@ -133,7 +136,7 @@ Ukraine: tests performed
 United Arab Emirates: tests performed
 United Kingdom: tests performed
 United States: tests performed
-Uruguay: tests performed
+Uruguay: people tested
 Vietnam: samples tested
 Zambia: tests performed
 Zimbabwe: tests performed

@@ -12,6 +12,7 @@ pipeline:
       - Morocco # Government data doesn't differentiate 1- and 2-dose vaccines so we use WHO instead
       - North Macedonia
       - South Africa
+      # - Faeroe Islands
   process-data:
     skip_complete:
       - Pitcairn
@@ -31,10 +32,16 @@ pipeline:
           metrics: 
            - total_vaccinations
            - people_vaccinated
+      Bulgaria:
+        - date: 2021-12-14
+          metrics: total_boosters
       Luxembourg:
-        - date: 2021-09-16
+        - date: 2021-11-29
           metrics: people_fully_vaccinated
       Nigeria:
         - date: 2021-06-15
           metrics: people_fully_vaccinated
+      United States:
+        - date: 2020-12-16
+          metrics: people_vaccinated
   generate-dataset:

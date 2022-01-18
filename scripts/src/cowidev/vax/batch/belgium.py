@@ -1,5 +1,8 @@
 import pandas as pd
 
+from cowidev.utils import paths
+from cowidev.utils.utils import check_known_columns
+
 
 class Belgium:
     def __init__(self) -> None:
@@ -8,7 +11,9 @@ class Belgium:
         self.source_url_ref = "https://epistat.wiv-isp.be/covid/"
 
     def read(self) -> pd.DataFrame:
-        return pd.read_csv(self.source_url, usecols=["DATE", "DOSE", "COUNT"])
+        df = pd.read_csv(self.source_url)
+        check_known_columns(df, ["DATE", "REGION", "AGEGROUP", "SEX", "BRAND", "DOSE", "COUNT"])
+        return df[["DATE", "DOSE", "COUNT"]]
 
     def pipe_dose_check(self, df: pd.DataFrame) -> pd.DataFrame:
         doses_wrong = set(df.DOSE).difference(["A", "B", "C", "E"])
@@ -35,7 +40,7 @@ class Belgium:
 
     def pipe_add_totals(self, df: pd.DataFrame) -> pd.DataFrame:
         df = df.assign(
-            total_vaccinations=df.A + df.B + df.C,
+            total_vaccinations=df.A + df.B + df.C + df.E,
             people_vaccinated=df.A + df.C,
             people_fully_vaccinated=df.B + df.C,
             total_boosters=df.E,
@@ -79,9 +84,9 @@ class Belgium:
             .pipe(self.pipe_metadata)
         )
 
-    def export(self, paths):
-        (self.read().pipe(self.pipeline).to_csv(paths.tmp_vax_out(self.location), index=False))
+    def export(self):
+        (self.read().pipe(self.pipeline).to_csv(paths.out_vax(self.location), index=False))
 
 
-def main(paths):
-    Belgium().export(paths)
+def main():
+    Belgium().export()

@@ -1,10 +1,11 @@
 import argparse
 
 from cowidev.vax.cmd import main_get_data, main_process_data
+from cowidev.vax.cmd.__main__ import main
 from cowidev.vax.cmd.get_data import (
-    modules_name,
-    modules_name_batch,
-    modules_name_incremental,
+    MODULES_NAME,
+    MODULES_NAME_BATCH,
+    MODULES_NAME_INCREMENTAL,
     country_to_module,
 )
 
@@ -12,28 +13,24 @@ from cowidev.vax.cmd.get_data import (
 def _parse_args():
     def _countries_to_modules(s):
         if s == "all":
-            return modules_name
+            return MODULES_NAME
         elif s == "incremental":
-            return modules_name_batch
+            return MODULES_NAME_BATCH
         elif s == "batch":
-            return modules_name_incremental
+            return MODULES_NAME_INCREMENTAL
         # Comma separated string to list of strings
         countries = [ss.strip().replace(" ", "_").lower() for ss in s.split(",")]
         # Verify validity of countries
         countries_wrong = [c for c in countries if c not in country_to_module]
         countries_valid = sorted(list(country_to_module.keys()))
         if countries_wrong:
-            print(
-                f"Invalid countries: {countries_wrong}. Valid countries are: {countries_valid}"
-            )
+            print(f"Invalid countries: {countries_wrong}. Valid countries are: {countries_valid}")
             raise ValueError("Invalid country")
         # Get module equivalent names
         modules = [country_to_module[country] for country in countries]
         return modules
 
-    parser = argparse.ArgumentParser(
-        description="Execute COVID-19 vaccination data collection pipeline."
-    )
+    parser = argparse.ArgumentParser(description="Execute COVID-19 vaccination data collection pipeline.")
     parser.add_argument(
         "mode",
         choices=["get-data", "process-data", "all"],
@@ -73,15 +70,15 @@ def _parse_args():
     return args
 
 
-def main():
-    args = _parse_args()
-    if args.mode == "get-data":
-        main_get_data(args.parallel, args.njobs, args.countries)
-    elif args.mode == "process-data":
-        main_process_data()
-    elif args.mode == "all":
-        main_get_data(args.parallel, args.njobs, args.countries)
-        main_process_data()
+# def main():
+#     args = _parse_args()
+#     if args.mode == "get-data":
+#         main_get_data(args.parallel, args.njobs, args.countries)
+#     elif args.mode == "process-data":
+#         main_process_data()
+#     elif args.mode == "all":
+#         main_get_data(args.parallel, args.njobs, args.countries)
+#         main_process_data()
 
 
 if __name__ == "__main__":

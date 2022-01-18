@@ -1,6 +1,8 @@
 import pandas as pd
 
-from cowidev.vax.utils.files import export_metadata
+from cowidev.utils import paths
+from cowidev.utils.utils import check_known_columns
+from cowidev.vax.utils.files import export_metadata_manufacturer
 
 
 vaccine_mapping = {
@@ -25,7 +27,8 @@ class Chile:
 
     # Generalized methods
     def read(self, url: str) -> pd.DataFrame:
-        return pd.read_csv(url)
+        df = pd.read_csv(url)
+        return df
 
     def pipe_melt(self, df: pd.DataFrame, id_vars: list) -> pd.DataFrame:
         return df.melt(id_vars, var_name="date", value_name="value")
@@ -38,6 +41,7 @@ class Chile:
         return df[(df[colname] == "Total") & (df.value > 0)]
 
     def pipe_calculate_metrics(self, df: pd.DataFrame) -> pd.DataFrame:
+        check_known_columns(df, ["Region", "date", "Primera", "Refuerzo", "Segunda", "Unica"])
         df = df.fillna(0)
         return df.assign(
             people_vaccinated=df.Primera + df.Unica,
@@ -100,24 +104,23 @@ class Chile:
             .sort_values(["location", "date", "vaccine"])
         )
 
-    def to_csv(self, paths):
+    def to_csv(self):
         # Manufacturer
         df_man = self.read(self.source_url_manufacturer).pipe(self.pipeline_manufacturer)
-        df_man.to_csv(paths.tmp_vax_out_man(self.location), index=False)
-        export_metadata(
+        df_man.to_csv(paths.out_vax(self.location, manufacturer=True), index=False)
+        export_metadata_manufacturer(
             df_man,
             "Ministerio de Ciencia, Tecnología, Conocimiento e Innovación",
             self.source_url_ref,
-            paths.tmp_vax_metadata_man,
         )
 
         # Main data
         df = self.read(self.source_url_vaccinations).pipe(self.pipeline_vaccinations)
-        df.to_csv(paths.tmp_vax_out(self.location), index=False)
+        df.to_csv(paths.out_vax(self.location), index=False)
 
 
-def main(paths):
-    Chile().to_csv(paths)
+def main():
+    Chile().to_csv()
 
 
 if __name__ == "__main__":

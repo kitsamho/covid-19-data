@@ -1,4 +1,5 @@
 import re
+import time
 import urllib3
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -27,6 +28,7 @@ class Jordan:
         with get_driver(headless=True) as driver:
             # Main page
             driver.get(self._get_iframe_url())
+            time.sleep(5)
 
             data_blocks = WebDriverWait(driver, 30).until(
                 EC.visibility_of_all_elements_located((By.CLASS_NAME, "card"))
@@ -81,10 +83,9 @@ class Jordan:
             .pipe(self.pipe_source)
         )
 
-    def to_csv(self, paths):
+    def export(self):
         data = self.read().pipe(self.pipeline)
         increment(
-            paths=paths,
             location=data["location"],
             total_vaccinations=data["total_vaccinations"],
             people_vaccinated=data["people_vaccinated"],
@@ -95,9 +96,9 @@ class Jordan:
         )
 
 
-def main(paths):
+def main():
     # At the date of this automation, only the Arabic version of the website had the vaccination numbers
-    Jordan().to_csv(paths)
+    Jordan().export()
 
 
 if __name__ == "__main__":

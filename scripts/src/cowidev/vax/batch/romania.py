@@ -1,39 +1,55 @@
 import pandas as pd
 
-from cowidev.vax.utils.files import export_metadata
-from cowidev.vax.utils.utils import make_monotonic
+from cowidev.utils import paths
+from cowidev.utils.utils import check_known_columns
 from cowidev.utils.web import request_json
+from cowidev.vax.utils.files import export_metadata_manufacturer
+from cowidev.vax.utils.utils import make_monotonic
 
 
 class Romania:
-    def __init__(
-        self,
-        source_url: str,
-        source_url_ref: str,
-        location: str,
-        vaccine_mapping: dict,
-        vaccines_1d: list,
-        columns_rename: dict = None,
-    ):
-        self.source_url = source_url
-        self.source_url_ref = source_url_ref
-        self.location = location
-        self.columns_rename = columns_rename
-        self.vaccine_mapping = vaccine_mapping
-        self.vaccines_1d = vaccines_1d
+    source_url: str = "https://d35p9e4fm9h3wo.cloudfront.net/latestData.json"
+    source_url_ref: str = "https://datelazi.ro/"
+    location: str = "Romania"
+    columns_rename: dict = {
+        "index": "date",
+        "numberTotalDosesAdministered": "total_vaccinations",
+    }
+    vaccine_mapping: dict = {
+        "pfizer": "Pfizer/BioNTech",
+        "moderna": "Moderna",
+        "astra_zeneca": "Oxford/AstraZeneca",
+        "johnson_and_johnson": "Johnson&Johnson",
+    }
+    vaccines_1d: list = ["johnson_and_johnson"]
 
     def read(self) -> pd.DataFrame:
         data = request_json(self.source_url)
-        return (
-            pd.DataFrame.from_dict(
-                data["historicalData"],
-                orient="index",
-                columns=["vaccines", "numberTotalDosesAdministered"],
-            )
-            .reset_index()
-            .dropna()
-            .sort_values(by="index")
+        df = pd.DataFrame.from_dict(data["historicalData"], orient="index")
+        check_known_columns(
+            df,
+            [
+                "parsedOn",
+                "parsedOnString",
+                "fileName",
+                "complete",
+                "averageAge",
+                "numberInfected",
+                "numberCured",
+                "numberDeceased",
+                "percentageOfWomen",
+                "percentageOfMen",
+                "percentageOfChildren",
+                "numberTotalDosesAdministered",
+                "distributionByAge",
+                "countyInfectionsNumbers",
+                "incidence",
+                "large_cities_incidence",
+                "small_cities_incidence",
+                "vaccines",
+            ],
         )
+        return df[["vaccines", "numberTotalDosesAdministered"]].reset_index().dropna().sort_values(by="index")
 
     def pipe_rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.rename(columns=self.columns_rename)
@@ -70,9 +86,31 @@ class Romania:
             return sum(v["immunized"] for k, v in x.items() if k in self.vaccines_1d)
 
         people_fully_vaccinated_1d = df.vaccines.apply(_people_fully_vaccinated_1d).cumsum()
-        return df.assign(
+        df = df.assign(
             people_vaccinated=(df.total_vaccinations - df.people_fully_vaccinated + people_fully_vaccinated_1d)
         )
+
+        # Booster doses have started on September 28, 2021. Because of this, the calculation
+        # performed here no longer holds, and people_vaccinated is left blank for now.
+        df.loc[df.date >= "2021-09-28", "people_vaccinated"] = pd.NA
+        return df
+
+    def pipe_add_latest_who(self, df: pd.DataFrame) -> pd.DataFrame:
+        who = pd.read_csv(
+            "https://covid19.who.int/who-data/vaccination-data.csv",
+            usecols=["COUNTRY", "DATA_SOURCE", "DATE_UPDATED", "PERSONS_VACCINATED_1PLUS_DOSE"],
+        )
+
+        who = who[(who.COUNTRY == "Romania") & (who.DATA_SOURCE == "REPORTING")]
+        if len(who) == 0:
+            return df
+
+        last_who_report_date = who.DATE_UPDATED.values[0]
+        df.loc[df.date == last_who_report_date, "total_vaccinations"] = pd.NA
+        df.loc[df.date == last_who_report_date, "people_vaccinated"] = who.PERSONS_VACCINATED_1PLUS_DOSE.values[0]
+        df.loc[df.date == last_who_report_date, "people_fully_vaccinated"] = pd.NA
+        df.loc[df.date == last_who_report_date, "source_url"] = "https://covid19.who.int/"
+        return df
 
     def _vaccine_start_dates(self, df: pd.DataFrame):
         date2vax = sorted(
@@ -107,13 +145,13 @@ class Romania:
         ]
 
     def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Could be generalized."""
         return (
             df.pipe(self.pipe_source)
             .pipe(self.pipe_people_fully_vaccinated)
             .pipe(self.pipe_people_vaccinated)
             .pipe(self.pipe_vaccine)
             .pipe(self.pipe_select_output_columns)
+            .pipe(self.pipe_add_latest_who)
             .pipe(make_monotonic)
         )
 
@@ -130,39 +168,23 @@ class Romania:
     def pipeline_manufacturer(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.pipe(self.pipe_manufacturer_melt).pipe(self.pipe_manufacturer_cumsum)
 
-    def to_csv(self, paths):
+    def export(self):
         df_base = self.read().pipe(self.pipeline_base)
         # Export data
         df = df_base.copy().pipe(self.pipeline)
-        df.to_csv(paths.tmp_vax_out(self.location), index=False)
+        df.to_csv(paths.out_vax(self.location), index=False)
         # Export manufacturer data
         df = df_base.copy().pipe(self.pipeline_manufacturer)
-        df.to_csv(paths.tmp_vax_out_man(f"{self.location}"), index=False)
-        export_metadata(
+        df.to_csv(paths.out_vax(self.location, manufacturer=True), index=False)
+        export_metadata_manufacturer(
             df,
             "Government of Romania via datelazi.ro",
             self.source_url,
-            paths.tmp_vax_metadata_man,
         )
 
 
-def main(paths):
-    Romania(
-        source_url="https://d35p9e4fm9h3wo.cloudfront.net/latestData.json",
-        source_url_ref="https://datelazi.ro/",
-        location="Romania",
-        columns_rename={
-            "index": "date",
-            "numberTotalDosesAdministered": "total_vaccinations",
-        },
-        vaccine_mapping={
-            "pfizer": "Pfizer/BioNTech",
-            "moderna": "Moderna",
-            "astra_zeneca": "Oxford/AstraZeneca",
-            "johnson_and_johnson": "Johnson&Johnson",
-        },
-        vaccines_1d=["johnson_and_johnson"],
-    ).to_csv(paths)
+def main():
+    Romania().export()
 
 
 if __name__ == "__main__":

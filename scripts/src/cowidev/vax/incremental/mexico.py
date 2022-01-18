@@ -5,14 +5,15 @@ import pandas as pd
 import requests
 import PyPDF2
 
-from cowidev.utils.clean import clean_date, clean_count
+from cowidev.utils.clean import clean_count
+from cowidev.utils.clean.dates import localdate
 from cowidev.utils.web.scraping import get_soup
 from cowidev.vax.utils.incremental import enrich_data, increment
 
 
 class Mexico:
     def __init__(self):
-        self.source_page = "https://www.gob.mx/salud/documentos/presentaciones-de-las-conferencias-de-prensa-2021"
+        self.source_page = "https://www.gob.mx/salud/documentos/presentaciones-2022"
         self.location = "Mexico"
 
     def read(self):
@@ -24,6 +25,7 @@ class Mexico:
         link = soup.find(class_="list-unstyled").find("a")["href"]
         link = "http://www.gob.mx" + link
         self.source_url = link
+        # print(link)
         return link
 
     def _get_pages_relevant_pdf(self, url) -> list:
@@ -32,7 +34,7 @@ class Mexico:
                 f.write(requests.get(url).content)
             with open(tf.name, mode="rb") as f:
                 reader = PyPDF2.PdfFileReader(f)
-                return [reader.getPage(i).extractText() for i in range(10)]
+                return [reader.getPage(i).extractText() for i in range(9)]
 
     def _parse_data(self, url) -> pd.Series:
         pages = self._get_pages_relevant_pdf(url)
@@ -43,16 +45,14 @@ class Mexico:
                 total_vaccinations = clean_count(
                     re.search(r"([\d,]{10,}) ?Total de dosis aplicadas reportadas", page_text).group(1)
                 )
-                date = clean_date(
-                    re.search(r"corte de informaci.n al (\d+ \w+ 202\d)", page_text).group(1),
-                    fmt="%d %B %Y",
-                    lang="es",
-                    minus_days=1,
-                )
+                date = localdate("America/Mexico_City")
 
             elif "Personas vacunadas reportadas" in page_text:
-                people_vaccinated = clean_count(re.search(r"Personas vacunadas \*\s?([\d,]{10,})", page_text).group(1))
-                people_fully_vaccinated = clean_count(re.search(r"Esquema completo ([\d,]{10,})", page_text).group(1))
+                matches = re.search(
+                    r"([\d,]{10,}) Esquema completo ([\d,]{10,}) Personas vacunadas con esq. completo", page_text
+                )
+                people_vaccinated = clean_count(matches.group(1))
+                people_fully_vaccinated = clean_count(matches.group(2))
 
         # Tests
         assert total_vaccinations >= 94300526
@@ -60,7 +60,6 @@ class Mexico:
         assert people_fully_vaccinated >= 41115211
         assert people_vaccinated <= total_vaccinations
         assert people_fully_vaccinated >= 0.5 * people_vaccinated
-        assert date >= "2021-09-16"
 
         return pd.Series(
             {
@@ -87,10 +86,9 @@ class Mexico:
     def pipeline(self, ds: pd.Series) -> pd.Series:
         return ds.pipe(self.pipe_location).pipe(self.pipe_vaccine).pipe(self.pipe_source)
 
-    def export(self, paths):
+    def export(self):
         data = self.read().pipe(self.pipeline)
         increment(
-            paths=paths,
             location=data["location"],
             total_vaccinations=data["total_vaccinations"],
             people_vaccinated=data["people_vaccinated"],
@@ -101,8 +99,8 @@ class Mexico:
         )
 
 
-def main(paths):
-    Mexico().export(paths)
+def main():
+    Mexico().export()
 
 
 if __name__ == "__main__":

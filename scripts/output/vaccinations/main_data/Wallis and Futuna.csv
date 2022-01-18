@@ -27,3 +27,12 @@ date,people_vaccinated,people_fully_vaccinated,total_vaccinations,location,sourc
 2021-09-28,5366,5072,10438,Wallis and Futuna,https://stats.pacificdata.org/vis?tm=covid&pg=0&df[ds]=SPC2&df[id]=DF_COVID_VACCINATION&df[ag]=SPC&df[vs]=1.0,Moderna
 2021-10-05,5679,5164,10843,Wallis and Futuna,https://stats.pacificdata.org/vis?tm=covid&pg=0&df[ds]=SPC2&df[id]=DF_COVID_VACCINATION&df[ag]=SPC&df[vs]=1.0,Moderna
 2021-10-12,5749,5260,11009,Wallis and Futuna,https://stats.pacificdata.org/vis?tm=covid&pg=0&df[ds]=SPC2&df[id]=DF_COVID_VACCINATION&df[ag]=SPC&df[vs]=1.0,Moderna
+2021-10-18,5781,5321,11102,Wallis and Futuna,https://stats.pacificdata.org/vis?tm=covid&pg=0&df[ds]=SPC2&df[id]=DF_COVID_VACCINATION&df[ag]=SPC&df[vs]=1.0,Moderna
+2021-10-25,5897,5464,11361,Wallis and Futuna,https://stats.pacificdata.org/vis?tm=covid&pg=0&df[ds]=SPC2&df[id]=DF_COVID_VACCINATION&df[ag]=SPC&df[vs]=1.0,Moderna
+2021-11-01,5938,5639,11577,Wallis and Futuna,https://stats.pacificdata.org/vis?tm=covid&pg=0&df[ds]=SPC2&df[id]=DF_COVID_VACCINATION&df[ag]=SPC&df[vs]=1.0,Moderna
+2021-11-08,5966,5808,11774,Wallis and Futuna,https://stats.pacificdata.org/vis?tm=covid&pg=0&df[ds]=SPC2&df[id]=DF_COVID_VACCINATION&df[ag]=SPC&df[vs]=1.0,Moderna
+2021-11-15,5988,5870,11858,Wallis and Futuna,https://stats.pacificdata.org/vis?tm=covid&pg=0&df[ds]=SPC2&df[id]=DF_COVID_VACCINATION&df[ag]=SPC&df[vs]=1.0,Moderna
+2021-11-22,6001,5902,11903,Wallis and Futuna,https://stats.pacificdata.org/vis?tm=covid&pg=0&df[ds]=SPC2&df[id]=DF_COVID_VACCINATION&df[ag]=SPC&df[vs]=1.0,Moderna
+2021-11-30,6016,5923,11939,Wallis and Futuna,https://stats.pacificdata.org/vis?tm=covid&pg=0&df[ds]=SPC2&df[id]=DF_COVID_VACCINATION&df[ag]=SPC&df[vs]=1.0,Moderna
+2022-01-11,6130,6117,12247,Wallis and Futuna,https://stats.pacificdata.org/vis?tm=covid&pg=0&df[ds]=SPC2&df[id]=DF_COVID_VACCINATION&df[ag]=SPC&df[vs]=1.0,Moderna
+2022-01-18,6151,6136,12287,Wallis and Futuna,https://stats.pacificdata.org/vis?tm=covid&pg=0&df[ds]=SPC2&df[id]=DF_COVID_VACCINATION&df[ag]=SPC&df[vs]=1.0,Moderna

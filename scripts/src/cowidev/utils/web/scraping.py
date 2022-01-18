@@ -25,6 +25,28 @@ def get_headers() -> dict:
     }
 
 
+def get_response(
+    source: str,
+    request_method: str = "get",
+    **kwargs,
+):
+    kwargs["headers"] = kwargs.get("headers", get_headers())
+    kwargs["verify"] = kwargs.get("verify", True)
+    kwargs["timeout"] = kwargs.get("timeout", 20)
+    try:
+        if request_method == "get":
+            response = requests.get(source, **kwargs)
+        elif request_method == "post":
+            response = requests.post(source, **kwargs)
+        else:
+            raise ValueError(f"Invalid value for `request_method`: {request_method}. Use 'get' or 'post'")
+    except Exception as err:
+        raise err
+    if not response.ok:
+        raise HTTPError(f"Web {source} not found! {response.content}")
+    return response
+
+
 def get_soup(
     source: str,
     from_encoding: str = None,
@@ -41,48 +63,61 @@ def get_soup(
         parser (str, optional): HTML parser. Read https://www.crummy.com/software/BeautifulSoup/bs4/doc/
                                 #installing-a-parser. Defaults to 'lxml'.
         request_method (str, optional): Request method. Options are 'get' and 'post'. Defaults to GET method. For POST
-                                        ßmethod, make sure to specify a header (default one does not work).
+                                        method, make sure to specify a header (default one does not work).
         kwargs (dict): Extra arguments passed to requests.get method. Default values for `headers`, `verify` and
                         `timeout` are used.
     Returns:
         BeautifulSoup: Website soup.
     """
-    kwargs["headers"] = kwargs.get("headers", get_headers())
-    kwargs["verify"] = kwargs.get("verify", True)
-    kwargs["timeout"] = kwargs.get("timeout", 20)
-    try:
-        if request_method == "get":
-            response = requests.get(source, **kwargs)
-        elif request_method == "post":
-            response = requests.post(source, **kwargs)
-        else:
-            raise ValueError(f"Invalid value for `request_method`: {request_method}. Use 'get' or 'post'")
-    except Exception as err:
-        raise err
-    if not response.ok:
-        raise HTTPError(f"Web {source} not found! {response.content}")
+    response = get_response(source, request_method, **kwargs)
     content = response.content
     soup = BeautifulSoup(content, parser, from_encoding=from_encoding)
     if soup.text == "":
         soup = BeautifulSoup(content, "html.parser", from_encoding=from_encoding)
+    # print(response.url)
     return soup
 
 
-def request_json(url, **kwargs):
+def request_json(url, mode="soup", **kwargs) -> dict:
     """Get data from `url` as a dictionary.
 
     Content at `url` should be a dictionary.
 
     Args:
         url (str): URL to data.
+        mode (str): Mode to use. Accepted is 'soup' (default) and 'raw'.
         kwargs: Check `get_soup` for the complete list of accepted arguments.
 
     Returns:
         dict: Data
     """
-    soup = get_soup(url, **kwargs)
-    data = json.loads(soup.text)
-    return data
+    if mode == "soup":
+        text = request_text(url, **kwargs)
+        return json.loads(text)
+    elif mode == "raw":
+        return get_response(url, **kwargs).json()
+    raise ValueError(f"Unrecognized `mode` value: {mode}. Accepted values are 'soup' and 'raw'.")
+
+
+def request_text(url, mode="soup", **kwargs) -> str:
+    """Get data from `url` as plain text.
+
+    Content at `url` should be a dictionary.
+
+    Args:
+        url (str): URL to data.
+        mode (str): Mode to use. Accepted is 'soup' (default) and 'raw'.
+        kwargs: Check `get_soup` for the complete list of accepted arguments.
+
+    Returns:
+        dict: Data
+    """
+    if mode == "soup":
+        soup = get_soup(url, **kwargs)
+        return soup.text
+    elif mode == "raw":
+        return get_response(url, **kwargs).text
+    raise ValueError(f"Unrecognized `mode` value: {mode}. Accepted values are 'soup' and 'raw'.")
 
 
 def sel_options(headless: bool = True, firefox: bool = False):
@@ -112,11 +147,13 @@ def get_driver(headless: bool = True, download_folder: str = None, options=None,
     else:
         driver = webdriver.Chrome(options=options)
     if download_folder:
-        set_download_settings(driver, download_folder)
+        set_download_settings(driver, download_folder, firefox)
     return driver
 
 
-def set_download_settings(driver, folder_name: str = None):
+def set_download_settings(driver, folder_name: str = None, firefox: bool = False):
+    if firefox:
+        raise NotImplementedError("Download capabilities only supported for Chromedriver!")
     if folder_name is None:
         folder_name = "/tmp"
     driver.command_executor._commands["send_command"] = (

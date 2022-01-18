@@ -33,6 +33,7 @@ class Bulgaria:
                 "Общ брой лица със завършен ваксинационен цикъл": "people_fully_vaccinated",
                 "Общо поставени дози": "total_vaccinations",
                 "Общ брой лица със завършен ваксинационен курс": "people_fully_vaccinated",
+                "Общ брой лица с поставена бустерна доза (реваксинация)": "total_boosters",
             }
         )
 
@@ -54,18 +55,18 @@ class Bulgaria:
             .pipe(self.pipe_source)
         )
 
-    def export(self, paths):
+    def export(self):
         data = self.read().pipe(self.pipeline)
         increment(
-            paths=paths,
             location=data["location"],
             total_vaccinations=int(data["total_vaccinations"]),
             people_fully_vaccinated=int(data["people_fully_vaccinated"]),
+            total_boosters=int(data["total_boosters"]),
             date=data["date"],
             source_url=data["source_url"],
             vaccine=data["vaccine"],
         )
 
 
-def main(paths):
-    Bulgaria().export(paths)
+def main():
+    Bulgaria().export()

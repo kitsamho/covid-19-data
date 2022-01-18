@@ -32,6 +32,7 @@ def get_uk() -> pd.DataFrame:
         "test_positivity_rate": "uniqueCasePositivityBySpecimenDateRollingSum",
         "weekly_hospital_admissions": "newAdmissionsRollingSum",
         "people_in_hospital": "hospitalCases",
+        "people_ventilated": "covidOccupiedMVBeds",
     }
     api = Cov19API(filters=filters, structure=structure)
     uk = api.get_dataframe()
@@ -44,7 +45,7 @@ def get_uk() -> pd.DataFrame:
         "areaCode": "areaCode",
         "cumulative_cases_rate": "cumCasesByPublishDateRate",
         "cumulative_deaths_rate": "cumDeaths28DaysByPublishDateRate",
-        "weekly_cases_rate": "newCasesByPublishDateRollingRate",
+        "weekly_cases_rate": "newCasesBySpecimenDateRollingRate",
         "weekly_deaths_rate": "newDeaths28DaysByDeathDateRollingRate",
     }
     api = Cov19API(filters=filters, structure=structure)
@@ -52,6 +53,44 @@ def get_uk() -> pd.DataFrame:
 
     # Merge
     return pd.merge(uk, uk_rate)
+
+
+def find_metric_peak(df: pd.DataFrame, metric: str, period_start="2020-12-09", period_end="2021-02-23") -> tuple:
+    period_df = df[(df.Year >= period_start) & (df.Year <= period_end)][["Year", metric]]
+    period_df = period_df.sort_values(metric, ascending=False, na_position="last")
+    peak_date = period_df.Year.values[0]
+    peak_value = period_df[metric].values[0]
+    return peak_date, peak_value
+
+
+def add_decoupling_metrics(df: pd.DataFrame) -> pd.DataFrame:
+    if df.people_ventilated.isnull().all() or df.weekly_cases_rolling.isnull().all():
+        df[
+            [
+                "weekly_cases_rolling_normalized",
+                "people_in_hospital_normalized",
+                "people_ventilated_normalized",
+                "weekly_deaths_rolling_normalized",
+            ]
+        ] = pd.NA
+        return df
+
+    case_peak_date, case_peak_value = find_metric_peak(df, "weekly_cases_rolling")
+    hosp_peak_date, hosp_peak_value = find_metric_peak(df, "people_in_hospital")
+    icu_peak_date, icu_peak_value = find_metric_peak(df, "people_ventilated")
+    death_peak_date, death_peak_value = find_metric_peak(df, "weekly_deaths_rolling")
+
+    hosp_shift = (pd.to_datetime(hosp_peak_date) - pd.to_datetime(case_peak_date)).days
+    icu_shift = (pd.to_datetime(icu_peak_date) - pd.to_datetime(case_peak_date)).days
+    death_shift = (pd.to_datetime(death_peak_date) - pd.to_datetime(case_peak_date)).days
+
+    df["weekly_cases_rolling_normalized"] = (df.weekly_cases_rolling / case_peak_value).mul(100).round(2)
+    df["people_in_hospital_normalized"] = (df.people_in_hospital.shift(hosp_shift) / hosp_peak_value).mul(100).round(2)
+    df["people_ventilated_normalized"] = (df.people_ventilated.shift(icu_shift) / icu_peak_value).mul(100).round(2)
+    df["weekly_deaths_rolling_normalized"] = (
+        (df.weekly_deaths_rolling.shift(death_shift) / death_peak_value).mul(100).round(2)
+    )
+    return df
 
 
 def get_nation() -> pd.DataFrame:
@@ -70,6 +109,7 @@ def get_nation() -> pd.DataFrame:
         "test_positivity_rate": "uniqueCasePositivityBySpecimenDateRollingSum",
         "weekly_hospital_admissions": "newAdmissionsRollingSum",
         "people_in_hospital": "hospitalCases",
+        "people_ventilated": "covidOccupiedMVBeds",
     }
     api = Cov19API(filters=filters, structure=structure)
     nation = api.get_dataframe()
@@ -82,7 +122,7 @@ def get_nation() -> pd.DataFrame:
         "areaCode": "areaCode",
         "cumulative_cases_rate": "cumCasesByPublishDateRate",
         "cumulative_deaths_rate": "cumDeaths28DaysByPublishDateRate",
-        "weekly_cases_rate": "newCasesByPublishDateRollingRate",
+        "weekly_cases_rate": "newCasesBySpecimenDateRollingRate",
         "weekly_deaths_rate": "newDeaths28DaysByDeathDateRollingRate",
     }
     api = Cov19API(filters=filters, structure=structure)
@@ -113,7 +153,7 @@ def get_local() -> pd.DataFrame:
     # Rate
     url_local_rate = (
         "https://api.coronavirus.data.gov.uk/v2/data?areaType=utla&metric=cumCasesByPublishDateRate&"
-        "metric=cumDeaths28DaysByPublishDateRate&metric=newCasesByPublishDateRollingRate&"
+        "metric=cumDeaths28DaysByPublishDateRate&metric=newCasesBySpecimenDateRollingRate&"
         "metric=newDeaths28DaysByDeathDateRollingRate"
     )
     local_rate = requests.get(url_local_rate).json()
@@ -124,7 +164,7 @@ def get_local() -> pd.DataFrame:
             "date": "Year",
             "cumCasesByPublishDateRate": "cumulative_cases_rate",
             "cumDeaths28DaysByPublishDateRate": "cumulative_deaths_rate",
-            "newCasesByPublishDateRollingRate": "weekly_cases_rate",
+            "newCasesBySpecimenDateRollingRate": "weekly_cases_rate",
             "newDeaths28DaysByDeathDateRollingRate": "weekly_deaths_rate",
         }
     )
@@ -154,6 +194,8 @@ def generate_dataset():
     combined = pd.concat([get_uk(), get_nation(), get_local(), get_nhs_region()])
     combined = combined.drop_duplicates(subset=["Country", "Year"], keep="first")
 
+    combined = combined.groupby("Country").apply(add_decoupling_metrics)
+
     combined["daily_cases_rolling_average"] = combined["weekly_cases_rolling"] / 7
     combined["daily_deaths_rolling_average"] = combined["weekly_deaths_rolling"] / 7
     combined["daily_cases_rate_rolling_average"] = combined["weekly_cases_rate"] / 7
@@ -175,7 +217,7 @@ def generate_dataset():
 
 def update_db():
     time_str = datetime.now().astimezone(pytz.timezone("Europe/London")).strftime("%-d %B, %H:%M")
-    source_name = f"UK Government Coronavirus (COVID-19) Dashboard – Last updated {time_str} (London time)"
+    source_name = f"UK Government COVID-19 Dashboard – Last updated {time_str} (London time)"
     import_dataset(
         dataset_name=DATASET_NAME,
         namespace="owid",

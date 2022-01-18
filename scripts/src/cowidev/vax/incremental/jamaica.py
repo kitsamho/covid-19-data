@@ -15,15 +15,18 @@ def connect_parse_data(source: str) -> pd.Series:
     soup = get_soup(source)
 
     counters = soup.find_all(class_="elementor-counter-number")
-    assert len(counters) == 4, "New counter in dashboard?"
+    assert len(counters) == 6, "New counter in dashboard?"
 
     total_vaccinations = clean_count(counters[0]["data-to-value"])
     first_doses = clean_count(counters[1]["data-to-value"])
     second_doses = clean_count(counters[2]["data-to-value"])
     unique_doses = clean_count(counters[3]["data-to-value"])
+    booster_shots = clean_count(counters[4]["data-to-value"])
+    immunocompromised_doses = clean_count(counters[5]["data-to-value"])
 
     people_vaccinated = first_doses + unique_doses
     people_fully_vaccinated = second_doses + unique_doses
+    total_boosters = booster_shots + immunocompromised_doses
 
     date = localdate("America/Jamaica")
 
@@ -32,6 +35,7 @@ def connect_parse_data(source: str) -> pd.Series:
             "total_vaccinations": total_vaccinations,
             "people_vaccinated": people_vaccinated,
             "people_fully_vaccinated": people_fully_vaccinated,
+            "total_boosters": total_boosters,
             "date": date,
         }
     )
@@ -53,15 +57,15 @@ def pipeline(ds: pd.Series, source: str) -> pd.Series:
     return ds.pipe(enrich_location).pipe(enrich_vaccine).pipe(enrich_source, source)
 
 
-def main(paths):
+def main():
     source = "https://vaccination.moh.gov.jm/"
     data = read(source).pipe(pipeline, source)
     increment(
-        paths=paths,
         location=data["location"],
         total_vaccinations=data["total_vaccinations"],
         people_vaccinated=data["people_vaccinated"],
         people_fully_vaccinated=data["people_fully_vaccinated"],
+        total_boosters=data["total_boosters"],
         date=data["date"],
         source_url=data["source_url"],
         vaccine=data["vaccine"],

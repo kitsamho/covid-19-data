@@ -1,33 +1,33 @@
 import os
-import importlib.util
 import webbrowser
 import pyperclip
 from cowidev.vax.cmd.utils import get_logger
-
+from cowidev.megafile.generate import generate_megafile
+from cowidev.utils import paths
 
 logger = get_logger()
 
 
-def main_export(paths, url):
-    main_source_table_html(paths, url)
-    main_megafile(paths)
+def main_export(url):
+    main_source_table_html(url)
+    main_megafile()
 
 
-def main_source_table_html(paths, url):
+def main_source_table_html(url):
     # Read html content
     print("-- Reading HTML table... --")
-    with open(paths.tmp_html, "r") as f:
+    path = os.path.join(paths.SCRIPTS.OUTPUT_VAX, "source_table.html")
+    with open(path, "r") as f:
         html = f.read()
     logger.info("Redirecting to owid editing platform...")
-    pyperclip.copy(html)
-    webbrowser.open(url)
+    try:
+        pyperclip.copy(html)
+        webbrowser.open(url)
+    except:
+        print(f"Can't copy content and open browser. Please visit {url} and copy the content from {path}")
 
 
-def main_megafile(paths):
+def main_megafile():
     """Executes scripts/scripts/megafile.py."""
     print("-- Generating megafiles... --")
-    script_path = os.path.join(paths.tmp_tmp, "megafile.py")
-    spec = importlib.util.spec_from_file_location("megafile", script_path)
-    megafile = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(megafile)
-    megafile.generate_megafile()
+    generate_megafile()

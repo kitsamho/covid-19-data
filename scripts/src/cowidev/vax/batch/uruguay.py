@@ -1,7 +1,8 @@
 import re
 import pandas as pd
 
-from cowidev.vax.utils.files import export_metadata
+from cowidev.vax.utils.files import export_metadata_age, export_metadata_manufacturer
+from cowidev.utils import paths
 
 
 vaccines_mapping = {
@@ -22,9 +23,7 @@ class Uruguay:
         df = pd.read_csv(self.source_url)
         # Load age data
         regex = r"(date|coverage_(people|fully)_\d+_\d+)"
-        df_age = df_age = pd.read_csv(
-            self.source_url_age, usecols=lambda x: re.match(regex, x)
-        )
+        df_age = df_age = pd.read_csv(self.source_url_age, usecols=lambda x: re.match(regex, x))
         return df, df_age
 
     def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -70,11 +69,7 @@ class Uruguay:
             "65_74",
             "75_115",
         }
-        age_groups = set(
-            df.columns.str.extract(
-                r"coverage_(?:people|fully)_(.*)", expand=False
-            ).dropna()
-        )
+        age_groups = set(df.columns.str.extract(r"coverage_(?:people|fully)_(.*)", expand=False).dropna())
         age_groups_wrong = age_groups.difference(age_groups_accepted)
         if age_groups_wrong:
             raise ValueError(f"Invalid age groups: {age_groups_wrong}")
@@ -86,9 +81,7 @@ class Uruguay:
         # Assign metric to each entry
         df = df.assign(
             metric=df.variable.apply(
-                lambda x: "people_fully_vaccinated_per_hundred"
-                if "fully" in x
-                else "people_vaccinated_per_hundred"
+                lambda x: "people_fully_vaccinated_per_hundred" if "fully" in x else "people_vaccinated_per_hundred"
             ),
         )
         # Extract age group parameters
@@ -123,33 +116,31 @@ class Uruguay:
             .sort_values(["location", "date", "age_group_min"])
         )
 
-    def to_csv(self, paths):
+    def to_csv(self):
         # Load data
         df, df_age = self.read()
         # Export main
-        df.pipe(self.pipeline).to_csv(paths.tmp_vax_out(self.location), index=False)
+        df.pipe(self.pipeline).to_csv(paths.out_vax(self.location), index=False)
         # Export manufacturer data
         df_man = df.pipe(self.pipeline_manufacturer)
-        df_man.to_csv(paths.tmp_vax_out_man(self.location), index=False)
-        export_metadata(
+        df_man.to_csv(paths.out_vax(self.location, manufacturer=True), index=False)
+        export_metadata_manufacturer(
             df_man,
             "Ministry of Health via vacuna.uy",
             self.source_url,
-            paths.tmp_vax_metadata_man,
         )
         # Export age data
         df_age = df_age.pipe(self.pipeline_age)
-        df_age.to_csv(paths.tmp_vax_out_by_age_group(self.location), index=False)
-        export_metadata(
+        df_age.to_csv(paths.out_vax(self.location, age=True), index=False)
+        export_metadata_age(
             df_age,
             "Ministry of Health via vacuna.uy",
             self.source_url_age,
-            paths.tmp_vax_metadata_age,
         )
 
 
-def main(paths):
-    Uruguay().to_csv(paths)
+def main():
+    Uruguay().to_csv()
 
 
 if __name__ == "__main__":

@@ -1,17 +1,24 @@
-url <- "https://datos.ins.gob.pe/dataset/a219dc7b-bd79-4ba8-b4ce-65120ea3d461/resource/0d13f025-b675-4bfa-beab-928a67748407/download/pm25septiembre2021.zip"
+url <- "https://datos.ins.gob.pe/api/3/action/package_show?id=dataset-de-pruebas-moleculares-del-instituto-nacional-de-salud-ins"
+
+context <- rjson::fromJSON(file = url)
+last_modified <- lapply(context$result$resources, FUN = "[[", "last_modified") %>%
+  unlist %>%
+  ymd_hms %>%
+  which.max
+url <- context$result$resources[[last_modified]]$url
 
 process_file <- function(url) {
-    filename <- str_extract(url, "[^/]+\\.zip$")
-    local_path <- sprintf("tmp/%s", filename)
-    if (!file.exists(local_path)) {
-        download.file(url = url, destfile = local_path)
-    }
-    csv_filename <- unzip(local_path, list = TRUE)$Name[1]
-    unzip(local_path, exdir = "tmp")
-    df <- fread(sprintf("tmp/%s", csv_filename), showProgress = FALSE, select = c("FECHA_MUESTRA", "RESULTADO"))
-    setnames(df, c("Date", "Result"))
-    df[, Date := as.character(Date)]
-    return(df)
+  filename <- str_extract(url, "[^/]+\\.zip$")
+  local_path <- sprintf("tmp/%s", filename)
+  if (!file.exists(local_path)) {
+    download.file(url = url, destfile = local_path)
+  }
+  csv_filename <- unzip(local_path, list = TRUE)$Name[1]
+  unzip(local_path, exdir = "tmp")
+  df <- fread(sprintf("tmp/%s", csv_filename), showProgress = FALSE, select = c("FECHA_MUESTRA", "RESULTADO"))
+  setnames(df, c("Date", "Result"))
+  df[, Date := as.character(Date)]
+  return(df)
 }
 
 data <- process_file(url)

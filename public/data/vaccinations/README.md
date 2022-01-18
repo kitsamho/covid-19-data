@@ -22,7 +22,7 @@ Stored in [`vaccinations.csv`](vaccinations.csv) and [`vaccinations.json`](vacci
 
 This dataset includes some subnational locations (England, Northern Ireland, Scotland, Wales, Northern Cyprus…) and international aggregates (World, continents, European Union…). They can be identified by their `iso_code` that starts with `OWID_`.
 
-The population estimates we use to calculate per-capita metrics are all based on the last revision of the [United Nations World Population Prospects](https://population.un.org/wpp/). The exact values can be viewed [here](https://github.com/owid/covid-19-data/blob/master/scripts/input/un/population_2020.csv).
+The population estimates we use to calculate per-capita metrics are based on the last revision of the [United Nations World Population Prospects](https://population.un.org/wpp/). The exact values can be viewed [here](https://github.com/owid/covid-19-data/blob/master/scripts/input/un/population_latest.csv). In a few cases, we use other sources (see column `source` in the population file) when the figures provided by the UN differ substantially from reliable and more recent national estimates. Population estimates for a few subnational locations are taken from national reports, and are stored [here](https://github.com/owid/covid-19-data/blob/master/scripts/input/owid/subnational_population_2020.csv).
 
 * `location`: name of the country (or region within a country).
 * `iso_code`: ISO 3166-1 alpha-3 – three-letter country codes.
@@ -36,7 +36,7 @@ The population estimates we use to calculate per-capita metrics are all based on
 * `people_vaccinated_per_hundred`: `people_vaccinated` per 100 people in the total population of the country.
 * `people_fully_vaccinated`: total number of people who received all doses prescribed by the vaccination protocol. If a person receives the first dose of a 2-dose vaccine, this metric stays the same. If they receive the second dose, the metric goes up by 1.
 * `people_fully_vaccinated_per_hundred`: `people_fully_vaccinated` per 100 people in the total population of the country.
-* `total_boosters`: Total number of COVID-19 vaccination booster doses administered (doses
+* `total_boosters`: total number of COVID-19 vaccination booster doses administered (doses
   administered beyond the number prescribed by the vaccination protocol)
 * `total_boosters_per_hundred`: Total number of COVID-19 vaccination booster doses administered per 100 people in the total population.
 
@@ -62,6 +62,8 @@ Stored in [`us_state_vaccinations.csv`](us_state_vaccinations.csv). State-by-sta
 * `total_distributed`: cumulative counts of COVID-19 vaccine doses recorded as shipped in CDC's Vaccine Tracking System.
 * `total_distributed_per_hundred`: cumulative counts of COVID-19 vaccine doses recorded as shipped in CDC's Vaccine Tracking System per 100 people in the total population of the state.
 * `share_doses_used`: share of vaccination doses administered among those recorded as shipped in CDC's Vaccine Tracking System.
+* `total_boosters`: total number of COVID-19 vaccination booster doses administered (doses administered beyond the number prescribed by the vaccination protocol)
+* `total_boosters_per_hundred`: Total number of COVID-19 vaccination booster doses administered per 100 people in the total population.
 
 
 ## An example of how we calculate our metrics

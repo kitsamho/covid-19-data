@@ -7,7 +7,7 @@ from cowidev.utils.clean import clean_count, clean_date
 from cowidev.vax.utils.incremental import increment
 
 
-def main(paths):
+def main():
 
     data = {
         "location": "Guatemala",
@@ -25,20 +25,23 @@ def main(paths):
         date = driver.find_element_by_class_name("logo").text
         dose1 = driver.find_element_by_id("dosisaplicadas1").find_element_by_tag_name("h3").text
         dose2 = driver.find_element_by_id("dosisaplicadas2").find_element_by_tag_name("h3").text
+        dose3 = driver.find_element_by_id("dosis_refuerzo").find_element_by_tag_name("h3").text
+        doses = driver.find_element_by_id("dosisaplicadasTot").find_element_by_tag_name("h3").text
 
     data["people_vaccinated"] = clean_count(dose1)
     data["people_fully_vaccinated"] = clean_count(dose2)
-    data["total_vaccinations"] = data["people_vaccinated"] + data["people_fully_vaccinated"]
+    data["total_vaccinations"] = clean_count(doses)
+    data["total_boosters"] = clean_count(dose3)
 
     date = re.search(r"\d+/\d+/202\d", date).group(0)
     data["date"] = clean_date(date, "%d/%m/%Y")
 
     increment(
-        paths=paths,
         location=data["location"],
         total_vaccinations=data["total_vaccinations"],
         people_vaccinated=data["people_vaccinated"],
         people_fully_vaccinated=data["people_fully_vaccinated"],
+        total_boosters=data["total_boosters"],
         date=data["date"],
         source_url=data["source_url"],
         vaccine=data["vaccine"],

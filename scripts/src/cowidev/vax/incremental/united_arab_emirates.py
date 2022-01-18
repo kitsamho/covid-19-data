@@ -44,22 +44,33 @@ class UnitedArabEmirates:
     def _parse_people_vaccinated(self, elem, population) -> pd.Series:
         regex = r"Percentage of population who received one dose \(of COVID-19 vaccine\)\s{1,2}([\d\.]+)%"
         share_vaccinated = self._parse_relative_metric(elem, "dose1pct", regex)
-        return round(share_vaccinated * population)
+        return round(share_vaccinated * population) if share_vaccinated else None
 
     def _parse_people_fully_vaccinated(self, elem, population) -> pd.Series:
         regex = r"Percentage of population fully vaccinated \(against COVID-19\)\s{1,2}([\d\.]+)%"
         share_fully_vaccinated = self._parse_relative_metric(elem, "fullyVaccintedpct", regex)
-        return round(share_fully_vaccinated * population)
+        return round(share_fully_vaccinated * population) if share_fully_vaccinated else None
 
     def _parse_relative_metric(self, elem, class_name: str, regex: str):
-        text = elem.find_element_by_class_name(class_name).text
-        metric = float(re.search(regex, text).group(1)) / 100
-        return metric
+        try:
+            text = elem.find_element_by_class_name(class_name).text
+            metric = float(re.search(regex, text).group(1)) / 100
+            return metric
+        except:
+            return None
 
     def _parse_date(self, driver) -> pd.Series:
         text_date = driver.find_element_by_class_name("full_data_set").text
         regex_date = r"Time period: 29 January 2020 - (\d{2} [a-zA-Z]+ 202\d)"
         return extract_clean_date(text_date, regex_date, "%d %B %Y", lang="en")
+
+    def pipe_calculate_boosters(self, ds: pd.Series) -> pd.Series:
+        total_boosters = (
+            ds.total_vaccinations - ds.people_vaccinated - ds.people_fully_vaccinated
+            if ds.people_vaccinated and ds.people_fully_vaccinated
+            else None
+        )
+        return enrich_data(ds, "total_boosters", total_boosters)
 
     def pipe_location(self, ds: pd.Series) -> pd.Series:
         return enrich_data(ds, "location", self.location)
@@ -75,21 +86,26 @@ class UnitedArabEmirates:
         return enrich_data(ds, "source_url", self.source_url)
 
     def pipeline(self, ds: pd.Series) -> pd.Series:
-        return ds.pipe(self.pipe_location).pipe(self.pipe_vaccine).pipe(self.pipe_source)
+        return (
+            ds.pipe(self.pipe_calculate_boosters)
+            .pipe(self.pipe_location)
+            .pipe(self.pipe_vaccine)
+            .pipe(self.pipe_source)
+        )
 
-    def export(self, paths):
+    def export(self):
         data = self.read().pipe(self.pipeline)
         increment(
-            paths=paths,
             location=data["location"],
-            total_vaccinations=int(data["total_vaccinations"]),
-            people_vaccinated=int(data["people_vaccinated"]),
-            people_fully_vaccinated=int(data["people_fully_vaccinated"]),
+            total_vaccinations=data["total_vaccinations"],
+            people_vaccinated=data["people_vaccinated"],
+            people_fully_vaccinated=data["people_fully_vaccinated"],
+            total_boosters=data["total_boosters"],
             date=data["date"],
             source_url=data["source_url"],
             vaccine=data["vaccine"],
         )
 
 
-def main(paths):
-    UnitedArabEmirates().export(paths)
+def main():
+    UnitedArabEmirates().export()

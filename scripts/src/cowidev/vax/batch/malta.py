@@ -1,6 +1,8 @@
 import pandas as pd
 
+from cowidev.utils import paths
 from cowidev.utils.clean import clean_date_series
+from cowidev.utils.utils import check_known_columns
 from cowidev.vax.utils.utils import make_monotonic
 
 
@@ -11,7 +13,7 @@ class Malta:
     )
     source_url_ref: str = "https://github.com/COVID19-Malta/COVID19-Cases"
     columns_rename: dict = {
-        "Date": "date",
+        "Date of Vaccination": "date",
         "Total Vaccination Doses": "total_vaccinations",
         "Fully vaccinated (2 of 2 or 1 of 1)": "people_fully_vaccinated",
         "Received one dose (1 of 2 or 1 of 1)": "people_vaccinated",
@@ -19,7 +21,18 @@ class Malta:
     }
 
     def read(self) -> pd.DataFrame:
-        return pd.read_csv(self.source_url)
+        df = pd.read_csv(self.source_url)
+        check_known_columns(
+            df,
+            [
+                "Date of Vaccination",
+                "Total Vaccination Doses",
+                "Fully vaccinated (2 of 2 or 1 of 1)",
+                "Received one dose (1 of 2 or 1 of 1)",
+                "Total Booster doses",
+            ],
+        )
+        return df
 
     def pipe_check_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         columns_wrong = set(df.columns).difference(self.columns_rename)
@@ -79,11 +92,11 @@ class Malta:
             .pipe(make_monotonic)
         )
 
-    def export(self, paths):
+    def export(self):
         df = self.read().pipe(self.pipeline)
-        destination = paths.tmp_vax_out(self.location)
+        destination = paths.out_vax(self.location)
         df.to_csv(destination, index=False)
 
 
-def main(paths):
-    Malta().export(paths)
+def main():
+    Malta().export()

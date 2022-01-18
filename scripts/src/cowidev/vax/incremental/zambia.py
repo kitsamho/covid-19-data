@@ -12,7 +12,7 @@ class Zambia:
         self.location = "Zambia"
         self.source_url = (
             "https://services7.arcgis.com/OwPYxdqWv7612O7N/arcgis/rest/services/"
-            "service_0c3a3c585d01433da6caf4d0feb4c664/FeatureServer/0/query?f=json&&cacheHint=true&resultOffset=0&"
+            "service_ef4ce56ba48a44ef82991dcf85f62f71/FeatureServer/0/query?f=json&&cacheHint=true&resultOffset=0&"
             "resultRecordCount=100&where=1=1&outFields=*&resultType=standard&returnGeometry=false&"
             "spatialRel=esriSpatialRelIntersects"
         )
@@ -40,10 +40,9 @@ class Zambia:
     def pipeline(self, ds: pd.Series) -> pd.Series:
         return ds.pipe(self.pipe_location).pipe(self.pipe_source).pipe(self.pipe_vaccine)
 
-    def export(self, paths):
+    def export(self):
         data = self.read().pipe(self.pipeline)
         increment(
-            paths=paths,
             location=data["location"],
             total_vaccinations=data["total_vaccinations"],
             people_fully_vaccinated=data["people_fully_vaccinated"],
@@ -53,5 +52,5 @@ class Zambia:
         )
 
 
-def main(paths):
-    Zambia().export(paths)
+def main():
+    Zambia().export()

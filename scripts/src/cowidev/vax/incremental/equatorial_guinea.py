@@ -1,5 +1,3 @@
-import re
-
 import pandas as pd
 
 from cowidev.utils.clean import clean_count, extract_clean_date
@@ -24,24 +22,11 @@ class EquatorialGuinea:
         )
 
     def parse_metrics(self, soup):
-        # Get key points table (total_vaccinations, people_vaccinated)
-        dfs = pd.read_html(self.source_url)
+        dfs = pd.read_html(self.source_url, converters={"Totales": lambda x: str(x)})
         df = dfs[0].rename(columns={"Unnamed: 0": "metric"}).set_index("metric")
         people_vaccinated = clean_count(df.loc["Total Vacunados 1ª dosis", "Totales"])
         total_vaccinations = clean_count(df.loc["Total dosis administradas", "Totales"])
-        # Get people_fully_vaccinated from text
-        regex = (
-            r"De los ([\d\.]+) vacunados,? un total de ([\d\.]+)\s?\([\d,]+%\) ya (han recibido la 2ª dosis|tienen la"
-            r" pauta completa)"
-        )
-        match = re.search(regex, soup.text)
-        people_fully_vaccinated = clean_count(match.group(2))
-        # Sanity check
-        if people_vaccinated != clean_count(match.group(1)):
-            raise ValueError(
-                f"There is an error! First dose metrics appears with different values in the source website!"
-            )
-        # Build data
+        people_fully_vaccinated = total_vaccinations - people_vaccinated
         return {
             "total_vaccinations": total_vaccinations,
             "people_vaccinated": people_vaccinated,
@@ -69,11 +54,9 @@ class EquatorialGuinea:
     def pipeline(self, ds: pd.Series) -> pd.Series:
         return ds.pipe(self.pipe_location).pipe(self.pipe_vaccine).pipe(self.pipe_source)
 
-    def to_csv(self, paths):
-        """Generalized."""
+    def to_csv(self):
         data = self.read().pipe(self.pipeline)
         increment(
-            paths=paths,
             location=data["location"],
             total_vaccinations=data["total_vaccinations"],
             people_vaccinated=data["people_vaccinated"],
@@ -84,8 +67,8 @@ class EquatorialGuinea:
         )
 
 
-def main(paths):
-    EquatorialGuinea().to_csv(paths)
+def main():
+    EquatorialGuinea().to_csv()
 
 
 if __name__ == "__main__":

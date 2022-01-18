@@ -1,11 +1,12 @@
 import datetime
-import json
 
-import requests
 import pandas as pd
 
-from cowidev.vax.utils.files import export_metadata
+from cowidev.utils import paths
 from cowidev.utils.clean import clean_date_series
+from cowidev.utils.utils import check_known_columns
+from cowidev.utils.web import request_json
+from cowidev.vax.utils.files import export_metadata_age
 
 
 class Israel:
@@ -18,16 +19,28 @@ class Israel:
     )
 
     def read(self) -> pd.DataFrame:
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.16; rv:85.0) Gecko/20100101 Firefox/85.0",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-            "Connection": "keep-alive",
-            "Upgrade-Insecure-Requests": "1",
-            "Pragma": "no-cache",
-            "Cache-Control": "no-cache",
-        }
-        data = json.loads(requests.get(self.source_url, headers=headers).content)
-        return pd.DataFrame.from_records(data)
+        data = request_json(self.source_url)
+        df = pd.DataFrame.from_records(data)
+        check_known_columns(
+            df,
+            [
+                "Day_Date",
+                "vaccinated",
+                "vaccinated_cum",
+                "vaccinated_population_perc",
+                "vaccinated_seconde_dose",
+                "vaccinated_seconde_dose_cum",
+                "vaccinated_seconde_dose_population_perc",
+                "vaccinated_third_dose",
+                "vaccinated_third_dose_cum",
+                "vaccinated_third_dose_population_perc",
+                "vaccinated_validity_perc",
+                "vaccinated_expired_perc",
+                "not_vaccinated_perc",
+                "vaccinated_fourth_dose_cum",
+            ],
+        )
+        return df
 
     def read_age(self):
         return pd.read_csv(self.source_url_age)
@@ -39,6 +52,7 @@ class Israel:
                 "vaccinated_cum": "people_vaccinated",
                 "vaccinated_seconde_dose_cum": "people_fully_vaccinated",
                 "vaccinated_third_dose_cum": "total_boosters",
+                "vaccinated_fourth_dose_cum": "total_boosters_2",
             }
         )
 
@@ -50,6 +64,9 @@ class Israel:
 
     def pipe_select_min_date(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.groupby(["people_vaccinated", "people_fully_vaccinated"], as_index=False).min()
+
+    def pipe_total_boosters(self, df: pd.DataFrame) -> pd.DataFrame:
+        return df.assign(total_boosters=df.total_boosters + df.total_boosters_2)
 
     def pipe_total_vaccinations(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.assign(total_vaccinations=df.people_vaccinated + df.people_fully_vaccinated + df.total_boosters)
@@ -94,6 +111,7 @@ class Israel:
             .pipe(self.pipe_date)
             .pipe(self.pipe_filter_date)
             .pipe(self.pipe_select_min_date)
+            .pipe(self.pipe_total_boosters)
             .pipe(self.pipe_total_vaccinations)
             .pipe(self.pipe_location)
             .pipe(self.pipe_source)
@@ -125,10 +143,12 @@ class Israel:
         # Ignore agr group 10-19
         df = df[(df.age_group_min != "10") | (df.age_group_max != "19")]
         # Final column creations
-        df = df.assign(
-            location="Israel",
-            people_vaccinated_per_hundred=100 * df["first dose"] / df["pop"],
-            people_fully_vaccinated_per_hundred=100 * df["second dose"] / df["pop"],
+        df = df.assign(location=self.location).rename(
+            columns={
+                "1st perc": "people_vaccinated_per_hundred",
+                "2nd perc": "people_fully_vaccinated_per_hundred",
+                "3rd perc": "people_with_booster_per_hundred",
+            }
         )
         # Select output columns
         df = df[
@@ -139,23 +159,23 @@ class Israel:
                 "age_group_max",
                 "people_vaccinated_per_hundred",
                 "people_fully_vaccinated_per_hundred",
+                "people_with_booster_per_hundred",
             ]
         ]
         return df
 
-    def export(self, paths):
-        destination = paths.tmp_vax_out(self.location)
+    def export(self):
+        destination = paths.out_vax(self.location)
         self.read().pipe(self.pipeline).to_csv(destination, index=False)
         # Export age data
         df_age = self.read_age().pipe(self.pipeline_age)
-        df_age.to_csv(paths.tmp_vax_out_by_age_group(self.location), index=False)
-        export_metadata(
+        df_age.to_csv(paths.out_vax(self.location, age=True), index=False)
+        export_metadata_age(
             df_age,
             "Ministry of Health via github.com/dancarmoz/israel_moh_covid_dashboard_data",
             self.source_url_age,
-            paths.tmp_vax_metadata_age,
         )
 
 
-def main(paths):
-    Israel().export(paths)
+def main():
+    Israel().export()

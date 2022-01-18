@@ -7,6 +7,7 @@ import pandas as pd
 from cowidev.utils.clean import clean_count, clean_date
 from cowidev.utils.web.scraping import get_soup
 from cowidev.vax.utils.incremental import merge_with_current_data
+from cowidev.utils import paths
 
 
 class Monaco:
@@ -75,7 +76,7 @@ class Monaco:
 
     def parse_date(self, elem):
         date_raw = elem.parent.find(class_="date").text
-        return clean_date(date_raw, "%d %B %Y", minus_days=1, loc="fr_FR")
+        return clean_date(date_raw, "%d %B %Y", minus_days=1, lang="fr")
 
     def parse_link(self, elem):
         href = elem.a.get("href")
@@ -127,9 +128,9 @@ class Monaco:
             .sort_values(by="date")
         )
 
-    def to_csv(self, paths):
+    def to_csv(self):
         """Generalized."""
-        output_file = paths.tmp_vax_out(self.location)
+        output_file = paths.out_vax(self.location)
         last_update = pd.read_csv(output_file).date.max()
         df = self.read(last_update)
         if not df.empty and "people_vaccinated" in df.columns:
@@ -139,11 +140,11 @@ class Monaco:
             df.to_csv(output_file, index=False)
 
 
-def main(paths):
+def main():
     Monaco(
         source_url="https://www.gouv.mc/Action-Gouvernementale/Coronavirus-Covid-19/Actualites/",
         location="Monaco",
-    ).to_csv(paths)
+    ).to_csv()
 
 
 if __name__ == "__main__":

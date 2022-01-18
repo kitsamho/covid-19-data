@@ -31,23 +31,33 @@ class Colombia:
                         total_vaccinations = clean_count(total_vaccinations)
                     date_raw = re.search(r"[\d-]{10}$", value).group(0)
                     date_str = clean_date(date_raw, "%d-%m-%Y")
-                elif value == "Esquemas completos segundas + únicas dosis":
-                    people_fully_vaccinated = row[-1]
-                    if type(people_fully_vaccinated) != int:
-                        people_fully_vaccinated = clean_count(people_fully_vaccinated)
+                elif value == "Total dosis segundas dosis acumuladas":
+                    second_doses = row[-1]
+                    if type(second_doses) != int:
+                        second_doses = clean_count(second_doses)
                 elif value == "Total únicas dosis acumuladas":
                     unique_doses = row[-1]
                     if type(unique_doses) != int:
                         unique_doses = clean_count(unique_doses)
+                elif value == "Aplicación Refuerzos":
+                    boosters = row[-1]
+                    if type(boosters) != int:
+                        boosters = clean_count(boosters)
 
-        if total_vaccinations is None or people_fully_vaccinated is None:
+        first_doses = total_vaccinations - second_doses - unique_doses - boosters
+        people_vaccinated = first_doses + unique_doses
+        people_fully_vaccinated = second_doses + unique_doses
+        total_boosters = boosters
+
+        if total_vaccinations is None or second_doses is None or unique_doses is None:
             raise ValueError("Date is not where it is expected be! Check worksheet")
         return pd.Series(
             {
                 "date": date_str,
                 "total_vaccinations": total_vaccinations,
                 "people_fully_vaccinated": people_fully_vaccinated,
-                "people_vaccinated": total_vaccinations - people_fully_vaccinated + unique_doses,
+                "people_vaccinated": people_vaccinated,
+                "total_boosters": total_boosters,
             }
         )
 
@@ -63,16 +73,16 @@ class Colombia:
     def pipeline(self, ds: pd.Series) -> pd.Series:
         return ds.pipe(self.pipe_location).pipe(self.pipe_vaccine).pipe(self.pipe_source)
 
-    def to_csv(self, paths):
+    def export(self):
         data = self.read()
         if "total_vaccinations" in data:
             data = data.pipe(self.pipeline)
             increment(
-                paths=paths,
                 location=data["location"],
                 total_vaccinations=data["total_vaccinations"],
                 people_vaccinated=data["people_vaccinated"],
                 people_fully_vaccinated=data["people_fully_vaccinated"],
+                total_boosters=data["total_boosters"],
                 date=data["date"],
                 source_url=data["source_url"],
                 vaccine=data["vaccine"],
@@ -81,5 +91,5 @@ class Colombia:
             print("skipped")
 
 
-def main(paths, gsheets_api):
-    Colombia(gsheets_api=gsheets_api).to_csv(paths)
+def main(gsheets_api):
+    Colombia(gsheets_api=gsheets_api).export()

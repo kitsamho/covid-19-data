@@ -8,21 +8,30 @@ import pytz
 import re
 
 import pandas as pd
-
+import epiweeks
 from cowidev.utils.clean.strings import clean_string
 
 
 LOCALE_LOCK = threading.Lock()
+DEFAULT_LOCALE = "C"  # "en_US.ISO8859-1"
 DATE_FORMAT = "%Y-%m-%d"
+
+
+def week_to_date(year: int, week: int, output_fmt: str = DATE_FORMAT):
+    week = epiweeks.Week(year, week)
+    dt = week.enddate()
+    return clean_date(dt, output_fmt=output_fmt)
 
 
 def clean_date(
     date_or_text: Union[str, datetime, date],
     fmt: str = None,
-    lang: str = None,
+    lang: str = "en",
     loc: str = "",
     minus_days: int = 0,
     unicode_norm: bool = True,
+    output_fmt: str = DATE_FORMAT,
+    as_datetime: bool = False,
 ):
     """Extract a date from a `text`.
 
@@ -40,16 +49,18 @@ def clean_date(
                                 `locale.windows_locale` in windows. Defaults to "" (system default).
         minus_days (int, optional): Number of days to subtract. Defaults to 0.
         unicode_norm (bool, optional): [description]. Defaults to True.
+        output_fmt (str, optional): Format of the output date. By default, uses `DATE_FORMAT`.
+        as_datetime (bool, optional): Set to True to return the date as a datetime.
 
     Returns:
         str: Extracted date in format %Y-%m-%d
     """
     if isinstance(date_or_text, (datetime, date)):
-        return date_or_text.strftime(DATE_FORMAT)
+        return date_or_text.strftime(output_fmt)
     # If lang is given, map language to a locale
     if fmt is None:
         raise ValueError("Input date format is required!")
-    if lang is not None:
+    if loc == "" and lang is not None:
         if lang in locale.locale_alias:
             loc = locale.locale_alias[lang]
     if platform == "win32":
@@ -58,16 +69,21 @@ def clean_date(
     # Unicode
     if unicode_norm:
         date_or_text = clean_string(date_or_text)
+    # Fix possible issues
+    date_or_text = date_or_text.replace("O", "0")
     # Thread-safe extract date
     with _setlocale(loc):
-        return (datetime.strptime(date_or_text, fmt) - timedelta(days=minus_days)).strftime(DATE_FORMAT)
+        dt = datetime.strptime(date_or_text, fmt) - timedelta(days=minus_days)
+        if not as_datetime:
+            return dt.strftime(output_fmt)
+        return dt
 
 
 def extract_clean_date(
     text: str,
     regex: str,
     date_format: str,
-    lang: str = None,
+    lang: str = "en",
     loc: str = "",
     minus_days: int = 0,
     unicode_norm: bool = True,
@@ -78,7 +94,7 @@ def extract_clean_date(
     Example:
 
     ```python
-    >>> from cowidev.vax.utils.utils import extract_clean_date
+    >>> from cowidev.utils import extract_clean_date
     >>> text = "Something irrelevant. This page was last updated on 25 May 2021 at 09:05hrs."
     >>> date_str = extract_clean_date(
         text=text,
@@ -159,8 +175,11 @@ def localdate(
         sum_days (int, optional): Number of days to add to local date.
         as_datetime (bool, optional): Set to True to return the date as a datetime.
     """
-    tz = pytz.timezone(tz)
-    local_time = datetime.now(tz=tz)
+    if tz is None:
+        local_time = datetime.now()
+    else:
+        tz = pytz.timezone(tz)
+        local_time = datetime.now(tz=tz)
     if not force_today and ((hour_limit is None) or (local_time.hour < hour_limit)):
         local_time = local_time - timedelta(days=1)
     if sum_days:
@@ -170,21 +189,38 @@ def localdate(
     return local_time.strftime(date_format)
 
 
-def clean_date_series(ds: pd.Series, format_input: str = None, format_output: str = DATE_FORMAT) -> pd.Series:
+def clean_date_series(
+    ds: Union[pd.Series, list], format_input: str = None, format_output: str = DATE_FORMAT, **kwargs
+) -> Union[pd.Series, list]:
     if format_output is None:
         format_output = DATE_FORMAT
-    return pd.to_datetime(ds, format=format_input).dt.strftime(format_output)
+    ds_new = pd.to_datetime(ds, format=format_input, **kwargs)
+    if isinstance(ds, list):
+        return pd.Series(ds_new).dt.strftime(format_output).tolist()
+    elif isinstance(ds, pd.Series):
+        return ds_new.dt.strftime(format_output)
 
 
 @contextmanager
 def _setlocale(name: str):
     # REF: https://stackoverflow.com/questions/18593661/how-do-i-strftime-a-date-object-in-a-different-locale
+    # with LOCALE_LOCK:
+    #     saved = locale.setlocale(locale.LC_TIME, DEFAULT_LOCALE)
+    #     try:
+    #         print("DEBUG -- try", name)
+    #         yield locale.setlocale(locale.LC_TIME, name)
+    #     finally:
+    #         print("DEBUG -- finally", saved)
+    #         locale.setlocale(locale.LC_TIME, saved)
     with LOCALE_LOCK:
-        saved = locale.setlocale(locale.LC_TIME, "")
+        saved = locale.setlocale(locale.LC_ALL)
+        # print("DEBUG -- init", saved)
         try:
-            yield locale.setlocale(locale.LC_TIME, name)
+            # print("DEBUG -- try", name)
+            yield locale.setlocale(locale.LC_ALL, name)
         finally:
-            locale.setlocale(locale.LC_TIME, saved)
+            # print("DEBUG -- finally", saved)
+            locale.setlocale(locale.LC_ALL, saved)
 
 
 def from_tz_to_tz(dt: datetime, from_tz: str = "UTC", to_tz: str = None):

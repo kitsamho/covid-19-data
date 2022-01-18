@@ -7,12 +7,11 @@ from cowidev.vax.utils.incremental import enrich_data, increment
 
 
 class Kyrgyzstan:
-    def __init__(self):
-        self.source_url = "https://vc.emed.gov.kg/"
-        self.location = "Kyrgyzstan"
+    source_url = "https://vc.emed.gov.kg/"
+    location = "Kyrgyzstan"
 
     def read(self) -> pd.Series:
-        soup = get_soup(self.source_url)
+        soup = get_soup(self.source_url, verify=False)
         data = self._parse_data(soup)
         return pd.Series(data)
 
@@ -44,11 +43,10 @@ class Kyrgyzstan:
     def pipeline(self, ds: pd.Series) -> pd.Series:
         return ds.pipe(self.pipe_date).pipe(self.pipe_source).pipe(self.pipe_location).pipe(self.pipe_vaccine)
 
-    def export(self, paths):
+    def export(self):
         """Generalized."""
         data = self.read().pipe(self.pipeline)
         increment(
-            paths=paths,
             location=str(data["location"]),
             total_vaccinations=int(data["total_vaccinations"]),
             people_vaccinated=int(data["people_vaccinated"]),
@@ -59,8 +57,8 @@ class Kyrgyzstan:
         )
 
 
-def main(paths):
-    Kyrgyzstan().export(paths)
+def main():
+    Kyrgyzstan().export()
 
 
 if __name__ == "__main__":

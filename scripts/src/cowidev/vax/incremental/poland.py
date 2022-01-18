@@ -11,7 +11,7 @@ from cowidev.vax.utils.files import load_query
 class Poland:
     location: str = "Poland"
     source_url: str = (
-        "https://services-eu1.arcgis.com/zk7YlClTgerl62BY/ArcGIS/rest/services/global_szczepienia_actual_widok3/"
+        "https://services-eu1.arcgis.com/zk7YlClTgerl62BY/ArcGIS/rest/services/widok_global_szczepienia_actual/"
         "FeatureServer/0/query"
     )
     source_url_ref: str = "https://www.gov.pl/web/szczepimysie/raport-szczepien-przeciwko-covid-19"
@@ -19,6 +19,8 @@ class Poland:
         "SZCZEPIENIA_SUMA": "total_vaccinations",
         "DAWKA_1_SUMA": "people_vaccinated",
         "zaszczepieni_finalnie": "people_fully_vaccinated",
+        "dawka_3_suma": "dose_3",
+        "dawka_przypominajaca": "total_boosters",
         "Data": "date",
     }
 
@@ -47,6 +49,10 @@ class Poland:
     def pipe_source(self, ds: pd.Series) -> pd.Series:
         return enrich_data(ds, "source_url", self.source_url_ref)
 
+    def pipe_boosters(self, ds: pd.Series) -> pd.Series:
+        ds["total_boosters"] = ds[["dose_3", "total_boosters"]].sum()
+        return ds.drop(index=["dose_3"])
+
     def pipeline(self, ds: pd.Series) -> pd.Series:
         return (
             ds.pipe(self.pipe_rename_columns)
@@ -54,25 +60,27 @@ class Poland:
             .pipe(self.pipe_location)
             .pipe(self.pipe_vaccine)
             .pipe(self.pipe_source)
+            .pipe(self.pipe_boosters)
         )
 
-    def export(self, paths):
+    def export(self):
         """Generalized."""
         data = self.read().pipe(self.pipeline)
+        # print(data["total_boosters"])
         increment(
-            paths=paths,
             location=data["location"],
             total_vaccinations=data["total_vaccinations"],
             people_vaccinated=data["people_vaccinated"],
             people_fully_vaccinated=data["people_fully_vaccinated"],
+            total_boosters=data["total_boosters"],
             date=data["date"],
             source_url=data["source_url"],
             vaccine=data["vaccine"],
         )
 
 
-def main(paths):
-    Poland().export(paths)
+def main():
+    Poland().export()
 
 
 if __name__ == "__main__":

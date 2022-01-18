@@ -2,8 +2,11 @@ import os
 
 import pandas as pd
 
+from cowidev.utils import paths
 from cowidev.utils.clean.dates import clean_date, localdate
-from cowidev.vax.utils.files import export_metadata
+from cowidev.utils.utils import check_known_columns
+from cowidev.utils.web.download import read_csv_from_url
+from cowidev.vax.utils.files import export_metadata_manufacturer, export_metadata_age
 from cowidev.vax.utils.orgs import ECDC_VACCINES
 
 
@@ -29,6 +32,10 @@ age_groups_known = {
 
 
 age_groups_relevant = {
+    "Age0_4",
+    "Age5_9",
+    "Age10_14",
+    "Age15_17",
     "Age18_24",
     "Age25_49",
     "Age50_59",
@@ -70,6 +77,8 @@ columns = {
     "UnknownDose",
     "Vaccine",
     "YearWeekISO",
+    "DoseAdditional1",
+    "NumberDosesExported",
 }
 
 
@@ -81,7 +90,7 @@ class ECDC:
         self.vaccine_mapping = {**ECDC_VACCINES, "UNK": "Unknown"}
 
     def read(self):
-        return pd.read_csv(self.source_url)
+        return read_csv_from_url(self.source_url, timeout=20)
 
     def _load_country_mapping(self, iso_path: str):
         country_mapping = pd.read_csv(iso_path)
@@ -98,20 +107,16 @@ class ECDC:
         vaccines_wrong = set(df.Vaccine).difference(self.vaccine_mapping)
         if vaccines_wrong:
             raise ValueError(f"Unknown vaccines found. Check {vaccines_wrong}")
-        columns_wrong = df.columns.difference(columns).tolist()
-        if columns_wrong:
-            raise ValueError(
-                "Unknown columns! If new breakdown groups have been added, unexpected errors may appear."
-                f"Please review: {columns_wrong}"
-            )
+        check_known_columns(df, columns)
         return df
 
     def pipe_base(self, df: pd.DataFrame) -> pd.DataFrame:
         df = df.pipe(self.pipe_initial_check)
         df = df.assign(
-            total_vaccinations=df[["FirstDose", "SecondDose", "UnknownDose"]].sum(axis=1),
+            total_vaccinations=df[["FirstDose", "SecondDose", "UnknownDose", "DoseAdditional1"]].sum(axis=1),
             people_vaccinated=df.FirstDose,
             people_fully_vaccinated=df.SecondDose,
+            people_with_booster=df.DoseAdditional1,
             date=df.YearWeekISO.apply(self._weekday_to_date),
             location=df.ReportingCountry.replace(self.country_mapping),
         )
@@ -127,6 +132,7 @@ class ECDC:
                     "total_vaccinations",
                     "people_vaccinated",
                     "people_fully_vaccinated",
+                    "people_with_booster",
                     "UnknownDose",
                 ]
             ]
@@ -139,6 +145,7 @@ class ECDC:
             total_vaccinations=df.groupby(["location", group_field_renamed])["total_vaccinations"].cumsum(),
             people_vaccinated=df.groupby(["location", group_field_renamed])["people_vaccinated"].cumsum(),
             people_fully_vaccinated=df.groupby(["location", group_field_renamed])["people_fully_vaccinated"].cumsum(),
+            people_with_booster=df.groupby(["location", group_field_renamed])["people_with_booster"].cumsum(),
             UnknownDose=df.groupby(["location", group_field_renamed])["UnknownDose"].cumsum(),
         )
 
@@ -152,6 +159,7 @@ class ECDC:
                     "total_vaccinations",
                     "people_vaccinated",
                     "people_fully_vaccinated",
+                    "people_with_booster",
                     "UnknownDose",
                 ]
             ]
@@ -263,6 +271,7 @@ class ECDC:
         return df.assign(
             people_vaccinated_per_hundred=(100 * df.people_vaccinated / df.Denominator).round(2),
             people_fully_vaccinated_per_hundred=(100 * df.people_fully_vaccinated / df.Denominator).round(2),
+            people_with_booster_per_hundred=(100 * df.people_with_booster / df.Denominator).round(2),
         )
 
     def pipeline_age(self, df: pd.DataFrame):
@@ -284,6 +293,7 @@ class ECDC:
                     "age_group_max",
                     "people_vaccinated_per_hundred",
                     "people_fully_vaccinated_per_hundred",
+                    "people_with_booster_per_hundred",
                 ]
             ]
             .sort_values(["location", "date", "age_group_min"])
@@ -297,7 +307,7 @@ class ECDC:
             columns=columns,
         )
 
-    def export_age(self, paths, df: pd.DataFrame):
+    def export_age(self, df: pd.DataFrame):
         df_age = df.pipe(self.pipeline_age)
         # Export
         locations = df_age.location.unique()
@@ -305,7 +315,7 @@ class ECDC:
             self._export_country_data(
                 df=df_age,
                 location=location,
-                output_path=paths.tmp_vax_out_by_age_group(location),
+                output_path=paths.out_vax(location, age=True),
                 columns=[
                     "location",
                     "date",
@@ -313,39 +323,40 @@ class ECDC:
                     "age_group_max",
                     "people_vaccinated_per_hundred",
                     "people_fully_vaccinated_per_hundred",
+                    "people_with_booster_per_hundred",
                 ],
             )
-        self._export_metadata(df_age, paths.tmp_vax_metadata_age)
-
-    def export_manufacturer(self, paths, df: pd.DataFrame):
-        df_manufacuter = df.pipe(self.pipeline_manufacturer)
-        # Export
-        locations = df_manufacuter.location.unique()
-        for location in locations:
-            self._export_country_data(
-                df=df_manufacuter,
-                location=location,
-                output_path=paths.tmp_vax_out_man(location),
-                columns=["location", "date", "vaccine", "total_vaccinations"],
-            )
-        self._export_metadata(df_manufacuter, paths.tmp_vax_metadata_man)
-
-    def _export_metadata(self, df, output_path):
-        export_metadata(
+        export_metadata_age(
             df=df,
             source_name="European Centre for Disease Prevention and Control (ECDC)",
             source_url=self.source_url_ref,
-            output_path=output_path,
         )
 
-    def export(self, paths):
+    def export_manufacturer(self, df: pd.DataFrame):
+        df_manufacturer = df.pipe(self.pipeline_manufacturer)
+        # Export
+        locations = df_manufacturer.location.unique()
+        for location in locations:
+            self._export_country_data(
+                df=df_manufacturer,
+                location=location,
+                output_path=paths.out_vax(location, manufacturer=True),
+                columns=["location", "date", "vaccine", "total_vaccinations"],
+            )
+        export_metadata_manufacturer(
+            df=df_manufacturer,
+            source_name="European Centre for Disease Prevention and Control (ECDC)",
+            source_url=self.source_url_ref,
+        )
+
+    def export(self):
         # Read data
         df = self.read().pipe(self.pipe_base)
         # Age
-        self.export_age(paths, df)
+        self.export_age(df)
         # Manufacturer
-        self.export_manufacturer(paths, df)
+        self.export_manufacturer(df)
 
 
-def main(paths):
-    ECDC(iso_path=os.path.join(paths.tmp_inp, "iso", "iso.csv")).export(paths)
+def main():
+    ECDC(iso_path=os.path.join(paths.SCRIPTS.INPUT_ISO, "iso.csv")).export()

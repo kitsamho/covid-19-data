@@ -1,34 +1,57 @@
+import requests
 import pandas as pd
+from cowidev.utils import paths, clean_date
 
 
-def main(paths):
+class Slovenia:
+    location = "Slovenia"
+    source_url = "https://api.sledilnik.org/api/vaccinations"
+    source_url_ref = "https://covid-19.sledilnik.org/sl/stats"
+    vaccine_mapping = {
+        "pfizer": "Pfizer/BioNTech",
+        "az": "Oxford/AstraZeneca",
+        "moderna": "Moderna",
+        "janssen": "Johnson&Johnson",
+    }
 
-    df = pd.read_csv(
-        "https://raw.githubusercontent.com/sledilnik/data/master/csv/vaccination.csv",
-        usecols=[
-            "date",
-            "vaccination.administered.todate",
-            "vaccination.administered2nd.todate",
-        ],
-    )
+    def read(self):
+        data = requests.get(self.source_url).json()
+        df = self._parse_data(data)
+        return df
 
-    df = df.rename(
-        columns={
-            "vaccination.administered.todate": "people_vaccinated",
-            "vaccination.administered2nd.todate": "people_fully_vaccinated",
-        }
-    )
+    def _parse_data(self, data):
+        data = [
+            {
+                "date": clean_date(f"{d['year']}-{d['month']}-{d['day']}", "%Y-%m-%d"),
+                "total_vaccinations": d.get("usedToDate"),
+                "people_vaccinated": d["administered"].get("toDate"),
+                "people_fully_vaccinated": d["administered2nd"].get("toDate"),
+                "total_boosters": d["administered3rd"].get("toDate"),
+                "vaccine": self._build_vaccine_str(d),
+            }
+            for d in data
+        ]
+        df = pd.DataFrame(data)
+        return df
 
-    df = df[-df["people_vaccinated"].isna()]
-    df["total_vaccinations"] = df["people_vaccinated"] + df[
-        "people_fully_vaccinated"
-    ].fillna(0)
+    def _build_vaccine_str(self, d):
+        return ", ".join(sorted([self.vaccine_mapping[v] for v in d["usedByManufacturer"].keys()]))
 
-    df.loc[:, "location"] = "Slovenia"
-    df.loc[:, "source_url"] = "https://covid-19.sledilnik.org/en/stats"
-    df.loc[:, "vaccine"] = "Oxford/AstraZeneca, Pfizer/BioNTech"
+    def pipeline(self, df: pd.DataFrame):
+        df = df.dropna(subset=["total_vaccinations", "people_vaccinated", "people_fully_vaccinated"], how="all")
+        df = df.assign(
+            location=self.location,
+            source_url=self.source_url_ref,
+        )
+        return df
 
-    df.to_csv(paths.tmp_vax_out("Slovenia"), index=False)
+    def export(self):
+        df = self.read().pipe(self.pipeline)
+        df.to_csv(paths.out_vax(self.location), index=False)
+
+
+def main():
+    Slovenia().export()
 
 
 if __name__ == "__main__":

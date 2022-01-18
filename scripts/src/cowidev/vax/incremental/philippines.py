@@ -32,28 +32,27 @@ class Philippines:
             )
             # Metrics
             total_vaccinations = clean_count(spans[8].text)
-            people_partly_vaccinated = clean_count(spans[14].text)
-            people_fully_vaccinated = clean_count(spans[13].text)
-        cond_1 = (total_vaccinations > people_partly_vaccinated) & (total_vaccinations > people_fully_vaccinated)
-        cond_2 = people_partly_vaccinated > people_fully_vaccinated
-        if not (cond_1 and cond_2):
+            people_fully_vaccinated = clean_count(spans[15].text)
+            total_boosters = clean_count(spans[18].text)
+        if total_vaccinations < people_fully_vaccinated:
             raise ValueError(
                 "Check values for:\n"
-                f"total_vaccinations\t\t{total_vaccinations}\npeople_partly_vaccinated\t{people_partly_vaccinated}\npeople_fully_vaccinated\t\t{people_fully_vaccinated}"
+                f"total_vaccinations\t\t{total_vaccinations}\npeople_fully_vaccinated\t\t{people_fully_vaccinated}"
             )
-        print(total_vaccinations, people_partly_vaccinated, people_fully_vaccinated)
-        # Sanity check
-        if abs(total_vaccinations - people_partly_vaccinated - people_fully_vaccinated) > 100:
+        if total_vaccinations < total_boosters:
             raise ValueError(
-                f"total_vaccinations should equal sum of first and second doses. {total_vaccinations} !="
-                f" {people_fully_vaccinated} + {people_partly_vaccinated}. Note: We actually allow for +100"
-                " difference."
+                f"Check values for:\ntotal_vaccinations\t\t{total_vaccinations}\ntotal_boosters\t\t{total_boosters}"
             )
-
+        if people_fully_vaccinated < total_boosters:
+            raise ValueError(
+                "Check values for:\n"
+                f"people_fully_vaccinated\t\t{people_fully_vaccinated}\ntotal_boosters\t\t{total_boosters}"
+            )
         return {
             "total_vaccinations": total_vaccinations,
             # "people_vaccinated": people_vaccinated,
             "people_fully_vaccinated": people_fully_vaccinated,
+            "total_boosters": total_boosters,
             "date": date,
         }
 
@@ -64,7 +63,7 @@ class Philippines:
         return enrich_data(
             ds,
             "vaccine",
-            "Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sinovac, Sputnik V",
+            "Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sinovac, Sputnik Light, Sputnik V",
         )
 
     def pipe_source(self, ds: pd.Series) -> pd.Series:
@@ -77,19 +76,19 @@ class Philippines:
     def pipeline(self, ds: pd.Series) -> pd.Series:
         return ds.pipe(self.pipe_location).pipe(self.pipe_vaccine).pipe(self.pipe_source)
 
-    def export(self, paths):
+    def export(self):
         data = self.read().pipe(self.pipeline)
         increment(
-            paths=paths,
             location=data["location"],
             total_vaccinations=data["total_vaccinations"],
             # people_vaccinated=data["people_vaccinated"],
             people_fully_vaccinated=data["people_fully_vaccinated"],
+            total_boosters=data["total_boosters"],
             date=data["date"],
             source_url=data["source_url"],
             vaccine=data["vaccine"],
         )
 
 
-def main(paths):
-    Philippines().export(paths)
+def main():
+    Philippines().export()
